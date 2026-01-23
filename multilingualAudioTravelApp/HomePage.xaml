@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="multilingualAudioTravelApp.HomePage"
+             Title="Trang Chủ">
+
+    <Grid RowDefinitions="*,Auto" Padding="20">
+        <VerticalStackLayout Spacing="20" VerticalOptions="Center">
+            
+        </VerticalStackLayout>
+
+        <Label Grid.Row="1" 
+               Text="Phiên bản 1.0" 
+               HorizontalOptions="Center" 
+               TextColor="LightGray"/>
+    </Grid>
+</ContentPage>

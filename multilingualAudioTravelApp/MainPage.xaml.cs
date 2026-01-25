@@ -121,7 +121,6 @@ public partial class MainPage : ContentPage
 
                     if (wantToListen)
                     {
-                        // Nếu bấm nút Nghe thì bắt đầu đọc
                         await SpeakDescription(desc);
                     }
                 });
@@ -153,18 +152,31 @@ public partial class MainPage : ContentPage
                 Pitch = 1.0f   
             };
 
-            await TextToSpeech.Default.SpeakAsync(text, options, _speechCts.Token);
-        }
-        catch (OperationCanceledException)
-        {
+            if (voice != null)
+            {
+                options.Locale = voice;
+                System.Diagnostics.Debug.WriteLine($"---> Đã tìm thấy giọng: {voice.Name}");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("---> CẢNH BÁO: Máy này chưa cài Tiếng Việt! Sẽ đọc bằng giọng mặc định.");
+            }
+
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    await TextToSpeech.Default.SpeakAsync(text, options, _speechCts.Token);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"---> Lỗi khi đọc: {ex.Message}");
+                }
+            });
         }
         catch (Exception ex)
         {
-            try
-            {
-                await TextToSpeech.Default.SpeakAsync(text);
-            }
-            catch { }
+            System.Diagnostics.Debug.WriteLine($"---> Lỗi cài đặt TTS: {ex.Message}");
         }
     }
     protected override async void OnAppearing()
@@ -215,8 +227,6 @@ public partial class MainPage : ContentPage
 
     private void OnLocationChanged(object sender, GeolocationLocationChangedEventArgs e)
     {
-        // Sự kiện GPS chạy ở luồng phụ (Background Thread), 
-        // muốn vẽ lên màn hình phải đưa về luồng chính (Main Thread)
         MainThread.BeginInvokeOnMainThread(() =>
         {
             UpdateUserLocationOnMap(e.Location);

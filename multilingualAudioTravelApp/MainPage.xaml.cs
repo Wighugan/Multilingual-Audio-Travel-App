@@ -19,7 +19,7 @@ public partial class MainPage : ContentPage
     private MemoryLayer _poiLayer;
     private bool _isTracking = false; // Biến cờ để kiểm soát việc theo dõi
     private CancellationTokenSource _speechCts;
-
+    private List<PoiData> _poiList = new List<PoiData>();
     public MainPage()
     {
         InitializeComponent();
@@ -28,14 +28,14 @@ public partial class MainPage : ContentPage
 
     private void InitializeMap()
     {
-        var minVN = SphericalMercator.FromLonLat(102.0, 8.0);  
+        var minVN = SphericalMercator.FromLonLat(102.0, 8.0);
         var maxVN = SphericalMercator.FromLonLat(110.0, 24.0);
         var panBounds = new MRect(minVN.x, minVN.y, maxVN.x, maxVN.y);
 
         MyMap.Map.Layers.Add(OpenStreetMap.CreateTileLayer());
 
         MyMap.Map.Navigator.OverridePanBounds = panBounds;
-        MyMap.Map.Navigator.OverrideZoomBounds = new MMinMax(0.5, 5000); 
+        MyMap.Map.Navigator.OverrideZoomBounds = new MMinMax(0.5, 5000);
 
         // Layer dấu chấm đỏ
         _currentLocationLayer = new MemoryLayer
@@ -64,34 +64,71 @@ public partial class MainPage : ContentPage
             catch { }
         });
     }
+    public class PoiData
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public bool HasPlayed { get; set; } = false;
+
+        public double Radius { get; set; } = 50;
+        public int Priority { get; set; } = 1;
+    }
 
     // Hàm tạo các điểm du lịch mẫu
     private void CreatePoiLayer()
     {
         _poiLayer = new MemoryLayer
         {
-            Name = "PoiLayer"
-        };
-
-        var poiCoord = SphericalMercator.FromLonLat(106.69529, 10.77782);
-        var poiFeature = new PointFeature(new MPoint(poiCoord.x, poiCoord.y));
-
-        poiFeature["Name"] = "Dinh Độc Lập";
-        poiFeature["Description"] = "Dinh Độc Lập là di tích lịch sử nổi tiếng tại Thành phố Hồ Chí Minh, nơi đánh dấu sự kiện thống nhất đất nước.";
-
-        _poiLayer = new MemoryLayer
-        {
             Name = "PoiLayer",
             Style = new SymbolStyle
             {
-                Fill = new MBrush(MColor.Cyan),
-                SymbolScale = 0.5,
+                Fill = new MBrush(MColor.Cyan), 
+                SymbolScale = 0.5,              
                 Outline = new Pen { Color = MColor.White, Width = 2 }
             }
         };
 
-        _poiLayer.Features = new List<IFeature> { poiFeature };
+        var dinhDocLap = new PoiData
+        {
+            Name = "Dinh Độc Lập",
+            Description = "Dinh Độc Lập là di tích lịch sử nổi tiếng tại Thành phố Hồ Chí Minh, nơi đánh dấu sự kiện thống nhất đất nước.",
+            Latitude = 10.77782,
+            Longitude = 106.69529,
+            Radius = 100, //100m
+            Priority = 10 
+        };
+        _poiList.Add(dinhDocLap);
 
+        var hoConRua = new PoiData
+        {
+            Name = "Hồ Con Rùa",
+            Latitude = 10.7825,
+            Longitude = 106.6961,
+            Description = "Đây là Hồ Con Rùa, một điểm đến văn hóa, du lịch đặc trưng với kiến trúc tháp cao, hồ phun nước và không gian xanh thoáng mát. Đây cũng là thiên đường ẩm thực đường phố sôi động về đêm, thu hút đông đảo người dân và du khách.",
+
+            Radius = 30,   // 30m
+            Priority = 5
+        };
+        _poiList.Add(hoConRua);
+
+        var features = new List<IFeature>();
+
+        foreach (var poi in _poiList)
+        {
+            // Chuyển tọa độ GPS sang tọa độ Bản đồ (SphericalMercator)
+            var coords = SphericalMercator.FromLonLat(poi.Longitude, poi.Latitude);
+            var feature = new PointFeature(new MPoint(coords.x, coords.y));
+
+            // Gắn dữ liệu text vào để hiện Popup khi bấm
+            feature["Name"] = poi.Name;
+            feature["Description"] = poi.Description;
+            features.Add(feature);
+        }
+
+        //Cập nhật vào Layer
+        _poiLayer.Features = features;
         MyMap.Map.Layers.Add(_poiLayer);
     }
 
@@ -113,10 +150,10 @@ public partial class MainPage : ContentPage
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
                     bool wantToListen = await DisplayAlert(
-                        name,               
-                        desc,               
-                        "Nghe thuyết minh", 
-                        "Đóng"              
+                        name,
+                        desc,
+                        "Nghe thuyết minh",
+                        "Đóng"
                     );
 
                     if (wantToListen)
@@ -130,7 +167,7 @@ public partial class MainPage : ContentPage
 
     private async Task SpeakDescription(string text)
     {
-        // Hủy lần đọc trước đó (nếu đang đọc dở)
+        // Hủy lần đọc trước đó nếu đang đọc dở
         if (_speechCts != null)
         {
             _speechCts.Cancel();
@@ -148,8 +185,8 @@ public partial class MainPage : ContentPage
             var options = new SpeechOptions
             {
                 Locale = voice,
-                Volume = 1.0f,  
-                Pitch = 1.0f   
+                Volume = 1.0f,
+                Pitch = 1.0f
             };
 
             if (voice != null)
@@ -195,7 +232,7 @@ public partial class MainPage : ContentPage
     // Hàm bắt đầu lắng nghe
     private async Task StartListeningGps()
     {
-        if (_isTracking) return; 
+        if (_isTracking) return;
 
         var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
         if (status != PermissionStatus.Granted)
@@ -207,7 +244,7 @@ public partial class MainPage : ContentPage
         // Đăng ký sự kiện: Khi vị trí thay đổi thì gọi hàm OnLocationChanged
         Geolocation.LocationChanged += OnLocationChanged;
 
-        // Cấu hình: Cập nhật mỗi 2 giây hoặc khi đi được 5 mét (để đỡ tốn pin)
+        // Cấu hình: Cập nhật mỗi 2 giây hoặc khi đi được 5 mét
         var request = new GeolocationListeningRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(2));
 
         // Bắt đầu lắng nghe
@@ -230,6 +267,7 @@ public partial class MainPage : ContentPage
         MainThread.BeginInvokeOnMainThread(() =>
         {
             UpdateUserLocationOnMap(e.Location);
+            CheckGeofence(e.Location);
         });
     }
 
@@ -239,11 +277,9 @@ public partial class MainPage : ContentPage
 
         try
         {
-            // Tính toán tọa độ
             var smPoint = SphericalMercator.FromLonLat(location.Longitude, location.Latitude);
             var mapPoint = new MPoint(smPoint.x, smPoint.y);
 
-            // Vẽ lại dấu chấm đỏ
             var pointFeature = new PointFeature(mapPoint);
             var features = new List<IFeature> { pointFeature };
 
@@ -258,5 +294,36 @@ public partial class MainPage : ContentPage
             Console.WriteLine(ex.Message); // Ghi log nếu lỗi
         }
     }
+    private void CheckGeofence(Location userLocation)
+    {
+        var candidates = _poiList
+            .Select(p => new
+            {
+                Poi = p,
+                Distance = Location.CalculateDistance(
+                    userLocation.Latitude, userLocation.Longitude,
+                    p.Latitude, p.Longitude, DistanceUnits.Kilometers) * 1000
+            })
+            .Where(x => x.Distance <= x.Poi.Radius && !x.Poi.HasPlayed) 
+            .OrderByDescending(x => x.Poi.Priority)
+            .ThenBy(x => x.Distance)               
+            .ToList();
 
+        var bestMatch = candidates.FirstOrDefault();
+
+        if (bestMatch != null)
+        {
+            var poi = bestMatch.Poi;
+
+            poi.HasPlayed = true;
+
+            // Auto play
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try { HapticFeedback.Perform(HapticFeedbackType.LongPress); } catch { }
+                System.Diagnostics.Debug.WriteLine($"---> Tự động đọc: {poi.Name}");
+                await SpeakDescription(poi.Description);
+            });
+        }
+    }
 }

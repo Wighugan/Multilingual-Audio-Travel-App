@@ -19,6 +19,7 @@ public partial class MainPage : ContentPage
     private MemoryLayer _poiLayer;
     private bool _isTracking = false; // Biến cờ để kiểm soát việc theo dõi
     private CancellationTokenSource _speechCts;
+    private DateTime _lastGeofenceCheckTime = DateTime.MinValue;
     private List<PoiData> _poiList = new List<PoiData>();
     public MainPage()
     {
@@ -70,8 +71,9 @@ public partial class MainPage : ContentPage
         public string Description { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public bool HasPlayed { get; set; } = false;
-
+ //        public bool HasPlayed { get; set; } = false;
+        public DateTime LastPlayedTime { get; set; } = DateTime.MinValue;
+        public TimeSpan CooldownDuration { get; set; } = TimeSpan.FromMinutes(5);
         public double Radius { get; set; } = 50;
         public int Priority { get; set; } = 1;
     }
@@ -267,6 +269,11 @@ public partial class MainPage : ContentPage
         MainThread.BeginInvokeOnMainThread(() =>
         {
             UpdateUserLocationOnMap(e.Location);
+            if ((DateTime.Now - _lastGeofenceCheckTime).TotalSeconds < 3) //check geofence mỗi 3 giây
+            {
+                return;
+            }
+            _lastGeofenceCheckTime = DateTime.Now;
             CheckGeofence(e.Location);
         });
     }
@@ -304,7 +311,7 @@ public partial class MainPage : ContentPage
                     userLocation.Latitude, userLocation.Longitude,
                     p.Latitude, p.Longitude, DistanceUnits.Kilometers) * 1000
             })
-            .Where(x => x.Distance <= x.Poi.Radius && !x.Poi.HasPlayed) 
+            .Where(x => x.Distance <= x.Poi.Radius && (DateTime.Now - x.Poi.LastPlayedTime) > x.Poi.CooldownDuration) //đọc lại sau 5 phút
             .OrderByDescending(x => x.Poi.Priority)
             .ThenBy(x => x.Distance)               
             .ToList();
@@ -315,7 +322,7 @@ public partial class MainPage : ContentPage
         {
             var poi = bestMatch.Poi;
 
-            poi.HasPlayed = true;
+            poi.LastPlayedTime = DateTime.Now;
 
             // Auto play
             MainThread.BeginInvokeOnMainThread(async () =>

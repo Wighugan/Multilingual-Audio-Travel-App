@@ -3,17 +3,33 @@
     x:Class="multilingualAudioTravelApp.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:multilingualAudioTravelApp"
+xmlns:local="clr-namespace:multilingualAudioTravelApp"
     Shell.FlyoutBehavior="Disabled">
 
     <TabBar>
-        <Tab Title="Trang Chủ" Icon="dotnet_bot.png">
+
+        <Tab Title="Khám Phá" Icon="discover.png">
+            <ShellContent ContentTemplate="{DataTemplate local:ExplorePage}" Route="ExplorePage" />
+        </Tab>
+
+        <Tab Title="Bản Đồ" Icon="map.png">
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
+        </Tab>
+
+        <Tab Title="Trang Chủ" Icon="home.png">
             <ShellContent ContentTemplate="{DataTemplate local:HomePage}" Route="HomePage" />
         </Tab>
 
-        <Tab Title="Bản Đồ" Icon="dotnet_bot.png">
+       
+        <Tab Title="Yêu Thích" Icon="history.png">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
         </Tab>
+
+        <Tab Title="Cài Đặt" Icon="people.png">
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
+        </Tab>
+
+
     </TabBar>
 
 </Shell>

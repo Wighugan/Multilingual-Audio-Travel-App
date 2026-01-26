@@ -14,4 +14,7 @@
                HorizontalOptions="Center" 
                TextColor="LightGray"/>
     </Grid>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="⚙ Cài đặt" Clicked="OnSettingsClicked"/>
+    </ContentPage.ToolbarItems>
 </ContentPage>

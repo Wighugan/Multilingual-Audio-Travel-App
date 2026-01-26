@@ -183,7 +183,8 @@ public partial class MainPage : ContentPage
         {
             //Cấu hình giọng đọc Tiếng Việt
             var locales = await TextToSpeech.Default.GetLocalesAsync();
-            var voice = locales.FirstOrDefault(l => l.Language == "vi");
+            string savedLang = Preferences.Get("VoiceLanguage", "vi");
+            var voice = locales.FirstOrDefault(l => l.Language.StartsWith(savedLang));
             var options = new SpeechOptions
             {
                 Locale = voice,
@@ -194,7 +195,7 @@ public partial class MainPage : ContentPage
             if (voice != null)
             {
                 options.Locale = voice;
-                System.Diagnostics.Debug.WriteLine($"---> Đã tìm thấy giọng: {voice.Name}");
+                System.Diagnostics.Debug.WriteLine($"---> Đang đọc bằng giọng: {voice.Name}");
             }
             else
             {
@@ -203,14 +204,7 @@ public partial class MainPage : ContentPage
 
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                try
-                {
                     await TextToSpeech.Default.SpeakAsync(text, options, _speechCts.Token);
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"---> Lỗi khi đọc: {ex.Message}");
-                }
             });
         }
         catch (Exception ex)
@@ -333,4 +327,5 @@ public partial class MainPage : ContentPage
             });
         }
     }
+
 }

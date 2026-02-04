@@ -29,16 +29,8 @@ public partial class MainPage : ContentPage
 
     private void InitializeMap()
     {
-        var minVN = SphericalMercator.FromLonLat(102.0, 8.0);
-        var maxVN = SphericalMercator.FromLonLat(110.0, 24.0);
-        var panBounds = new MRect(minVN.x, minVN.y, maxVN.x, maxVN.y);
-
         MyMap.Map.Layers.Add(OpenStreetMap.CreateTileLayer());
 
-        MyMap.Map.Navigator.OverridePanBounds = panBounds;
-        MyMap.Map.Navigator.OverrideZoomBounds = new MMinMax(0.5, 5000);
-
-        // Layer dấu chấm đỏ
         _currentLocationLayer = new MemoryLayer
         {
             Name = "LocationLayer",
@@ -53,18 +45,33 @@ public partial class MainPage : ContentPage
         CreatePoiLayer();
         MyMap.Info += OnMapInfo;
 
-        // Mặc định nhìn về VN
-        Dispatcher.Dispatch(() =>
+        Dispatcher.Dispatch(async () =>
         {
             try
             {
-                var centerVietnam = SphericalMercator.FromLonLat(108.0, 14.0);
-                MyMap.Map.Navigator.CenterOn(new MPoint(centerVietnam.x, centerVietnam.y));
+                var vinhKhanhCenter = SphericalMercator.FromLonLat(106.7035, 10.7605);
+                var centerPoint = new MPoint(vinhKhanhCenter.x, vinhKhanhCenter.y);
+                MyMap.Map.Navigator.CenterOn(centerPoint);
                 MyMap.Map.Navigator.ZoomTo(1);
+                await Task.Delay(500);
+                try {
+                    var min = SphericalMercator.FromLonLat(106.7010, 10.7570);
+                    var max = SphericalMercator.FromLonLat(106.7060, 10.7640);
+                    MyMap.Map.Navigator.OverridePanBounds = new MRect(min.x, min.y, max.x, max.y);
+                    MyMap.Map.Navigator.OverrideZoomBounds = new MMinMax(0.1, 5);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Lỗi khóa map: " + ex.Message);
+                }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         });
     }
+    
     public class PoiData
     {
         public string Name { get; set; }
@@ -78,7 +85,6 @@ public partial class MainPage : ContentPage
         public int Priority { get; set; } = 1;
     }
 
-    // Hàm tạo các điểm du lịch mẫu
     private void CreatePoiLayer()
     {
         _poiLayer = new MemoryLayer
@@ -86,34 +92,22 @@ public partial class MainPage : ContentPage
             Name = "PoiLayer",
             Style = new SymbolStyle
             {
-                Fill = new MBrush(MColor.Cyan), 
-                SymbolScale = 0.5,              
+                Fill = new MBrush(MColor.Cyan),
+                SymbolScale = 0.5,
                 Outline = new Pen { Color = MColor.White, Width = 2 }
             }
         };
 
-        var dinhDocLap = new PoiData
+        var khuPhoAmThuc = new PoiData
         {
-            Name = "Dinh Độc Lập",
-            Description = "Dinh Độc Lập là di tích lịch sử nổi tiếng tại Thành phố Hồ Chí Minh, nơi đánh dấu sự kiện thống nhất đất nước.",
-            Latitude = 10.77782,
-            Longitude = 106.69529,
+            Name = "Khu phố ẩm thực Vĩnh Khánh",
+            Description = "Ở quận 4 nhắc đến phố ẩm thực thì Vĩnh Khánh chính là cái tên nổi bật nhất mà bạn chắc chắn phải ghé đến. Tại đây có rất nhiều hàng quán với vô số món ăn hấp dẫn. Bên cạnh đó, phố ẩm thực Vĩnh Khánh cũng khá gần trung tâm, cách Dinh Độc Lập chỉ 2.9km nên rất thuận tiện để bạn ghé đến khi có dịp du lịch Sài Gòn.",
+            Latitude = 10.7605,
+            Longitude = 106.7035,
             Radius = 100, //100m
-            Priority = 10 
+            Priority = 10
         };
-        _poiList.Add(dinhDocLap);
-
-        var hoConRua = new PoiData
-        {
-            Name = "Hồ Con Rùa",
-            Latitude = 10.7825,
-            Longitude = 106.6961,
-            Description = "Đây là Hồ Con Rùa, một điểm đến văn hóa, du lịch đặc trưng với kiến trúc tháp cao, hồ phun nước và không gian xanh thoáng mát. Đây cũng là thiên đường ẩm thực đường phố sôi động về đêm, thu hút đông đảo người dân và du khách.",
-
-            Radius = 30,   // 30m
-            Priority = 5
-        };
-        _poiList.Add(hoConRua);
+        _poiList.Add(khuPhoAmThuc);
 
         var features = new List<IFeature>();
 

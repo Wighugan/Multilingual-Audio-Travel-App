@@ -1,0 +1,20 @@
+﻿<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="multilingualAudioTravelApp.EditProfilePage"
+    Title="Chỉnh sửa thông tin">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Entry x:Name="NameEntry" Placeholder="Họ và tên"/>
+        <Entry x:Name="EmailEntry" Placeholder="Email"/>
+        <Entry x:Name="PhoneEntry" Placeholder="Số điện thoại"/>
+
+        <Button
+            Text="Lưu thay đổi"
+            BackgroundColor="#2196F3"
+            TextColor="White"
+            CornerRadius="10"
+            Clicked="OnSaveClicked"/>
+    </VerticalStackLayout>
+</ContentPage>

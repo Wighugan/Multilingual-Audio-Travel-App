@@ -5,11 +5,9 @@
         public App()
         {
             InitializeComponent();
+            MainPage = new LoginPage(); // CHƯA vào Shell
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
-        }
+        
     }
 }

@@ -26,7 +26,7 @@ xmlns:local="clr-namespace:multilingualAudioTravelApp"
         </Tab>
 
         <Tab Title="Cài Đặt" Icon="people.png">
-            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
+            <ShellContent ContentTemplate="{DataTemplate local:ProfilePage}" Route="ProfilePage" />
         </Tab>
 
 

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="multilingualAudioTravelApp.ProfilePage"
+    Title="Hồ sơ">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Avatar + Welcome -->
+            <VerticalStackLayout
+                HorizontalOptions="Center"
+                Spacing="10">
+
+                <Frame
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    CornerRadius="50"
+                    Padding="0"
+                    BackgroundColor="#E0E0E0"
+                    HasShadow="False"/>
+
+                <Label
+                    Text="Welcome khang"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <!-- Dark mode -->
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="Darkmode" FontSize="16"/>
+                    <Label Text="On/Off" FontSize="12" TextColor="Gray"/>
+                </VerticalStackLayout>
+
+                <Switch
+                    Grid.Column="1"
+                    IsToggled="{Binding IsDarkMode}"/>
+            </Grid>
+
+            <BoxView HeightRequest="1" BackgroundColor="#DDDDDD"/>
+
+            <!-- Menu -->
+            <CollectionView
+                ItemsSource="{Binding ProfileMenus}"
+                SelectionMode="Single"
+                    SelectionChanged="OnMenuSelected">
+
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="0,12"
+                              ColumnDefinitions="*,Auto">
+
+                            <VerticalStackLayout>
+                                <Label
+                                    Text="{Binding Title}"
+                                    FontSize="16"
+                                    FontAttributes="Bold"/>
+
+                                <Label
+                                    Text="{Binding Description}"
+                                    FontSize="13"
+                                    TextColor="Gray"/>
+                            </VerticalStackLayout>
+
+                            
+                            <Label
+                                Grid.Column="1"
+                                Text="›"
+                                FontSize="20"
+                                VerticalOptions="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <BoxView HeightRequest="1" BackgroundColor="#DDDDDD"/>
+
+            <!-- Font size -->
+           
+            <Button
+            Text="Đăng xuất"
+BackgroundColor="#D32F2F"
+TextColor="White"
+FontAttributes="Bold"
+CornerRadius="10"
+HeightRequest="50"
+Margin="0,30,0,10"
+Clicked="OnLogoutClicked"/>
+
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+

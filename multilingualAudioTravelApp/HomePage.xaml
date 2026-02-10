@@ -1,20 +1,123 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="multilingualAudioTravelApp.HomePage"
-             Title="Trang Chủ">
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="multilingualAudioTravelApp.HomePage"
+    >
 
-    <Grid RowDefinitions="*,Auto" Padding="20">
-        <VerticalStackLayout Spacing="20" VerticalOptions="Center">
-            
-        </VerticalStackLayout>
 
-        <Label Grid.Row="1" 
-               Text="Phiên bản 1.0" 
-               HorizontalOptions="Center" 
-               TextColor="LightGray"/>
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- 🔵 APP BAR -->
+        <Grid
+            BackgroundColor="#0A5BD3"
+            Padding="16"
+            ColumnDefinitions="Auto,*">
+
+            <Image
+                Source="search.png"
+                WidthRequest="22"
+                HeightRequest="22"
+                VerticalOptions="Center"/>
+
+            <Label
+                Grid.Column="1"
+                Text="Tìm kiếm"
+                TextColor="White"
+                FontSize="18"
+                VerticalOptions="Center"
+                Margin="12,0,0,0"/>
+        </Grid>
+
+        <!-- 🔵 TABS -->
+        <Grid
+            Grid.Row="1"
+            ColumnDefinitions="*,*,*"
+            Padding="12,8">
+
+            <Label Text="Ngẫu nhiên"
+                   TextColor="#0A5BD3"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+
+            <Label Grid.Column="1"
+                   Text="Mới nhất"
+                   TextColor="Gray"
+                   HorizontalOptions="Center"/>
+
+            <Label Grid.Column="2"
+                   Text="Gần quanh đây"
+                   TextColor="Gray"
+                   HorizontalOptions="Center"/>
+        </Grid>
+
+        <!-- 🔵 CONTENT -->
+        <CollectionView
+            Grid.Row="2"
+            ItemsLayout="VerticalGrid,2"
+            Margin="12"
+            SelectionMode="None">
+
+            <CollectionView.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>benthanh.png</x:String>
+                    <x:String>benthanh.png</x:String>
+                    <x:String>benthanh.png</x:String>
+                    <x:String>benthanh.png</x:String>
+                </x:Array>
+            </CollectionView.ItemsSource>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame
+                        Margin="6"
+                        CornerRadius="20"
+                        HasShadow="False"
+                        Padding="0">
+
+                        <Grid HeightRequest="230">
+
+                            <!-- ẢNH -->
+                            <Image
+                                Source="{Binding}"
+                                Aspect="AspectFill"/>
+
+                            <!-- OVERLAY -->
+                            <BoxView
+                                BackgroundColor="#40000000"/>
+
+                            <!-- HEART -->
+                            <Image
+                                Source="heart.png"
+                                WidthRequest="20"
+                                HeightRequest="20"
+                                Margin="12"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Start"/>
+
+                            <!-- TEXT -->
+                            <StackLayout
+                                Padding="12"
+                                VerticalOptions="End">
+
+                                <Label
+                                    Text="Hội An"
+                                    TextColor="White"
+                                    FontAttributes="Bold"/>
+
+                                <Label
+                                    Text="Nét đẹp hoài cổ"
+                                    TextColor="White"
+                                    FontSize="12"/>
+                            </StackLayout>
+
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
     </Grid>
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="⚙ Cài đặt" Clicked="OnSettingsClicked"/>
-    </ContentPage.ToolbarItems>
+
 </ContentPage>

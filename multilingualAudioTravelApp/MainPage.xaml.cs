@@ -11,13 +11,14 @@ using Microsoft.Maui.Devices.Sensors;
 using MBrush = Mapsui.Styles.Brush;
 using MColor = Mapsui.Styles.Color;
 
+
 namespace multilingualAudioTravelApp;
 
 public partial class MainPage : ContentPage
 {
     private MemoryLayer _currentLocationLayer;
     private MemoryLayer _poiLayer;
-    private bool _isTracking = false; // Biến cờ để kiểm soát việc theo dõi
+    private bool _isTracking = false;
     private CancellationTokenSource _speechCts;
     private DateTime _lastGeofenceCheckTime = DateTime.MinValue;
     private List<PoiData> _poiList = new List<PoiData>();
@@ -30,6 +31,15 @@ public partial class MainPage : ContentPage
     private void InitializeMap()
     {
         MyMap.Map.Layers.Add(OpenStreetMap.CreateTileLayer());
+        foreach (var widget in MyMap.Map.Widgets)
+        {
+            string widgetName = widget.GetType().Name;
+
+            if (widgetName == "LoggingWidget" || widgetName == "PerformanceWidget")
+            {
+                widget.Enabled = false;
+            }
+        }
 
         _currentLocationLayer = new MemoryLayer
         {

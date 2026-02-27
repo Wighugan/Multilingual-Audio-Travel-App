@@ -5,9 +5,19 @@
         public App()
         {
             InitializeComponent();
-            MainPage = new LoginPage(); // CHƯA vào Shell
+
+            bool isLoggedIn = Preferences.Get("isLoggedIn", false);
+
+            if (isLoggedIn)
+            {
+                MainPage = new AppShell();
+            }
+            else
+            {
+                MainPage = new NavigationPage(new LoginPage());
+            }
         }
 
-        
+
     }
 }

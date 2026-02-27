@@ -9,6 +9,8 @@ public partial class LoginPage : ContentPage
 
     private void OnLoginClicked(object sender, EventArgs e)
     {
+        Preferences.Set("isLoggedIn", true);
+
         Application.Current.MainPage = new AppShell();
 
     }

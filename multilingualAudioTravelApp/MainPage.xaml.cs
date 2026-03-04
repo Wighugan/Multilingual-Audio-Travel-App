@@ -22,6 +22,14 @@ public partial class MainPage : ContentPage
     private CancellationTokenSource _speechCts;
     private DateTime _lastGeofenceCheckTime = DateTime.MinValue;
     private List<PoiData> _poiList = new List<PoiData>();
+    private PoiData _selectedPoi;
+    // ===== AUDIO CONTROL =====
+    // ===== AUDIO CONTROL =====
+    private string _currentText;
+    private string[] _sentences;
+    private int _currentSentenceIndex = 0;
+    private bool _isPaused = false;
+    private bool _isPlaying = false;
     public MainPage()
     {
         InitializeComponent();
@@ -81,14 +89,14 @@ public partial class MainPage : ContentPage
             }
         });
     }
-    
+
     public class PoiData
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Image { get; set; }   // thêm dòng này
         public double Latitude { get; set; }
         public double Longitude { get; set; }
- //        public bool HasPlayed { get; set; } = false;
         public DateTime LastPlayedTime { get; set; } = DateTime.MinValue;
         public TimeSpan CooldownDuration { get; set; } = TimeSpan.FromMinutes(5);
         public double Radius { get; set; } = 50;
@@ -100,95 +108,131 @@ public partial class MainPage : ContentPage
         _poiLayer = new MemoryLayer
         {
             Name = "PoiLayer",
-            Style = new SymbolStyle
-            {
-                Fill = new MBrush(MColor.Cyan),
-                SymbolScale = 0.5,
-                Outline = new Pen { Color = MColor.White, Width = 2 }
-            }
+            
         };
 
-        var khuPhoAmThuc = new PoiData
+        _poiList = new List<PoiData>
+    {
+        new PoiData
         {
             Name = "Khu phố ẩm thực Vĩnh Khánh",
-            Description = "Ở quận 4 nhắc đến phố ẩm thực thì Vĩnh Khánh chính là cái tên nổi bật nhất mà bạn chắc chắn phải ghé đến. Tại đây có rất nhiều hàng quán với vô số món ăn hấp dẫn. Bên cạnh đó, phố ẩm thực Vĩnh Khánh cũng khá gần trung tâm, cách Dinh Độc Lập chỉ 2.9km nên rất thuận tiện để bạn ghé đến khi có dịp du lịch Sài Gòn.",
-            Latitude = 10.7605,
-            Longitude = 106.7035,
-            Radius = 100, //100m
+            Description = "Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.",
+            Image = "vinhkhanh.jpg",
+            Latitude = 10.761923,
+             Longitude = 106.701964,
+            Radius = 100,
             Priority = 10
-        };
-        _poiList.Add(khuPhoAmThuc);
+        },
+
+        new PoiData
+        {
+            Name = "Quán Ốc Oanh",
+            Description = "Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh.",
+            Image = "ocoanh.jpg",
+            Latitude = 10.761411,
+            Longitude = 106.702734,
+            Radius = 80,
+            Priority = 8
+        },
+
+        new PoiData
+        {
+            Name = "Quán Ốc Phát",
+            Description = "Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc cho các tín đồ mê ốc. Với không gian thoáng đáng, quán Ốc Phát Vĩnh Khánh đích thị là một điểm hẹn hò lý tưởng.",
+            Image = "bunca.jpg",
+            Latitude = 10.761921,
+            Longitude = 106.702121,
+            Radius = 70,
+            Priority = 6
+        }
+    };
 
         var features = new List<IFeature>();
 
         foreach (var poi in _poiList)
         {
-            // Chuyển tọa độ GPS sang tọa độ Bản đồ (SphericalMercator)
             var coords = SphericalMercator.FromLonLat(poi.Longitude, poi.Latitude);
             var feature = new PointFeature(new MPoint(coords.x, coords.y));
 
-            // Gắn dữ liệu text vào để hiện Popup khi bấm
             feature["Name"] = poi.Name;
-            feature["Description"] = poi.Description;
+
+            feature.Styles.Add(new SymbolStyle
+            {
+                // BitmapId = BitmapRegistry.Instance.Register(
+                //     typeof(MainPage).Assembly.GetManifestResourceStream(
+                //         "multilingualAudioTravelApp.Resources.Images.map.png")),
+                SymbolType = SymbolType.Ellipse, // Use a built-in symbol type
+                Fill = new MBrush(MColor.Red),
+                SymbolScale = 0.6
+            });
+
             features.Add(feature);
         }
 
-        //Cập nhật vào Layer
         _poiLayer.Features = features;
+        _poiLayer.DataHasChanged();   
         MyMap.Map.Layers.Add(_poiLayer);
     }
 
     // Hàm xử lý khi người dùng chạm vào bản đồ
-    private async void OnMapInfo(object sender, MapInfoEventArgs e)
+    private void OnMapInfo(object sender, MapInfoEventArgs e)
     {
-        // Lấy thông tin từ lớp PoiLayer
         var mapInfo = e.GetMapInfo(new List<ILayer> { _poiLayer });
 
-        // Kiểm tra xem có chạm trúng điểm nào không
-        if (mapInfo != null && mapInfo.Feature != null)
+        if (mapInfo?.Feature != null)
         {
             var name = mapInfo.Feature["Name"]?.ToString();
-            var desc = mapInfo.Feature["Description"]?.ToString();
 
-            if (!string.IsNullOrEmpty(name))
+            _selectedPoi = _poiList.FirstOrDefault(p => p.Name == name);
+
+            if (_selectedPoi != null)
             {
-                // Chạy trên luồng giao diện chính
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    bool wantToListen = await DisplayAlert(
-                        name,
-                        desc,
-                        "Nghe thuyết minh",
-                        "Đóng"
-                    );
+                PopupTitle.Text = _selectedPoi.Name;
+                PopupDescription.Text = _selectedPoi.Description;
+                PopupImage.Source = _selectedPoi.Image;
 
-                    if (wantToListen)
-                    {
-                        await SpeakDescription(desc);
-                    }
-                });
+                PopupOverlay.IsVisible = true;
             }
         }
     }
 
-    private async Task SpeakDescription(string text)
+
+    private void OnClosePopup(object sender, EventArgs e)
     {
-        // Hủy lần đọc trước đó nếu đang đọc dở
-        if (_speechCts != null)
+        PopupOverlay.IsVisible = false;
+    }
+
+    private async void OnSpeakClicked(object sender, EventArgs e)
+    {
+        if (_selectedPoi != null)
         {
-            _speechCts.Cancel();
-            _speechCts.Dispose();
+            await SpeakDescription(_selectedPoi.Description);
+        }
+    }
+    private async Task SpeakDescription(string text, bool resume = false)
+    {
+        if (!resume)
+        {
+            StopSpeech();
+
+            _currentText = text;
+            _sentences = text.Split('.', StringSplitOptions.RemoveEmptyEntries);
+            _currentSentenceIndex = 0;
+            _isPaused = false;
         }
 
-        // Tạo "cờ lệnh" mới cho lần đọc này
+        if (_sentences == null || _sentences.Length == 0)
+            return;
+
         _speechCts = new CancellationTokenSource();
+        _isPlaying = true;
 
         try
         {
-            //Cấu hình giọng đọc Tiếng Việt
             var locales = await TextToSpeech.Default.GetLocalesAsync();
             string savedLang = Preferences.Get("VoiceLanguage", "vi");
             var voice = locales.FirstOrDefault(l => l.Language.StartsWith(savedLang));
+
             var options = new SpeechOptions
             {
                 Locale = voice,
@@ -196,26 +240,78 @@ public partial class MainPage : ContentPage
                 Pitch = 1.0f
             };
 
-            if (voice != null)
+            for (int i = _currentSentenceIndex; i < _sentences.Length; i++)
             {
-                options.Locale = voice;
-                System.Diagnostics.Debug.WriteLine($"---> Đang đọc bằng giọng: {voice.Name}");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("---> CẢNH BÁO: Máy này chưa cài Tiếng Việt! Sẽ đọc bằng giọng mặc định.");
+                _currentSentenceIndex = i;
+
+                if (string.IsNullOrWhiteSpace(_sentences[i]))
+                    continue;
+
+                await TextToSpeech.Default.SpeakAsync(
+                    _sentences[i],
+                    options,
+                    _speechCts.Token);
             }
 
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                    await TextToSpeech.Default.SpeakAsync(text, options, _speechCts.Token);
-            });
+            // Đọc xong hoàn toàn
+            ResetAudioState();
         }
-        catch (Exception ex)
+        catch (OperationCanceledException)
         {
-            System.Diagnostics.Debug.WriteLine($"---> Lỗi cài đặt TTS: {ex.Message}");
+            _isPaused = true;
+            _isPlaying = false;
         }
     }
+
+    private async void OnPlayClicked(object sender, EventArgs e)
+    {
+        if (_selectedPoi != null)
+            await SpeakDescription(_selectedPoi.Description);
+    }
+
+    private void OnPauseClicked(object sender, EventArgs e)
+    {
+        if (_isPlaying)
+        {
+            _speechCts?.Cancel();
+            _isPaused = true;
+            _isPlaying = false;
+        }
+    }
+
+    private async void OnResumeClicked(object sender, EventArgs e)
+    {
+        if (_isPaused && _currentText != null)
+        {
+            _isPaused = false;
+            await SpeakDescription(_currentText, true);
+        }
+    }
+
+    private void OnStopClicked(object sender, EventArgs e)
+    {
+        StopSpeech();
+        ResetAudioState();
+    }
+
+    private void StopSpeech()
+    {
+        if (_speechCts != null)
+        {
+            _speechCts.Cancel();
+            _speechCts.Dispose();
+            _speechCts = null;
+        }
+    }
+
+    private void ResetAudioState()
+    {
+        _currentSentenceIndex = 0;
+        _isPaused = false;
+        _isPlaying = false;
+    }
+
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -252,7 +348,13 @@ public partial class MainPage : ContentPage
         _isTracking = true;
     }
 
-    // Hàm dừng lắng nghe
+
+  
+
+ 
+
+
+
     private void StopListeningGps()
     {
         if (!_isTracking) return;

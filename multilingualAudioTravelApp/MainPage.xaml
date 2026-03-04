@@ -4,9 +4,89 @@
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              x:Class="multilingualAudioTravelApp.MainPage"
              Title="Bản Đồ">
+
     <Grid>
-        <mapsui:MapView x:Name="MyMap" 
-            VerticalOptions="FillAndExpand" 
-            HorizontalOptions="FillAndExpand" />
+
+        <!-- MAP -->
+        <mapsui:MapView x:Name="MyMap"
+                        VerticalOptions="FillAndExpand"
+                        HorizontalOptions="FillAndExpand" />
+
+        <!-- POPUP OVERLAY -->
+        <Grid x:Name="PopupOverlay"
+              BackgroundColor="#80000000"
+              IsVisible="False">
+
+            <Frame BackgroundColor="White"
+                   CornerRadius="20"
+                   Padding="15"
+                   Margin="30"
+                   VerticalOptions="Center"
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="10">
+
+                    <Image x:Name="PopupImage"
+                           HeightRequest="180"
+                           Aspect="AspectFill" />
+
+                    <Label x:Name="PopupTitle"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="Black" />
+
+                    <Label x:Name="PopupDescription"
+                           FontSize="14"
+                           TextColor="Gray" />
+
+                    <HorizontalStackLayout Spacing="10">
+
+                        <!-- PLAY -->
+                        <Button Text="Play"
+        BackgroundColor="#4CAF50"
+        TextColor="White"
+        CornerRadius="10"
+        Clicked="OnPlayClicked"
+        HorizontalOptions="FillAndExpand"/>
+
+                        <!-- PAUSE -->
+                        <Button Text="Pause"
+        BackgroundColor="#FF9800"
+        TextColor="White"
+        CornerRadius="10"
+        Clicked="OnPauseClicked"
+        HorizontalOptions="FillAndExpand"/>
+
+                        <!-- RESUME -->
+                        <Button Text="Resume"
+        BackgroundColor="#03A9F4"
+        TextColor="White"
+        CornerRadius="10"
+        Clicked="OnResumeClicked"
+        HorizontalOptions="FillAndExpand"/>
+
+                        <!-- STOP -->
+                        <Button Text="Stop"
+        BackgroundColor="#F44336"
+        TextColor="White"
+        CornerRadius="10"
+        Clicked="OnStopClicked"
+        HorizontalOptions="FillAndExpand"/>
+
+                        <!-- ĐÓNG -->
+                        <Button Text="Đóng"
+        BackgroundColor="LightGray"
+        CornerRadius="10"
+        Clicked="OnClosePopup"
+        HorizontalOptions="FillAndExpand"/>
+
+
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </Grid>
+
     </Grid>
 </ContentPage>

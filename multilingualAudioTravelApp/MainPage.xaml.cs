@@ -10,6 +10,7 @@ using Mapsui.UI.Maui;
 using Microsoft.Maui.Devices.Sensors;
 using MBrush = Mapsui.Styles.Brush;
 using MColor = Mapsui.Styles.Color;
+using multilingualAudioTravelApp.Services;
 
 
 namespace multilingualAudioTravelApp;
@@ -23,6 +24,8 @@ public partial class MainPage : ContentPage
     private DateTime _lastGeofenceCheckTime = DateTime.MinValue;
     private List<PoiData> _poiList = new List<PoiData>();
     private PoiData _selectedPoi;
+    private readonly DatabaseService _dbService = new DatabaseService();
+
     // ===== AUDIO CONTROL =====
     // ===== AUDIO CONTROL =====
     private string _currentText;
@@ -60,7 +63,12 @@ public partial class MainPage : ContentPage
             }
         };
         MyMap.Map.Layers.Add(_currentLocationLayer);
-        CreatePoiLayer();
+
+        Dispatcher.Dispatch(async () =>
+        {
+            await CreatePoiLayer();
+        });
+
         MyMap.Info += OnMapInfo;
 
         Dispatcher.Dispatch(async () =>
@@ -103,74 +111,41 @@ public partial class MainPage : ContentPage
         public int Priority { get; set; } = 1;
     }
 
-    private void CreatePoiLayer()
+    private async Task CreatePoiLayer()
     {
-        _poiLayer = new MemoryLayer
-        {
-            Name = "PoiLayer",
-            
-        };
+        _poiLayer = new MemoryLayer { Name = "PoiLayer" };
 
-        _poiList = new List<PoiData>
-    {
-        new PoiData
-        {
-            Name = "Khu phố ẩm thực Vĩnh Khánh",
-            Description = "Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.",
-            Image = "vinhkhanh.jpg",
-            Latitude = 10.761923,
-             Longitude = 106.701964,
-            Radius = 100,
-            Priority = 10
-        },
+        var entities = await _dbService.GetAllPoisAsync();
 
-        new PoiData
+        _poiList = entities.Select(e => new PoiData
         {
-            Name = "Quán Ốc Oanh",
-            Description = "Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh.",
-            Image = "ocoanh.jpg",
-            Latitude = 10.761411,
-            Longitude = 106.702734,
-            Radius = 80,
-            Priority = 8
-        },
-
-        new PoiData
-        {
-            Name = "Quán Ốc Phát",
-            Description = "Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc cho các tín đồ mê ốc. Với không gian thoáng đáng, quán Ốc Phát Vĩnh Khánh đích thị là một điểm hẹn hò lý tưởng.",
-            Image = "bunca.jpg",
-            Latitude = 10.761921,
-            Longitude = 106.702121,
-            Radius = 70,
-            Priority = 6
-        }
-    };
+            Name = e.Name,
+            Description = e.Description,
+            Image = e.Image,
+            Latitude = e.Latitude,
+            Longitude = e.Longitude,
+            Radius = e.Radius,
+            Priority = e.Priority,
+            CooldownDuration = TimeSpan.FromMinutes(e.CooldownMinutes)
+        }).ToList();
 
         var features = new List<IFeature>();
-
         foreach (var poi in _poiList)
         {
             var coords = SphericalMercator.FromLonLat(poi.Longitude, poi.Latitude);
             var feature = new PointFeature(new MPoint(coords.x, coords.y));
-
             feature["Name"] = poi.Name;
-
             feature.Styles.Add(new SymbolStyle
             {
-                // BitmapId = BitmapRegistry.Instance.Register(
-                //     typeof(MainPage).Assembly.GetManifestResourceStream(
-                //         "multilingualAudioTravelApp.Resources.Images.map.png")),
-                SymbolType = SymbolType.Ellipse, // Use a built-in symbol type
+                SymbolType = SymbolType.Ellipse,
                 Fill = new MBrush(MColor.Red),
                 SymbolScale = 0.6
             });
-
             features.Add(feature);
         }
 
         _poiLayer.Features = features;
-        _poiLayer.DataHasChanged();   
+        _poiLayer.DataHasChanged();
         MyMap.Map.Layers.Add(_poiLayer);
     }
 

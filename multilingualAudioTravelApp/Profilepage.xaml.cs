@@ -23,11 +23,15 @@ public partial class ProfilePage : ContentPage
                 break;
 
             case "language":
-                await DisplayAlert("Ngôn ngữ", "Chức năng đang phát triển", "OK");
+                await DisplayAlert("Ngôn ngữ thuyết minh", "Chức năng đang phát triển", "OK");
                 break;
 
-            case "map":
-                await DisplayAlert("Bản đồ hình ảnh", "Chức năng đang phát triển", "OK");
+            case "favorite":
+                await DisplayAlert("Quán yêu thích", "Chức năng đang phát triển", "OK");
+                break;
+
+            case "feedback":
+                await DisplayAlert("Đánh giá & Góp ý", "Chức năng đang phát triển", "OK");
                 break;
 
             default:

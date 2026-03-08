@@ -7,31 +7,23 @@
     Shell.NavBarIsVisible="False"
     Title="Đăng nhập">
 
-    <VerticalStackLayout
-        Padding="24"
-        Spacing="16"
-        VerticalOptions="Center">
+    <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
 
-        <Label
-            Text="Đăng nhập"
-            FontSize="28"
-            FontAttributes="Bold"
-            HorizontalOptions="Center"/>
+        <Label Text="Đăng nhập" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
 
-        <Entry
-            Placeholder="Email"
-            Keyboard="Email"/>
+        <Entry x:Name="EmailEntry" Placeholder="Email" Keyboard="Email"/>
 
-        <Entry
-            Placeholder="Mật khẩu"
-            IsPassword="True"/>
+        <Entry x:Name="PasswordEntry" Placeholder="Mật khẩu" IsPassword="True"/>
+
+        <Label x:Name="ErrorLabel" TextColor="Red" IsVisible="False" HorizontalOptions="Center"/>
+
+        <Button Text="Đăng nhập" CornerRadius="10" HeightRequest="48" Clicked="OnLoginClicked"/>
 
         <Button
-            Text="Đăng nhập"
-            CornerRadius="10"
-            HeightRequest="48"
-            Clicked="OnLoginClicked"/>
+        Text="Chưa có tài khoản? Đăng ký"
+        BackgroundColor="Transparent"
+        TextColor="Gray"
+        Clicked="OnGoToRegisterClicked"/>
 
     </VerticalStackLayout>
-
 </ContentPage>

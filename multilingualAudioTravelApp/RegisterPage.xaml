@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="multilingualAudioTravelApp.RegisterPage"
+    Shell.NavBarIsVisible="False"
+    Title="Đăng ký">
+
+    <VerticalStackLayout
+        Padding="24"
+        Spacing="16"
+        VerticalOptions="Center">
+
+        <Label
+            Text="Tạo tài khoản"
+            FontSize="28"
+            FontAttributes="Bold"
+            HorizontalOptions="Center"/>
+
+        <Entry
+            x:Name="FullNameEntry"
+            Placeholder="Họ và tên"/>
+
+        <Entry
+            x:Name="EmailEntry"
+            Placeholder="Email"
+            Keyboard="Email"/>
+
+        <Entry
+            x:Name="PasswordEntry"
+            Placeholder="Mật khẩu"
+            IsPassword="True"/>
+
+        <Entry
+            x:Name="ConfirmPasswordEntry"
+            Placeholder="Xác nhận mật khẩu"
+            IsPassword="True"/>
+
+        <Label
+            x:Name="ErrorLabel"
+            TextColor="Red"
+            IsVisible="False"
+            HorizontalOptions="Center"/>
+
+        <Button
+            Text="Đăng ký"
+            CornerRadius="10"
+            HeightRequest="48"
+            Clicked="OnRegisterClicked"/>
+
+        <Button
+            Text="Đã có tài khoản? Đăng nhập"
+            BackgroundColor="Transparent"
+            TextColor="Gray"
+            Clicked="OnGoToLoginClicked"/>
+
+    </VerticalStackLayout>
+</ContentPage>

@@ -9,23 +9,42 @@
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Avatar + Welcome -->
-            <VerticalStackLayout
-                HorizontalOptions="Center"
-                Spacing="10">
+            <!-- Avatar + Welcome -->
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
 
                 <Frame
-                    WidthRequest="100"
-                    HeightRequest="100"
-                    CornerRadius="50"
-                    Padding="0"
-                    BackgroundColor="#E0E0E0"
-                    HasShadow="False"/>
+        WidthRequest="100"
+        HeightRequest="100"
+        CornerRadius="50"
+        Padding="0"
+        BackgroundColor="#E0E0E0"
+        HasShadow="False"
+        HorizontalOptions="Center">
 
+                    <!-- Chữ viết tắt tên thay cho avatar -->
+                    <Label
+            Text="{Binding UserInitial}"
+            FontSize="36"
+            FontAttributes="Bold"
+            TextColor="Gray"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"/>
+                </Frame>
+
+                <!-- Tên người dùng thật -->
                 <Label
-                    Text="Welcome khang"
-                    FontSize="18"
-                    FontAttributes="Bold"
-                    HorizontalOptions="Center"/>
+        Text="{Binding WelcomeText}"
+        FontSize="18"
+        FontAttributes="Bold"
+        HorizontalOptions="Center"/>
+
+                <!-- Email người dùng -->
+                <Label
+        Text="{Binding UserEmail}"
+        FontSize="13"
+        TextColor="Gray"
+        HorizontalOptions="Center"/>
+
             </VerticalStackLayout>
 
             <!-- Dark mode -->

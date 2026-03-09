@@ -39,48 +39,21 @@
                            FontSize="14"
                            TextColor="Gray" />
 
-                    <HorizontalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" Padding="10">
 
-                        <!-- PLAY -->
-                        <Button Text="Play"
-        BackgroundColor="#4CAF50"
-        TextColor="White"
-        CornerRadius="10"
-        Clicked="OnPlayClicked"
-        HorizontalOptions="FillAndExpand"/>
-
-                        <!-- PAUSE -->
-                        <Button Text="Pause"
-        BackgroundColor="#FF9800"
-        TextColor="White"
-        CornerRadius="10"
-        Clicked="OnPauseClicked"
-        HorizontalOptions="FillAndExpand"/>
-
-                        <!-- RESUME -->
-                        <Button Text="Resume"
-        BackgroundColor="#03A9F4"
-        TextColor="White"
-        CornerRadius="10"
-        Clicked="OnResumeClicked"
-        HorizontalOptions="FillAndExpand"/>
-
-                        <!-- STOP -->
-                        <Button Text="Stop"
-        BackgroundColor="#F44336"
-        TextColor="White"
-        CornerRadius="10"
-        Clicked="OnStopClicked"
-        HorizontalOptions="FillAndExpand"/>
-
-                        <!-- ĐÓNG -->
-                        <Button Text="Đóng"
-        BackgroundColor="LightGray"
-        CornerRadius="10"
-        Clicked="OnClosePopup"
-        HorizontalOptions="FillAndExpand"/>
-
-
+                        <ImageButton x:Name="PlayStopButton" 
+                            Source="play_icon.png"
+                            WidthRequest="60"
+                            HeightRequest="60"
+                            CornerRadius="30" Padding="15" Aspect="AspectFit" Clicked="OnPlayStopClicked"
+                            BackgroundColor="#E0E0E0" />
+                        <ImageButton Source="close_icon.png"
+                            WidthRequest="60"
+                            HeightRequest="60"
+                            CornerRadius="30"
+                            Padding="15" Aspect="AspectFit"
+                            Clicked="OnClosePopup"
+                            BackgroundColor="#FFE0E0" />
                     </HorizontalStackLayout>
 
                 </VerticalStackLayout>

@@ -165,7 +165,6 @@ public partial class MainPage : ContentPage
                 PopupTitle.Text = _selectedPoi.Name;
                 PopupDescription.Text = _selectedPoi.Description;
                 PopupImage.Source = _selectedPoi.Image;
-
                 PopupOverlay.IsVisible = true;
             }
         }
@@ -175,6 +174,8 @@ public partial class MainPage : ContentPage
     private void OnClosePopup(object sender, EventArgs e)
     {
         PopupOverlay.IsVisible = false;
+        StopSpeech();
+        ResetAudioState();
     }
 
     private async void OnSpeakClicked(object sender, EventArgs e)
@@ -238,36 +239,22 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private async void OnPlayClicked(object sender, EventArgs e)
+    private async void OnPlayStopClicked(object sender, EventArgs e)
     {
-        if (_selectedPoi != null)
-            await SpeakDescription(_selectedPoi.Description);
-    }
-
-    private void OnPauseClicked(object sender, EventArgs e)
-    {
+        if (_selectedPoi == null) return;
         if (_isPlaying)
         {
-            _speechCts?.Cancel();
-            _isPaused = true;
-            _isPlaying = false;
+            StopSpeech();
+            ResetAudioState();
         }
-    }
-
-    private async void OnResumeClicked(object sender, EventArgs e)
-    {
-        if (_isPaused && _currentText != null)
+        else
         {
-            _isPaused = false;
-            await SpeakDescription(_currentText, true);
+            PlayStopButton.Source = "stop_icon.png";
+
+            await SpeakDescription(_selectedPoi.Description);
         }
     }
 
-    private void OnStopClicked(object sender, EventArgs e)
-    {
-        StopSpeech();
-        ResetAudioState();
-    }
 
     private void StopSpeech()
     {
@@ -284,10 +271,13 @@ public partial class MainPage : ContentPage
         _currentSentenceIndex = 0;
         _isPaused = false;
         _isPlaying = false;
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            // Trả icon về lại nút Play khi đã đọc xong hoặc bị dừng
+            PlayStopButton.Source = "play_icon.png";
+        });
     }
-
-
-    protected override async void OnAppearing()
+protected override async void OnAppearing()
     {
         base.OnAppearing();
         await StartListeningGps();
@@ -322,13 +312,6 @@ public partial class MainPage : ContentPage
         await Geolocation.StartListeningForegroundAsync(request);
         _isTracking = true;
     }
-
-
-  
-
- 
-
-
 
     private void StopListeningGps()
     {

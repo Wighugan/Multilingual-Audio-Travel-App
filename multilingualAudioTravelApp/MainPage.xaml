@@ -24,6 +24,7 @@
                    VerticalOptions="Center"
                    HasShadow="True">
 
+                
                 <VerticalStackLayout Spacing="10">
 
                     <Image x:Name="PopupImage"

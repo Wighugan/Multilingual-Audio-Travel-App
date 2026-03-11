@@ -46,8 +46,8 @@ public partial class ExplorePage : ContentPage
         if (e.Parameter is PoiEntity selectedItem)
         {
             _selectedPoi = selectedItem;
-            PopupTitle.Text = _selectedPoi.Name;
-            PopupDescription.Text = _selectedPoi.Description;
+            PopupTitle.Text = _selectedPoi.CurrentName;
+            PopupDescription.Text = _selectedPoi.CurrentDescription;
             PopupImage.Source = _selectedPoi.Image;
             PopupOverlay.IsVisible = true;
         }
@@ -72,14 +72,48 @@ public partial class ExplorePage : ContentPage
         else
         {
             PlayStopButton.Source = "stop_icon.png";
-            await SpeakDescription(_selectedPoi.Description);
+            await SpeakDescription(_selectedPoi.CurrentDescription);
         }
     }
 
+    /*   private async Task SpeakDescription(string text)
+       {
+           StopSpeech();
+
+           if (string.IsNullOrWhiteSpace(text)) return;
+
+           _speechCts = new CancellationTokenSource();
+           _isPlaying = true;
+
+           try
+           {
+               var locales = await TextToSpeech.Default.GetLocalesAsync();
+               string savedLang = Preferences.Get("AppLanguage", "vi");
+               var voice = locales.FirstOrDefault(l => l.Language.StartsWith(savedLang));
+
+               var options = new SpeechOptions
+               {
+                   Locale = voice,
+                   Volume = 1.0f,
+                   Pitch = 1.0f
+               };
+
+               await TextToSpeech.Default.SpeakAsync(text, options, _speechCts.Token);
+
+               ResetAudioState();
+           }
+           catch (OperationCanceledException)
+           {
+           }
+           catch (Exception ex)
+           {
+               System.Diagnostics.Debug.WriteLine($"Lỗi đọc TTS: {ex.Message}");
+               ResetAudioState();
+           }
+       }*/
     private async Task SpeakDescription(string text)
     {
         StopSpeech();
-
         if (string.IsNullOrWhiteSpace(text)) return;
 
         _speechCts = new CancellationTokenSource();
@@ -87,23 +121,28 @@ public partial class ExplorePage : ContentPage
 
         try
         {
+            // 1. Lấy danh sách tất cả các giọng đọc có sẵn trên điện thoại
             var locales = await TextToSpeech.Default.GetLocalesAsync();
+
+            // 2. Lấy ngôn ngữ người dùng đang chọn ("vi" hoặc "en")
             string savedLang = Preferences.Get("AppLanguage", "vi");
-            var voice = locales.FirstOrDefault(l => l.Language.StartsWith(savedLang));
+
+            // 3. Tìm đúng giọng đọc khớp với ngôn ngữ
+            // - Nếu savedLang = "vi", tìm giọng có mã bắt đầu bằng "vi" (Ví dụ: vi-VN)
+            // - Nếu savedLang = "en", tìm giọng có mã bắt đầu bằng "en" (Ví dụ: en-US hoặc en-GB)
+            var voice = locales.FirstOrDefault(l => l.Language.StartsWith(savedLang, StringComparison.OrdinalIgnoreCase));
 
             var options = new SpeechOptions
             {
-                Locale = voice,
+                Locale = voice, // Gắn giọng đọc chuẩn vào đây
                 Volume = 1.0f,
                 Pitch = 1.0f
             };
 
+            // Bắt đầu đọc
             await TextToSpeech.Default.SpeakAsync(text, options, _speechCts.Token);
 
             ResetAudioState();
-        }
-        catch (OperationCanceledException)
-        {
         }
         catch (Exception ex)
         {

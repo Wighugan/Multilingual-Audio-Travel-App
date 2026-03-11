@@ -23,7 +23,21 @@ public partial class ProfilePage : ContentPage
                 break;
 
             case "language":
-                await DisplayAlert("Ngôn ngữ thuyết minh", "Chức năng đang phát triển", "OK");
+                string action = await DisplayActionSheet(
+                    "Chọn ngôn ngữ (Select Language)",
+                    "Hủy (Cancel)",
+                    null,
+                    "Tiếng Việt", "English", "日本語", "한국어");
+
+                string langCode = "vi";
+                if (action == "English") langCode = "en";
+                else if (action == "日本語") langCode = "ja";
+                else if (action == "한국어") langCode = "ko";
+                else if (action == "Hủy (Cancel)" || string.IsNullOrEmpty(action)) break;
+                Preferences.Set("AppLanguage", langCode);
+
+                await DisplayAlert("Thành công", "Đã đổi ngôn ngữ. Vui lòng chuyển sang trang Khám Phá để xem thay đổi!", "OK");
+
                 break;
 
             case "favorite":

@@ -37,7 +37,7 @@
                         <Grid HeightRequest="220" InputTransparent="True">
                             <Image Source="{Binding Image}" Aspect="AspectFill"/>
                             <BoxView BackgroundColor="#80000000"/>
-                            <Label Text="{Binding Name}"
+                            <Label Text="{Binding CurrentName}"
                                    TextColor="White" 
                                    FontSize="20" 
                                    FontAttributes="Bold" 

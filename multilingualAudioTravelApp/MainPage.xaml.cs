@@ -119,8 +119,8 @@ public partial class MainPage : ContentPage
 
         _poiList = entities.Select(e => new PoiData
         {
-            Name = e.Name,
-            Description = e.Description,
+            Name = e.CurrentName,
+            Description = e.CurrentDescription,
             Image = e.Image,
             Latitude = e.Latitude,
             Longitude = e.Longitude,
@@ -185,7 +185,7 @@ public partial class MainPage : ContentPage
             await SpeakDescription(_selectedPoi.Description);
         }
     }
-    private async Task SpeakDescription(string text, bool resume = false)
+    /*private async Task SpeakDescription(string text, bool resume = false)
     {
         if (!resume)
         {
@@ -236,6 +236,45 @@ public partial class MainPage : ContentPage
         {
             _isPaused = true;
             _isPlaying = false;
+        }
+    }*/
+    private async Task SpeakDescription(string text)
+    {
+        StopSpeech();
+        if (string.IsNullOrWhiteSpace(text)) return;
+
+        _speechCts = new CancellationTokenSource();
+        _isPlaying = true;
+
+        try
+        {
+            // 1. Lấy danh sách tất cả các giọng đọc có sẵn trên điện thoại
+            var locales = await TextToSpeech.Default.GetLocalesAsync();
+
+            // 2. Lấy ngôn ngữ người dùng đang chọn ("vi" hoặc "en")
+            string savedLang = Preferences.Get("AppLanguage", "vi");
+
+            // 3. Tìm đúng giọng đọc khớp với ngôn ngữ
+            // - Nếu savedLang = "vi", tìm giọng có mã bắt đầu bằng "vi" (Ví dụ: vi-VN)
+            // - Nếu savedLang = "en", tìm giọng có mã bắt đầu bằng "en" (Ví dụ: en-US hoặc en-GB)
+            var voice = locales.FirstOrDefault(l => l.Language.StartsWith(savedLang, StringComparison.OrdinalIgnoreCase));
+
+            var options = new SpeechOptions
+            {
+                Locale = voice, // Gắn giọng đọc chuẩn vào đây
+                Volume = 1.0f,
+                Pitch = 1.0f
+            };
+
+            // Bắt đầu đọc
+            await TextToSpeech.Default.SpeakAsync(text, options, _speechCts.Token);
+
+            ResetAudioState();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Lỗi đọc TTS: {ex.Message}");
+            ResetAudioState();
         }
     }
 

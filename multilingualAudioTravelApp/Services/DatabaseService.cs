@@ -1,19 +1,73 @@
 ﻿using SQLite;
+using System.Text.Json;
 
 namespace multilingualAudioTravelApp.Services;
+
+public class PoiTranslation
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+}
 
 public class PoiEntity  //POI
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
+/*    public string Name { get; set; }
+    public string Description { get; set; }*/
     public string Image { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public double Radius { get; set; }
     public int Priority { get; set; }
     public int CooldownMinutes { get; set; } = 5;
+    public string TranslationsJson { get; set; }
+    private Dictionary<string, PoiTranslation> _parsedTranslations;
+
+    // Hàm tự động dịch chuỗi JSON thành Dictionary (Từ điển)
+    [Ignore]
+    public Dictionary<string, PoiTranslation> TranslationDict
+    {
+        get
+        {
+            try {
+                if (_parsedTranslations == null)
+                {
+                    if (string.IsNullOrWhiteSpace(TranslationsJson))
+                        _parsedTranslations = new Dictionary<string, PoiTranslation>();
+                    else
+                        _parsedTranslations = JsonSerializer.Deserialize<Dictionary<string, PoiTranslation>>(TranslationsJson);
+                }
+                return _parsedTranslations;
+            }
+            catch
+            {
+                return new Dictionary<string, PoiTranslation>();
+            }
+        }
+    }
+
+    [Ignore]
+    public string CurrentName
+    {
+        get
+        {
+            string lang = Preferences.Get("AppLanguage", "vi");
+            if (TranslationDict.ContainsKey(lang)) return TranslationDict[lang].Name;
+            return TranslationDict.ContainsKey("vi") ? TranslationDict["vi"].Name : "Đang cập nhật...";
+        }
+    }
+
+    [Ignore]
+    public string CurrentDescription
+    {
+        get
+        {
+            string lang = Preferences.Get("AppLanguage", "vi");
+            if (TranslationDict.ContainsKey(lang)) return TranslationDict[lang].Description;
+            return TranslationDict.ContainsKey("vi") ? TranslationDict["vi"].Description : "";
+        }
+    }
 }
 
 public class UserEntity  //user
@@ -71,16 +125,112 @@ public class DatabaseService
         await _db.DeleteAsync<PoiEntity>(id);
     }
 
-    private async Task SeedDataAsync()
+    /*private async Task SeedDataAsync()
     {
         var samples = new List<PoiEntity>
         {
-            new PoiEntity { Name = "Khu phố ẩm thực Vĩnh Khánh", Description = "Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.", Image = "vinhkhanh.jpg", Latitude = 10.761923, Longitude = 106.701964, Radius = 100, Priority = 10 },
-            new PoiEntity { Name = "Quán Ốc Oanh", Description = "Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh.", Image = "ocoanh.jpg", Latitude = 10.761410, Longitude = 106.702820, Radius = 80, Priority = 8 },
-            new PoiEntity { Name = "Quán Ốc Phát", Description = "Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc cho các tín đồ mê ốc.", Image = "ocphat.jpg", Latitude = 10.761921, Longitude = 106.702151, Radius = 70, Priority = 6 },
-            new PoiEntity { Name = "Quán bún cá Châu Đốc", Description = "Nước lèo thanh mát, đậm đà hương vị ăn cùng bún, chả cá và cá.", Image = "bunca.jpg", Latitude = 10.761455, Longitude = 106.702660, Radius = 70, Priority = 6 },
-            new PoiEntity { Name = "Quán Ốc Loan", Description = "Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon.", Image = "ocloan.jpg", Latitude = 10.761170, Longitude = 106.702710, Radius = 70, Priority = 6 }
+            new PoiEntity { 
+                Name = "Khu phố ẩm thực Vĩnh Khánh", 
+                Description = "Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.",
+                Image = "vinhkhanh.jpg",
+                Latitude = 10.761923,
+                Longitude = 106.701964,
+                Radius = 100,
+                Priority = 10 },
+            new PoiEntity { 
+                Name = "Quán Ốc Oanh", 
+                Description = "Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh.", 
+                Image = "ocoanh.jpg", 
+                Latitude = 10.761410, 
+                Longitude = 106.702820, 
+                Radius = 80, 
+                Priority = 8 },
+            new PoiEntity { 
+                Name = "Quán Ốc Phát", 
+                Description = "Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc cho các tín đồ mê ốc.", 
+                Image = "ocphat.jpg", 
+                Latitude = 10.761921, 
+                Longitude = 106.702151, 
+                Radius = 70, 
+                Priority = 6 },
+            new PoiEntity { 
+                Name = "Quán bún cá Châu Đốc", 
+                Description = "Nước lèo thanh mát, đậm đà hương vị ăn cùng bún, chả cá và cá.", 
+                Image = "bunca.jpg", 
+                Latitude = 10.761455, 
+                Longitude = 106.702660, 
+                Radius = 70, 
+                Priority = 6 },
+            new PoiEntity { 
+                Name = "Quán Ốc Loan", 
+                Description = "Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon.", 
+                Image = "ocloan.jpg", 
+                Latitude = 10.761170, 
+                Longitude = 106.702710, 
+                Radius = 70, 
+                Priority = 6 }
         };
+        await _db.InsertAllAsync(samples);
+    }*/
+    private async Task SeedDataAsync()
+    {
+        var samples = new List<PoiEntity>
+    {
+        new PoiEntity
+        {
+            Image = "vinhkhanh.jpg", Latitude = 10.761923, Longitude = 106.701964, Radius = 80, Priority = 8,
+            
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+            {
+                { "vi", new PoiTranslation { Name = "Quán ốc Oanh", Description = "Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh." } },
+                { "en", new PoiTranslation { Name = "Oanh Snail Restaurant", Description = "The oldest and most famous snail restaurant in Vinh Khanh area." } },
+                { "ja", new PoiTranslation { Name = "ヴィンカン通り", Description = "4区で有名なグルメ通りです。" } },
+                
+            })
+        },
+        new PoiEntity
+        {
+            Image = "ocoanh.jpg", Latitude = 10.761410, Longitude = 106.702820, Radius = 100, Priority = 10,
+
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+            {
+                { "vi", new PoiTranslation { Name = "Khu phố Vĩnh Khánh", Description = "Phố ẩm thực nổi tiếng quận 4." } },
+                { "en", new PoiTranslation { Name = "Vinh Khanh Food Street", Description = "A famous food street in District 4." } },
+                { "ja", new PoiTranslation { Name = "ヴィンカン通り", Description = "4区で有名なグルメ通りです。" } },
+
+            })
+        },
+        new PoiEntity
+            {
+                Image = "ocphat.jpg", Latitude = 10.761921, Longitude = 106.702151, Radius = 70, Priority = 6,
+                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+                {
+                    { "vi", new PoiTranslation { Name = "Quán Ốc Phát", Description = "Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc cho các tín đồ mê ốc." } },
+                    { "en", new PoiTranslation { Name = "Phat Snail Restaurant", Description = "Phat Snail Vinh Khanh is always a familiar destination for snail lovers." } },
+                    { "ja", new PoiTranslation { Name = "ファット貝料理店", Description = "ヴィンカン通りのファット貝料理店は、貝好きに常におなじみの場所です。" } },
+                })
+            },
+            new PoiEntity
+            {
+                Image = "bunca.jpg", Latitude = 10.761455, Longitude = 106.702660, Radius = 70, Priority = 6,
+                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+                {
+                    { "vi", new PoiTranslation { Name = "Quán bún cá Châu Đốc", Description = "Nước lèo thanh mát, đậm đà hương vị ăn cùng bún, chả cá và cá." } },
+                    { "en", new PoiTranslation { Name = "Chau Doc Fish Noodle Soup", Description = "Refreshing, flavorful broth served with noodles, fish cake, and fish." } },
+                    { "ja", new PoiTranslation { Name = "チャウドック魚麺", Description = "さっぱりとして風味豊かなスープに、麺、さつま揚げ、魚が入っています。" } },
+                })
+            },
+            new PoiEntity
+            {
+                Image = "ocloan.jpg", Latitude = 10.761170, Longitude = 106.702710, Radius = 70, Priority = 6,
+                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+                {
+                    { "vi", new PoiTranslation { Name = "Quán Ốc Loan", Description = "Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon." } },
+                    { "en", new PoiTranslation { Name = "Loan Snail Restaurant", Description = "Airy space, famous for its extremely delicious dipping sauce." } },
+                    { "ja", new PoiTranslation { Name = "ロアン貝料理店", Description = "風通しの良い空間で、とても美味しいディップソースで有名です。" } },
+                })
+            }
+    };
         await _db.InsertAllAsync(samples);
     }
 

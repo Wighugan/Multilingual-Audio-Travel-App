@@ -24,7 +24,7 @@
     <Grid>
         <CollectionView x:Name="PoiCollectionView"
                         SelectionMode="Single"
-                        SelectionChanged="OnPoiSelected"
+                        SelectionChanged="OnPoiTapped"
                         ItemsLayout="VerticalList">
 
             <CollectionView.ItemTemplate>
@@ -83,4 +83,5 @@
             </Frame>
         </Grid>
     </Grid>
+
 </ContentPage>

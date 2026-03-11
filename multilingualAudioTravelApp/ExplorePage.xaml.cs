@@ -41,7 +41,7 @@ public partial class ExplorePage : ContentPage
             PopupOverlay.IsVisible = true;
         }
     }*/
-    private void OnPoiSelected(object sender, TappedEventArgs e)
+    private void OnPoiTapped(object sender, TappedEventArgs e)
     {
         if (e.Parameter is PoiEntity selectedItem)
         {

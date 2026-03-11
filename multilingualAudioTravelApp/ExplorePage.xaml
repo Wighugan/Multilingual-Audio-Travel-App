@@ -21,53 +21,66 @@
     </ContentPage.ToolbarItems>
 
     <!-- Nội dung -->
-    <CollectionView
-        SelectionMode="None"
-        ItemsLayout="VerticalList">
+    <Grid>
+        <CollectionView x:Name="PoiCollectionView"
+                        SelectionMode="Single"
+                        SelectionChanged="OnPoiSelected"
+                        ItemsLayout="VerticalList">
 
-        <!-- DATA GIẢ -->
-        <CollectionView.ItemsSource>
-            <x:Array Type="{x:Type x:String}">
-                <x:String>benthanh.jpg</x:String>
-                <x:String>benthanh.jpg</x:String>
-                <x:String>benthanh.jpg</x:String>
-            </x:Array>
-        </CollectionView.ItemsSource>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="12,8" Padding="0" CornerRadius="16" HasShadow="False">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPoiTapped" CommandParameter="{Binding .}" />
+                         </Frame.GestureRecognizers>
+
+                        <Grid HeightRequest="220" InputTransparent="True">
+                            <Image Source="{Binding Image}" Aspect="AspectFill"/>
+                            <BoxView BackgroundColor="#80000000"/>
+                            <Label Text="{Binding Name}"
+                                   TextColor="White" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold" 
+                                   Margin="16" 
+                                   VerticalOptions="End"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
         <!-- TEMPLATE -->
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Frame
-                    Margin="12,8"
-                    Padding="0"
-                    CornerRadius="16"
-                    HasShadow="False">
+        <Grid x:Name="PopupOverlay" BackgroundColor="#80000000" IsVisible="False">
+            <Frame BackgroundColor="White"
+                   CornerRadius="20"
+                   Padding="15"
+                   Margin="30"
+                   VerticalOptions="Center"
+                   HasShadow="True">
 
-                    <Grid HeightRequest="220">
+                <VerticalStackLayout Spacing="10">
+                    <Image x:Name="PopupImage" HeightRequest="180" Aspect="AspectFill" />
 
-                        <!-- ẢNH -->
-                        <Image
-                            Source="{Binding}"
-                            Aspect="AspectFill"/>
+                    <Label x:Name="PopupTitle" FontSize="20" FontAttributes="Bold" TextColor="Black" />
 
-                        <!-- OVERLAY -->
-                        <BoxView
-                            BackgroundColor="#80000000"/>
+                    <Label x:Name="PopupDescription" FontSize="14" TextColor="Gray" />
 
-                        <!-- TEXT -->
-                        <Label
-                            Text="Chợ Bến Thành"
-                            TextColor="White"
-                            FontSize="20"
-                            FontAttributes="Bold"
-                            Margin="16"
-                            VerticalOptions="End"/>
-                    </Grid>
+                    <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" Padding="10">
+                        <ImageButton x:Name="PlayStopButton" 
+                                     Source="play_icon.png"
+                                     WidthRequest="60" HeightRequest="60"
+                                     CornerRadius="30" Padding="15" Aspect="AspectFit"
+                                     Clicked="OnPlayStopClicked"
+                                     BackgroundColor="#E0E0E0" />
 
-                </Frame>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-
-    </CollectionView>
-
+                        <ImageButton Source="close_icon.png"
+                                     WidthRequest="60" HeightRequest="60"
+                                     CornerRadius="30" Padding="15" Aspect="AspectFit"
+                                     Clicked="OnClosePopup"
+                                     BackgroundColor="#FFE0E0" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+    </Grid>
 </ContentPage>

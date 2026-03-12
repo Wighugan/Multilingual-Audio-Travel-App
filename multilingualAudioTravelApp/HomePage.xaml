@@ -20,95 +20,85 @@
                 HeightRequest="22"
                 VerticalOptions="Center"/>
 
-            <Label
-                Grid.Column="1"
-                Text="Tìm kiếm"
-                TextColor="White"
-                FontSize="18"
-                VerticalOptions="Center"
-                Margin="12,0,0,0"/>
+            <SearchBar
+    Grid.Column="1"
+    x:Name="SearchBar"
+    Placeholder="Tìm quán ăn..."
+    PlaceholderColor="#CCFFFFFF"
+    TextColor="White"
+    BackgroundColor="Transparent"
+    TextChanged="OnSearchTextChanged"
+    SearchButtonPressed="OnSearchButtonPressed"
+    Margin="8,0,0,0"/>
         </Grid>
 
-        <!-- 🔵 TABS -->
+        <!-- TABS -->
         <Grid
             Grid.Row="1"
             ColumnDefinitions="*,*,*"
             Padding="12,8">
 
-            <Label Text="Ngẫu nhiên"
+            <Label Text="Tất cả"
                    TextColor="#0A5BD3"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"/>
-
             <Label Grid.Column="1"
-                   Text="Mới nhất"
+                   Text="Gần đây"
                    TextColor="Gray"
                    HorizontalOptions="Center"/>
-
             <Label Grid.Column="2"
-                   Text="Gần quanh đây"
+                   Text="Nổi bật"
                    TextColor="Gray"
                    HorizontalOptions="Center"/>
         </Grid>
-
-        <!-- 🔵 CONTENT -->
+        
+        
+        
+        
+        <!-- DANH SÁCH QUÁN -->
         <CollectionView
             Grid.Row="2"
-            ItemsLayout="VerticalGrid,2"
+            x:Name="PoiCollection"
+            ItemsLayout="VerticalGrid, 2"
             Margin="12"
-            SelectionMode="None">
+            SelectionMode="Single"
+            SelectionChanged="OnPoiSelected">
 
-            <CollectionView.ItemsSource>
-                <x:Array Type="{x:Type x:String}">
-                    <x:String>benthanh.png</x:String>
-                    <x:String>benthanh.png</x:String>
-                    <x:String>benthanh.png</x:String>
-                    <x:String>benthanh.png</x:String>
-                </x:Array>
-            </CollectionView.ItemsSource>
+            <CollectionView.EmptyView>
+                <Label
+                    Text="Không tìm thấy quán nào"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    TextColor="Gray"
+                    Margin="0,40"/>
+            </CollectionView.EmptyView>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame
-                        Margin="6"
-                        CornerRadius="20"
-                        HasShadow="False"
-                        Padding="0">
-
+                    <Frame Margin="6" CornerRadius="20" HasShadow="False" Padding="0">
                         <Grid HeightRequest="230">
 
-                            <!-- ẢNH -->
-                            <Image
-                                Source="{Binding}"
-                                Aspect="AspectFill"/>
-
-                            <!-- OVERLAY -->
-                            <BoxView
-                                BackgroundColor="#40000000"/>
-
-                            <!-- HEART -->
+                            <Image Source="{Binding Image}" Aspect="AspectFill"/>
+                            <BoxView BackgroundColor="#50000000"/>
                             <Image
                                 Source="heart.png"
-                                WidthRequest="20"
-                                HeightRequest="20"
+                                WidthRequest="20" HeightRequest="20"
                                 Margin="12"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Start"/>
 
-                            <!-- TEXT -->
-                            <StackLayout
-                                Padding="12"
-                                VerticalOptions="End">
-
+                            <StackLayout Padding="12" VerticalOptions="End">
                                 <Label
-                                    Text="Hội An"
+                                    Text="{Binding Name}"
                                     TextColor="White"
-                                    FontAttributes="Bold"/>
-
+                                    FontAttributes="Bold"
+                                    FontSize="14"/>
                                 <Label
-                                    Text="Nét đẹp hoài cổ"
+                                    Text="{Binding ShortDescription}"
                                     TextColor="White"
-                                    FontSize="12"/>
+                                    FontSize="11"
+                                    MaxLines="2"
+                                    LineBreakMode="TailTruncation"/>
                             </StackLayout>
 
                         </Grid>
@@ -119,5 +109,4 @@
         </CollectionView>
 
     </Grid>
-
 </ContentPage>

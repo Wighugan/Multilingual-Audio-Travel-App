@@ -1,30 +1,89 @@
-﻿namespace multilingualAudioTravelApp;
+﻿using multilingualAudioTravelApp.Services;
+
+namespace multilingualAudioTravelApp;
+
+public class PoiCardItem
+{
+    public string Name { get; set; }
+    public string Image { get; set; }
+    public string Description { get; set; }
+    public string ShortDescription => Description?.Length > 50
+        ? Description.Substring(0, 50) + "..."
+        : Description;
+}
 
 public partial class HomePage : ContentPage
 {
+    private readonly DatabaseService _dbService = new DatabaseService();
+    private List<PoiCardItem> _allPois = new();
+    private bool _isSearching = false; // đang trong chế độ tìm kiếm hay không
+
     public HomePage()
     {
         InitializeComponent();
     }
 
-    private async void OnStartClicked(object sender, EventArgs e)
+    protected override async void OnAppearing()
     {
-        await Shell.Current.GoToAsync("//MainPage");
+        base.OnAppearing();
+        await LoadPois();
     }
 
-    private async void OnSettingsClicked(object sender, EventArgs e)
+    private async Task LoadPois()
     {
-        string action = await DisplayActionSheet("Chọn ngôn ngữ giọng đọc:", "Hủy", null, "Tiếng Việt", "English");
+        var entities = await _dbService.GetAllPoisAsync();
 
-        if (action == "Tiếng Việt")
+        _allPois = entities.Select(e => new PoiCardItem
         {
-            Preferences.Set("VoiceLanguage", "vi");
-            await DisplayAlert("Thông báo", "Đã chuyển sang giọng Tiếng Việt", "OK");
-        }
-        else if (action == "English")
+            Name = e.CurrentName,
+            Image = e.Image,
+            Description = e.CurrentDescription
+        }).ToList();
+
+        PoiCollection.ItemsSource = _allPois;
+    }
+
+    // Theo dõi khi text thay đổi
+    private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+    {
+        var newText = e.NewTextValue;
+
+        // Nếu đang tìm kiếm và xóa hết chữ → reset về tất cả
+        if (_isSearching && string.IsNullOrEmpty(newText))
         {
-            Preferences.Set("VoiceLanguage", "en");
-            await DisplayAlert("Notification", "Switched to English voice", "OK");
+            _isSearching = false;
+            PoiCollection.ItemsSource = _allPois;
         }
+    }
+
+    // Chỉ tìm khi bấm Enter hoặc nút tìm kiếm
+    private void OnSearchButtonPressed(object sender, EventArgs e)
+    {
+        var keyword = SearchBar.Text?.Trim().ToLower();
+
+        if (string.IsNullOrEmpty(keyword))
+        {
+            _isSearching = false;
+            PoiCollection.ItemsSource = _allPois;
+            return;
+        }
+
+        _isSearching = true;
+
+        var filtered = _allPois
+            .Where(p => p.Name.ToLower().Contains(keyword)
+                     || p.Description.ToLower().Contains(keyword))
+            .ToList();
+
+        PoiCollection.ItemsSource = filtered;
+    }
+
+    private async void OnPoiSelected(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.FirstOrDefault() is not PoiCardItem selected)
+            return;
+
+        ((CollectionView)sender).SelectedItem = null;
+        await Shell.Current.GoToAsync("//MainPage");
     }
 }

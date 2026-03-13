@@ -2,111 +2,133 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="multilingualAudioTravelApp.HomePage"
-    >
+    x:Class="multilingualAudioTravelApp.HomePage">
 
+    <Grid>
 
-    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- NỘI DUNG CHÍNH -->
+        <Grid RowDefinitions="Auto,Auto,*">
 
-        <!-- 🔵 APP BAR -->
-        <Grid
-            BackgroundColor="#0A5BD3"
-            Padding="16"
-            ColumnDefinitions="Auto,*">
+            <!-- APP BAR -->
+            <Grid BackgroundColor="#0A5BD3" Padding="16" ColumnDefinitions="Auto,*">
+                <Image Source="search.png" WidthRequest="22" HeightRequest="22" VerticalOptions="Center"/>
+                <SearchBar
+                    Grid.Column="1"
+                    x:Name="SearchBar"
+                    Placeholder="Tìm quán ăn..."
+                    PlaceholderColor="#CCFFFFFF"
+                    TextColor="White"
+                    BackgroundColor="Transparent"
+                    TextChanged="OnSearchTextChanged"
+                    SearchButtonPressed="OnSearchButtonPressed"
+                    Margin="8,0,0,0"/>
+            </Grid>
 
-            <Image
-                Source="search.png"
-                WidthRequest="22"
-                HeightRequest="22"
-                VerticalOptions="Center"/>
+            <!-- TABS -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*,*" Padding="12,8">
+                <Label Text="Tất cả" TextColor="#0A5BD3" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Label Grid.Column="1" Text="Gần đây" TextColor="Gray" HorizontalOptions="Center"/>
+                <Label Grid.Column="2" Text="Nổi bật" TextColor="Gray" HorizontalOptions="Center"/>
+            </Grid>
 
-            <SearchBar
-    Grid.Column="1"
-    x:Name="SearchBar"
-    Placeholder="Tìm quán ăn..."
-    PlaceholderColor="#CCFFFFFF"
-    TextColor="White"
-    BackgroundColor="Transparent"
-    TextChanged="OnSearchTextChanged"
-    SearchButtonPressed="OnSearchButtonPressed"
-    Margin="8,0,0,0"/>
+            <!-- DANH SÁCH QUÁN -->
+            <CollectionView
+                Grid.Row="2"
+                x:Name="PoiCollection"
+                ItemsLayout="VerticalGrid, 2"
+                Margin="12"
+                SelectionMode="None">
+
+                <CollectionView.EmptyView>
+                    <Label Text="Không tìm thấy quán nào"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           TextColor="Gray" Margin="0,40"/>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="6" CornerRadius="20" HasShadow="False" Padding="0">
+
+                            <!-- *** THÊM TapGestureRecognizer GIỐNG ExplorePage *** -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Tapped="OnPoiTapped"
+                                    CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Grid HeightRequest="230" InputTransparent="True">
+                                <Image Source="{Binding Image}" Aspect="AspectFill"/>
+                                <BoxView BackgroundColor="#50000000"/>
+                                <Image Source="heart.png" WidthRequest="20" HeightRequest="20"
+                                       Margin="12" HorizontalOptions="Start" VerticalOptions="Start"/>
+                                <StackLayout Padding="12" VerticalOptions="End">
+                                    <Label Text="{Binding Name}" TextColor="White"
+                                           FontAttributes="Bold" FontSize="14"/>
+                                    <Label Text="{Binding ShortDescription}" TextColor="White"
+                                           FontSize="11" MaxLines="2" LineBreakMode="TailTruncation"/>
+                                </StackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
         </Grid>
 
-        <!-- TABS -->
-        <Grid
-            Grid.Row="1"
-            ColumnDefinitions="*,*,*"
-            Padding="12,8">
+        <!-- POPUP - nằm ngoài, luôn trên cùng -->
+        <Grid x:Name="PopupOverlay" IsVisible="False" BackgroundColor="#80000000">
+            <Frame BackgroundColor="White" CornerRadius="20" Padding="15"
+           Margin="30" VerticalOptions="Center" HasShadow="True">
 
-            <Label Text="Tất cả"
-                   TextColor="#0A5BD3"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"/>
-            <Label Grid.Column="1"
-                   Text="Gần đây"
-                   TextColor="Gray"
-                   HorizontalOptions="Center"/>
-            <Label Grid.Column="2"
-                   Text="Nổi bật"
-                   TextColor="Gray"
-                   HorizontalOptions="Center"/>
+                <VerticalStackLayout Spacing="10">
+
+                    <Image x:Name="PopupImage" HeightRequest="180" Aspect="AspectFill"/>
+
+                    <Label x:Name="PopupTitle" FontSize="20" FontAttributes="Bold" TextColor="Black"/>
+
+                    <Label x:Name="PopupDescription" FontSize="14" TextColor="Gray"/>
+
+                    <!-- 3 NÚT ICON TRÒN GIỐNG EXPLOREPAGE -->
+                    <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" Padding="10">
+
+                        <!-- Nghe -->
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <ImageButton x:Name="PlayStopButton"
+                                 Source="play_icon.png"
+                                 WidthRequest="60" HeightRequest="60"
+                                 CornerRadius="30" Padding="15" Aspect="AspectFit"
+                                 Clicked="OnPopupPlayClicked"
+                                 BackgroundColor="#E0E0E0"/>
+                            <Label Text="Nghe" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+                        
+
+                        <!-- Đóng -->
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <ImageButton Source="close_icon.png"
+                                 WidthRequest="60" HeightRequest="60"
+                                 CornerRadius="30" Padding="15" Aspect="AspectFit"
+                                 Clicked="OnPopupCloseClicked"
+                                 BackgroundColor="#FFE0E0"/>
+                            <Label Text="Đóng" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+                        <!-- Bản đồ -->
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <ImageButton Source="map.png"
+                             WidthRequest="60" HeightRequest="60"
+                            CornerRadius="30" Padding="15" Aspect="AspectFit"
+                              Clicked="OnPopupMapClicked"
+                                 BackgroundColor="#E8F5E9"/>
+                            <Label Text="Bản đồ" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
         </Grid>
-        
-        
-        
-        
-        <!-- DANH SÁCH QUÁN -->
-        <CollectionView
-            Grid.Row="2"
-            x:Name="PoiCollection"
-            ItemsLayout="VerticalGrid, 2"
-            Margin="12"
-            SelectionMode="Single"
-            SelectionChanged="OnPoiSelected">
-
-            <CollectionView.EmptyView>
-                <Label
-                    Text="Không tìm thấy quán nào"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    TextColor="Gray"
-                    Margin="0,40"/>
-            </CollectionView.EmptyView>
-
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Margin="6" CornerRadius="20" HasShadow="False" Padding="0">
-                        <Grid HeightRequest="230">
-
-                            <Image Source="{Binding Image}" Aspect="AspectFill"/>
-                            <BoxView BackgroundColor="#50000000"/>
-                            <Image
-                                Source="heart.png"
-                                WidthRequest="20" HeightRequest="20"
-                                Margin="12"
-                                HorizontalOptions="Start"
-                                VerticalOptions="Start"/>
-
-                            <StackLayout Padding="12" VerticalOptions="End">
-                                <Label
-                                    Text="{Binding Name}"
-                                    TextColor="White"
-                                    FontAttributes="Bold"
-                                    FontSize="14"/>
-                                <Label
-                                    Text="{Binding ShortDescription}"
-                                    TextColor="White"
-                                    FontSize="11"
-                                    MaxLines="2"
-                                    LineBreakMode="TailTruncation"/>
-                            </StackLayout>
-
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-
-        </CollectionView>
 
     </Grid>
 </ContentPage>

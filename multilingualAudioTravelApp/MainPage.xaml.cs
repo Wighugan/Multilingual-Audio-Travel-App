@@ -316,10 +316,29 @@ public partial class MainPage : ContentPage
             PlayStopButton.Source = "play_icon.png";
         });
     }
-protected override async void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         await StartListeningGps();
+
+        // Kiểm tra có quán được chọn từ HomePage không
+        var lat = Preferences.Get("MapTargetLat", 0.0);
+        var lon = Preferences.Get("MapTargetLon", 0.0);
+        var name = Preferences.Get("MapTargetName", "");
+
+        if (lat != 0 && lon != 0)
+        {
+            // Xóa để lần sau không zoom lại
+            Preferences.Remove("MapTargetLat");
+            Preferences.Remove("MapTargetLon");
+            Preferences.Remove("MapTargetName");
+
+            // Zoom vào quán được chọn
+            var coords = SphericalMercator.FromLonLat(lon, lat);
+            var point = new MPoint(coords.x, coords.y);
+            MyMap.Map.Navigator.CenterOn(point);
+            MyMap.Map.Navigator.ZoomTo(5);
+        }
     }
 
     // Khi thoát màn hình hoặc ẩn app thì dừng theo dõi

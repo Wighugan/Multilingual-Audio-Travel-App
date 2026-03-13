@@ -22,7 +22,7 @@ xmlns:local="clr-namespace:multilingualAudioTravelApp"
 
        
         <Tab Title="Yêu Thích" Icon="history.png">
-            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
+            <ShellContent ContentTemplate="{DataTemplate local:FavoritePage}" Route="FavoritePage" />
         </Tab>
 
         <Tab Title="Cài Đặt" Icon="people.png">

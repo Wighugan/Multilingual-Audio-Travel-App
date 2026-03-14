@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="multilingualAudioTravelApp.ProfilePage"
+    xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
     Title="Hồ sơ">
 
     <ScrollView>
@@ -13,37 +14,37 @@
             <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
 
                 <Frame
-        WidthRequest="100"
-        HeightRequest="100"
-        CornerRadius="50"
-        Padding="0"
-        BackgroundColor="#E0E0E0"
-        HasShadow="False"
-        HorizontalOptions="Center">
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    CornerRadius="50"
+                    Padding="0"
+                    BackgroundColor="#E0E0E0"
+                    HasShadow="False"
+                    HorizontalOptions="Center">
 
-                    <!-- Chữ viết tắt tên thay cho avatar -->
-                    <Label
-            Text="{Binding UserInitial}"
-            FontSize="36"
-            FontAttributes="Bold"
-            TextColor="Gray"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"/>
+                <!-- Chữ viết tắt tên thay cho avatar -->
+                <Label
+                    Text="{Binding UserInitial}"
+                    FontSize="36"
+                    FontAttributes="Bold"
+                    TextColor="Gray"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"/>
                 </Frame>
 
                 <!-- Tên người dùng thật -->
                 <Label
-        Text="{Binding WelcomeText}"
-        FontSize="18"
-        FontAttributes="Bold"
-        HorizontalOptions="Center"/>
+                    Text="{Binding WelcomeText}"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"/>
 
                 <!-- Email người dùng -->
                 <Label
-        Text="{Binding UserEmail}"
-        FontSize="13"
-        TextColor="Gray"
-        HorizontalOptions="Center"/>
+                    Text="{Binding UserEmail}"
+                    FontSize="13"
+                    TextColor="Gray"
+                    HorizontalOptions="Center"/>
 
             </VerticalStackLayout>
 
@@ -102,14 +103,14 @@
             <!-- Font size -->
            
             <Button
-            Text="Đăng xuất"
-BackgroundColor="#D32F2F"
-TextColor="White"
-FontAttributes="Bold"
-CornerRadius="10"
-HeightRequest="50"
-Margin="0,30,0,10"
-Clicked="OnLogoutClicked"/>
+                Text="{x:Static lang:AppStrings.BtnLogout}"
+                BackgroundColor="#D32F2F"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="10"
+                HeightRequest="50"
+                Margin="0,30,0,10"
+                Clicked="OnLogoutClicked"/>
 
 
 

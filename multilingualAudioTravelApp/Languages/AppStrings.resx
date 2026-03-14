@@ -120,14 +120,47 @@
   <data name="BtnLogout" xml:space="preserve">
     <value>Đăng xuất</value>
   </data>
+  <data name="Darkmode" xml:space="preserve">
+    <value>Chế độ tối</value>
+  </data>
+  <data name="DesEditInfo" xml:space="preserve">
+    <value>Cập nhật tên, email của bạn</value>
+  </data>
+  <data name="DesFeedback" xml:space="preserve">
+    <value>Gửi các đánh giá giúp chúng tôi cải thiện ứng dụng</value>
+  </data>
+  <data name="DesFvCafe" xml:space="preserve">
+    <value>Danh sách quán ăn đã lưu</value>
+  </data>
+  <data name="DesLanguage" xml:space="preserve">
+    <value>Thay đổi ngôn ngữ hiển thị và ngôn ngữ âm thanh thuyết minh</value>
+  </data>
+  <data name="EditInfo" xml:space="preserve">
+    <value>Chỉnh sửa thông tin</value>
+  </data>
   <data name="Favorite" xml:space="preserve">
     <value>Yêu thích</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>Đánh giá và góp ý</value>
+  </data>
+  <data name="FvCafe" xml:space="preserve">
+    <value>Quán yêu thích</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Xin chào</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Trang chủ</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Ngôn ngữ</value>
+  </data>
   <data name="Map" xml:space="preserve">
     <value>Bản đồ</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Hồ sơ</value>
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Cài đặt</value>

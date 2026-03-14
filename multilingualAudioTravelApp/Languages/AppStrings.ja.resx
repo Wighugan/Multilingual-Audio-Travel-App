@@ -120,14 +120,47 @@
   <data name="BtnLogout" xml:space="preserve">
     <value>ログアウト</value>
   </data>
+  <data name="Darkmode" xml:space="preserve">
+    <value>ダークモード</value>
+  </data>
+  <data name="DesEditInfo" xml:space="preserve">
+    <value>これは、あなたの名前とメールアドレスを更新するのに役立ちます</value>
+  </data>
+  <data name="DesFeedback" xml:space="preserve">
+    <value>アプリの改善に役立てるため、ぜひご意見をお寄せください</value>
+  </data>
+  <data name="DesFvCafe" xml:space="preserve">
+    <value>保存したレストランのリスト</value>
+  </data>
+  <data name="DesLanguage" xml:space="preserve">
+    <value>表示言語と音声ナレーション言語を変更します</value>
+  </data>
+  <data name="EditInfo" xml:space="preserve">
+    <value>情報を編集する</value>
+  </data>
   <data name="Favorite" xml:space="preserve">
     <value>お気に入り</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>フィードバック</value>
+  </data>
+  <data name="FvCafe" xml:space="preserve">
+    <value>お気に入りのレストラン</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>こんにちは</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>ホームページ</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>言語</value>
+  </data>
   <data name="Map" xml:space="preserve">
     <value>地図</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>プロフィール</value>
   </data>
   <data name="Setting" xml:space="preserve">
     <value>設定</value>

@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="multilingualAudioTravelApp.ProfilePage"
     xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
-    Title="Hồ sơ">
+    Title="{x:Static lang:AppStrings.Profile}">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
@@ -51,7 +51,7 @@
             <!-- Dark mode -->
             <Grid ColumnDefinitions="*,Auto">
                 <VerticalStackLayout>
-                    <Label Text="Darkmode" FontSize="16"/>
+                    <Label Text="{x:Static lang:AppStrings.Darkmode}"  FontSize="16"/>
                     <Label Text="On/Off" FontSize="12" TextColor="Gray"/>
                 </VerticalStackLayout>
 

@@ -70,11 +70,92 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chế độ tối.
+        /// </summary>
+        public static string Darkmode {
+            get {
+                return ResourceManager.GetString("Darkmode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cập nhật tên, email của bạn.
+        /// </summary>
+        public static string DesEditInfo {
+            get {
+                return ResourceManager.GetString("DesEditInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gửi các đánh giá giúp chúng tôi cải thiện ứng dụng.
+        /// </summary>
+        public static string DesFeedback {
+            get {
+                return ResourceManager.GetString("DesFeedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Danh sách quán ăn đã lưu.
+        /// </summary>
+        public static string DesFvCafe {
+            get {
+                return ResourceManager.GetString("DesFvCafe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thay đổi ngôn ngữ hiển thị và ngôn ngữ âm thanh thuyết minh.
+        /// </summary>
+        public static string DesLanguage {
+            get {
+                return ResourceManager.GetString("DesLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉnh sửa thông tin.
+        /// </summary>
+        public static string EditInfo {
+            get {
+                return ResourceManager.GetString("EditInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yêu thích.
         /// </summary>
         public static string Favorite {
             get {
                 return ResourceManager.GetString("Favorite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đánh giá và góp ý.
+        /// </summary>
+        public static string Feedback {
+            get {
+                return ResourceManager.GetString("Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quán yêu thích.
+        /// </summary>
+        public static string FvCafe {
+            get {
+                return ResourceManager.GetString("FvCafe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xin chào.
+        /// </summary>
+        public static string Hello {
+            get {
+                return ResourceManager.GetString("Hello", resourceCulture);
             }
         }
         
@@ -88,11 +169,29 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ngôn ngữ.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bản đồ.
         /// </summary>
         public static string Map {
             get {
                 return ResourceManager.GetString("Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hồ sơ.
+        /// </summary>
+        public static string Profile {
+            get {
+                return ResourceManager.GetString("Profile", resourceCulture);
             }
         }
         

@@ -120,6 +120,18 @@
   <data name="BtnLogout" xml:space="preserve">
     <value>ログアウト</value>
   </data>
+  <data name="Favorite" xml:space="preserve">
+    <value>お気に入り</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>ホームページ</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>地図</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>設定</value>
+  </data>
   <data name="TitleExplore" xml:space="preserve">
     <value>探検する</value>
   </data>

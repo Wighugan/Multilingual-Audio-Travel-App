@@ -3,29 +3,30 @@
     x:Class="multilingualAudioTravelApp.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-xmlns:local="clr-namespace:multilingualAudioTravelApp"
+    xmlns:local="clr-namespace:multilingualAudioTravelApp"
+    xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
     Shell.FlyoutBehavior="Disabled">
 
     <TabBar>
 
-        <Tab Title="Khám Phá" Icon="discover.png">
+        <Tab Title="{x:Static lang:AppStrings.TitleExplore}" Icon="discover.png">
             <ShellContent ContentTemplate="{DataTemplate local:ExplorePage}" Route="ExplorePage" />
         </Tab>
 
-        <Tab Title="Bản Đồ" Icon="map.png">
+        <Tab Title="{x:Static lang:AppStrings.Map}" Icon="map.png">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
         </Tab>
 
-        <Tab Title="Trang Chủ" Icon="home.png">
+        <Tab Title="{x:Static lang:AppStrings.Home}" Icon="home.png">
             <ShellContent ContentTemplate="{DataTemplate local:HomePage}" Route="HomePage" />
         </Tab>
 
-       
-        <Tab Title="Yêu Thích" Icon="history.png">
+
+        <Tab Title="{x:Static lang:AppStrings.Favorite}" Icon="history.png">
             <ShellContent ContentTemplate="{DataTemplate local:FavoritePage}" Route="FavoritePage" />
         </Tab>
 
-        <Tab Title="Cài Đặt" Icon="people.png">
+        <Tab Title="{x:Static lang:AppStrings.Setting}" Icon="people.png">
             <ShellContent ContentTemplate="{DataTemplate local:ProfilePage}" Route="ProfilePage" />
         </Tab>
 

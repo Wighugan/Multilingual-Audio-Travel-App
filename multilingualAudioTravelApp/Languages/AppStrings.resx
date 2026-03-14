@@ -120,6 +120,18 @@
   <data name="BtnLogout" xml:space="preserve">
     <value>Đăng xuất</value>
   </data>
+  <data name="Favorite" xml:space="preserve">
+    <value>Yêu thích</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>Bản đồ</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
   <data name="TitleExplore" xml:space="preserve">
     <value>Khám phá</value>
   </data>

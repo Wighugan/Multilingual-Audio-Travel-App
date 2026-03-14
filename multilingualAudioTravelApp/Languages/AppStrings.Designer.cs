@@ -70,6 +70,42 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Yêu thích.
+        /// </summary>
+        public static string Favorite {
+            get {
+                return ResourceManager.GetString("Favorite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trang chủ.
+        /// </summary>
+        public static string Home {
+            get {
+                return ResourceManager.GetString("Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bản đồ.
+        /// </summary>
+        public static string Map {
+            get {
+                return ResourceManager.GetString("Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cài đặt.
+        /// </summary>
+        public static string Setting {
+            get {
+                return ResourceManager.GetString("Setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Khám phá.
         /// </summary>
         public static string TitleExplore {

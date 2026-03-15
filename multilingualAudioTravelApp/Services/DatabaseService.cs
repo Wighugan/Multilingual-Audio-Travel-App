@@ -1,5 +1,6 @@
 ﻿using SQLite;
 using System.Text.Json;
+using static multilingualAudioTravelApp.Services.PoiEntity;
 
 namespace multilingualAudioTravelApp.Services;
 
@@ -24,6 +25,18 @@ public class PoiEntity  //POI
     public string TranslationsJson { get; set; }
     private Dictionary<string, PoiTranslation> _parsedTranslations;
 
+    public class FavoriteEntity  //favoritePOI
+
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string UserEmail { get; set; }  // mỗi user có favorites riêng
+        public string PoiName { get; set; }
+        public string PoiImage { get; set; }
+        public string PoiDescription { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+    }
     // Hàm tự động dịch chuỗi JSON thành Dictionary (Từ điển)
     [Ignore]
     public Dictionary<string, PoiTranslation> TranslationDict
@@ -95,6 +108,7 @@ public class DatabaseService
         _db = new SQLiteAsyncConnection(_dbPath);
         await _db.CreateTableAsync<PoiEntity>();
         await _db.CreateTableAsync<UserEntity>();
+        await _db.CreateTableAsync<FavoriteEntity>(); 
 
         var count = await _db.Table<PoiEntity>().CountAsync();
         if (count == 0)
@@ -297,5 +311,54 @@ public class DatabaseService
         Preferences.Set("userEmail", newEmail);
 
         return true;
+    }
+
+
+    // Lấy danh sách yêu thích của user
+    public async Task<List<FavoriteEntity>> GetFavoritesAsync(string userEmail)
+    {
+        await InitAsync();
+        return await _db.Table<FavoriteEntity>()
+            .Where(f => f.UserEmail == userEmail)
+            .ToListAsync();
+    }
+
+    // Kiểm tra đã bookmark chưa
+    public async Task<bool> IsFavoriteAsync(string userEmail, string poiName)
+    {
+        await InitAsync();
+        var item = await _db.Table<FavoriteEntity>()
+            .Where(f => f.UserEmail == userEmail && f.PoiName == poiName)
+            .FirstOrDefaultAsync();
+        return item != null;
+    }
+
+    // Thêm vào yêu thích
+    public async Task AddFavoriteAsync(string userEmail, PoiCardItem poi)
+    {
+        await InitAsync();
+        var exists = await IsFavoriteAsync(userEmail, poi.Name);
+        if (exists) return;
+
+        await _db.InsertAsync(new FavoriteEntity
+        {
+            UserEmail = userEmail,
+            PoiName = poi.Name,
+            PoiImage = poi.Image,
+            PoiDescription = poi.Description,
+            Latitude = poi.Latitude,
+            Longitude = poi.Longitude
+        });
+    }
+
+    // Xóa khỏi yêu thích
+    public async Task RemoveFavoriteAsync(string userEmail, string poiName)
+    {
+        await InitAsync();
+        var item = await _db.Table<FavoriteEntity>()
+            .Where(f => f.UserEmail == userEmail && f.PoiName == poiName)
+            .FirstOrDefaultAsync();
+        if (item != null)
+            await _db.DeleteAsync(item);
     }
 }

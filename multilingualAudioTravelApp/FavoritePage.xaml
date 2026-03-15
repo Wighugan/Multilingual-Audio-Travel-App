@@ -5,11 +5,79 @@
     x:Class="multilingualAudioTravelApp.FavoritePage"
     Title="Yêu Thích">
 
-    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
-        <Label Text="" FontSize="60" HorizontalOptions="Center"/>
-        <Label Text="Chức năng đang phát triển"
-               FontSize="16" TextColor="Gray"
-               HorizontalOptions="Center"/>
-    </VerticalStackLayout>
+    <Grid>
+        <CollectionView
+            x:Name="FavCollection"
+            Margin="12"
+            SelectionMode="None">
 
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+                    <Label Text="" FontSize="60" HorizontalOptions="Center"/>
+                    <Label Text="Chưa lưu quán nào"
+                           FontSize="25" TextColor="Gray" HorizontalOptions="Center"/>
+                    <Label Text="Nhấn  🤍  trên quán để lưu vào đây"
+                           FontSize="13" TextColor="Gray" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,6" CornerRadius="16" HasShadow="False" Padding="0">
+                        <Grid ColumnDefinitions="120,*,Auto" HeightRequest="100">
+
+                            <!-- ẢNH -->
+                            <Image
+                                Source="{Binding PoiImage}"
+                                Aspect="AspectFill"/>
+
+                            <!-- TÊN + MÔ TẢ -->
+                            <VerticalStackLayout
+                                Grid.Column="1"
+                                Padding="12,10"
+                                Spacing="4"
+                                VerticalOptions="Center">
+                                <Label
+                                    Text="{Binding PoiName}"
+                                    FontSize="15"
+                                    FontAttributes="Bold"
+                                    MaxLines="1"
+                                    LineBreakMode="TailTruncation"/>
+                                <Label
+                                    Text="{Binding PoiDescription}"
+                                    FontSize="12"
+                                    TextColor="Gray"
+                                    MaxLines="2"
+                                    LineBreakMode="TailTruncation"/>
+                            </VerticalStackLayout>
+
+                            <Border
+                                Grid.Column="2"
+                                BackgroundColor="#FFF0F0"
+                                StrokeThickness="0"
+                                Margin="8"
+                                Padding="10,6"
+                                VerticalOptions="Center">   
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20"/>
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnRemoveFavoriteTapped" CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Label
+                                Text="Bỏ lưu"
+                                TextColor="#E53935"
+                                FontSize="12"
+                                FontAttributes="Bold"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"/>  
+                            </Border>
+
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+    </Grid>
 </ContentPage>

@@ -1,17 +1,31 @@
 ﻿using multilingualAudioTravelApp.Services;
+using System.ComponentModel;
 
 namespace multilingualAudioTravelApp;
 
-public class PoiCardItem
+public class PoiCardItem : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void OnPropertyChanged(string name) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
     public string Name { get; set; }
     public string Image { get; set; }
     public string Description { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string ShortDescription => Description?.Length > 50
-        ? Description.Substring(0, 50) + "..."
-        : Description;
+        ? Description.Substring(0, 50) + "..." : Description;
+
+    private bool _isFavorite;
+    public bool IsFavorite
+    {
+        get => _isFavorite;
+        set { _isFavorite = value; OnPropertyChanged(nameof(IsFavorite)); OnPropertyChanged(nameof(HeartIcon)); }
+    }
+
+    // Tự đổi icon theo trạng thái
+    public string HeartIcon => IsFavorite ? "❤️" : "🤍";
 }
 
 public partial class HomePage : ContentPage
@@ -36,6 +50,9 @@ public partial class HomePage : ContentPage
     private async Task LoadPois()
     {
         var entities = await _dbService.GetAllPoisAsync();
+        var email = Preferences.Get("userEmail", "");
+        var favList = await _dbService.GetFavoritesAsync(email);
+        var favNames = favList.Select(f => f.PoiName).ToHashSet();
 
         _allPois = entities.Select(e => new PoiCardItem
         {
@@ -43,7 +60,8 @@ public partial class HomePage : ContentPage
             Image = e.Image,
             Description = e.CurrentDescription,
             Latitude = e.Latitude,
-            Longitude = e.Longitude
+            Longitude = e.Longitude,
+            IsFavorite = favNames.Contains(e.CurrentName) // ← set trạng thái
         }).ToList();
 
         PoiCollection.ItemsSource = _allPois;
@@ -155,4 +173,28 @@ public partial class HomePage : ContentPage
         }
         catch (OperationCanceledException) { }
     }
+
+    private async void OnFavoriteTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not PoiCardItem selected) return;
+
+        var email = Preferences.Get("userEmail", "");
+        if (string.IsNullOrEmpty(email))
+        {
+            await DisplayAlert("", "Vui lòng đăng nhập để lưu yêu thích", "OK");
+            return;
+        }
+
+        if (selected.IsFavorite)
+        {
+            await _dbService.RemoveFavoriteAsync(email, selected.Name);
+            selected.IsFavorite = false; // ← icon tự đổi thành 🤍
+        }
+        else
+        {
+            await _dbService.AddFavoriteAsync(email, selected);
+            selected.IsFavorite = true; // ← icon tự đổi thành ❤️
+        }
+    }
+
 }

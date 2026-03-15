@@ -49,24 +49,48 @@
                     <DataTemplate>
                         <Frame Margin="6" CornerRadius="20" HasShadow="False" Padding="0">
 
-                            <!-- *** THÊM TapGestureRecognizer GIỐNG ExplorePage *** -->
                             <Frame.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Tapped="OnPoiTapped"
-                                    CommandParameter="{Binding .}"/>
+                                <TapGestureRecognizer Tapped="OnPoiTapped" CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
 
-                            <Grid HeightRequest="230" InputTransparent="True">
-                                <Image Source="{Binding Image}" Aspect="AspectFill"/>
-                                <BoxView BackgroundColor="#50000000"/>
-                                <Image Source="heart.png" WidthRequest="20" HeightRequest="20"
-                                       Margin="12" HorizontalOptions="Start" VerticalOptions="Start"/>
-                                <StackLayout Padding="12" VerticalOptions="End">
+                            <Grid HeightRequest="230">
+
+                                <!-- ẢNH -->
+                                <Image Source="{Binding Image}" Aspect="AspectFill" InputTransparent="True"/>
+
+                                <!-- OVERLAY TỐI -->
+                                <BoxView BackgroundColor="#50000000" InputTransparent="True"/>
+
+                                <!-- TÊN + MÔ TẢ -->
+                                <StackLayout Padding="12" VerticalOptions="End" InputTransparent="True">
                                     <Label Text="{Binding Name}" TextColor="White"
-                                           FontAttributes="Bold" FontSize="14"/>
+                       FontAttributes="Bold" FontSize="14"/>
                                     <Label Text="{Binding ShortDescription}" TextColor="White"
-                                           FontSize="11" MaxLines="2" LineBreakMode="TailTruncation"/>
+                       FontSize="11" MaxLines="2" LineBreakMode="TailTruncation"/>
                                 </StackLayout>
+
+                                <Border
+                                       BackgroundColor="#60000000"
+                                         StrokeThickness="0"
+                                     WidthRequest="36" HeightRequest="36"
+                                             HorizontalOptions="End"
+                                      VerticalOptions="Start"
+                                      Margin="0,10,10,0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="18"/>
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnFavoriteTapped" CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+
+                                    <!-- ← Bind HeartIcon thay vì hardcode 🤍 -->
+                                    <Label
+                                          Text="{Binding HeartIcon}"
+                                          FontSize="16"
+                                         HorizontalOptions="Center"
+                                        VerticalOptions="Center"/>
+                                </Border>
+
                             </Grid>
                         </Frame>
                     </DataTemplate>
@@ -124,7 +148,7 @@
                             <Label Text="Bản đồ" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
                         </VerticalStackLayout>
 
-
+                      
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>

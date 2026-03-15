@@ -106,6 +106,8 @@ public class DatabaseService
         if (_db != null) return;
 
         _db = new SQLiteAsyncConnection(_dbPath);
+       // await _db.DropTableAsync<PoiEntity>();       // ← thêm tạm, xóa sau khi chạy 1 lần
+
         await _db.CreateTableAsync<PoiEntity>();
         await _db.CreateTableAsync<UserEntity>();
         await _db.CreateTableAsync<FavoriteEntity>(); 
@@ -243,8 +245,44 @@ public class DatabaseService
                     { "en", new PoiTranslation { Name = "Loan Snail Restaurant", Description = "Airy space, famous for its extremely delicious dipping sauce." } },
                     { "ja", new PoiTranslation { Name = "ロアン貝料理店", Description = "風通しの良い空間で、とても美味しいディップソースで有名です。" } },
                 })
+            },
+
+             new PoiEntity
+            {
+                Image = "sushiko.jpg", Latitude = 10.760827, Longitude = 106.704798, Radius = 70, Priority = 6,
+                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+                {
+                    { "vi", new PoiTranslation { Name = "Nhà hàng Sushi KO", Description = "Nhiều món độc đáo khác, tạo nên trải nghiệm ẩm thực phong phú và hấp dẫn." } },
+                    { "en", new PoiTranslation { Name = "Sushi KO Restaurant", Description = "A variety of unique dishes creating a rich and exciting culinary experience." } },
+                    { "ja", new PoiTranslation { Name = "寿司KOレストラン", Description = "豊かで魅力的な食体験を生み出す、多彩なユニークな料理が揃っています。" } },
+                })
+            },
+
+            new PoiEntity
+            {
+                Image = "chili.jpg", Latitude = 10.760774, Longitude = 106.704575, Radius = 70, Priority = 6,
+                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+                {
+                    { "vi", new PoiTranslation { Name = "Nhà hàng nướng Chilli", Description = "Giá cả hợp lý và thực đơn đồ nướng tự chọn đa dạng. Các món ăn ở đây được tẩm ướp đậm đà, nêm nếm khéo léo." } },
+                    { "en", new PoiTranslation { Name = "Chilli BBQ Restaurant", Description = "Affordable prices with a diverse all-you-can-grill menu. Dishes are richly marinated and skillfully seasoned." } },
+                    { "ja", new PoiTranslation { Name = "チリBBQレストラン", Description = "手頃な価格で多彩な食べ放題グリルメニューを提供。料理はしっかりと下味が付けられ、丁寧に味付けされています。" } },
+                })
+            },
+
+            new PoiEntity
+            {
+                Image = "otxiemquan.jpg", Latitude = 10.760801, Longitude = 106.704631, Radius = 70, Priority = 6,
+                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+                {
+                    { "vi", new PoiTranslation { Name = "Ớt Xiêm Quán", Description = "Món ăn ngon, phù hợp với khẩu vị nhiều người và có giá cả vô cùng hợp lý. Menu đa dạng" } },
+                    { "en", new PoiTranslation { Name = "Ot Xiem Restaurant", Description = "Delicious food that suits many tastes at very affordable prices. Features a diverse and varied menu." } },
+                 { "ja", new PoiTranslation { Name = "オットシエムレストラン", Description = "多くの人の好みに合う美味しい料理を手頃な価格で提供。バラエティ豊かな多彩なメニューが揃っています。" } },
+                })
             }
-    };
+
+
+
+    }; 
         await _db.InsertAllAsync(samples);
     }
 

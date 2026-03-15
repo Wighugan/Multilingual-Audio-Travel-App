@@ -25,11 +25,7 @@
             </Grid>
 
             <!-- TABS -->
-            <Grid Grid.Row="1" ColumnDefinitions="*,*,*" Padding="12,8">
-                <Label Text="Tất cả" TextColor="#0A5BD3" FontAttributes="Bold" HorizontalOptions="Center"/>
-                <Label Grid.Column="1" Text="Gần đây" TextColor="Gray" HorizontalOptions="Center"/>
-                <Label Grid.Column="2" Text="Nổi bật" TextColor="Gray" HorizontalOptions="Center"/>
-            </Grid>
+           
 
             <!-- DANH SÁCH QUÁN -->
             <CollectionView

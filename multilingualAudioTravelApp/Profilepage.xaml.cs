@@ -46,7 +46,7 @@ public partial class ProfilePage : ContentPage
             break;
 
             case "favorite":
-                await DisplayAlert("Quán yêu thích", "Chức năng đang phát triển", "OK");
+                await Shell.Current.GoToAsync("//FavoritePage");
                 break;
 
             case "feedback":

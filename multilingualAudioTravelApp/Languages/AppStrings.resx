@@ -120,6 +120,12 @@
   <data name="BtnLogout" xml:space="preserve">
     <value>Đăng xuất</value>
   </data>
+  <data name="CfNewPw" xml:space="preserve">
+    <value>Xác nhận mật khẩu mới</value>
+  </data>
+  <data name="CfNewPwEntry" xml:space="preserve">
+    <value>Nhập lại mật khẩu mới</value>
+  </data>
   <data name="Darkmode" xml:space="preserve">
     <value>Chế độ tối</value>
   </data>
@@ -137,6 +143,12 @@
   </data>
   <data name="EditInfo" xml:space="preserve">
     <value>Chỉnh sửa thông tin</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EmailEntry" xml:space="preserve">
+    <value>Nhập địa chỉ email của bạn</value>
   </data>
   <data name="Favorite" xml:space="preserve">
     <value>Yêu thích</value>
@@ -159,8 +171,23 @@
   <data name="Map" xml:space="preserve">
     <value>Bản đồ</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>Họ và tên</value>
+  </data>
+  <data name="NameEntry" xml:space="preserve">
+    <value>Nhập họ và tên</value>
+  </data>
+  <data name="NewPw" xml:space="preserve">
+    <value>Mật khẩu mới (để trống nếu không đổi)</value>
+  </data>
+  <data name="NewPwEntry" xml:space="preserve">
+    <value>Nhập mật khẩu mới</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Hồ sơ</value>
+  </data>
+  <data name="SaveChange" xml:space="preserve">
+    <value>Lưu thay đổi</value>
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Cài đặt</value>

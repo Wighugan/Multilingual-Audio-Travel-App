@@ -120,6 +120,12 @@
   <data name="BtnLogout" xml:space="preserve">
     <value>ログアウト</value>
   </data>
+  <data name="CfNewPw" xml:space="preserve">
+    <value>新しいパスワードを確認します</value>
+  </data>
+  <data name="CfNewPwEntry" xml:space="preserve">
+    <value>新しいパスワードを再入力してください</value>
+  </data>
   <data name="Darkmode" xml:space="preserve">
     <value>ダークモード</value>
   </data>
@@ -137,6 +143,12 @@
   </data>
   <data name="EditInfo" xml:space="preserve">
     <value>情報を編集する</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>電子メール</value>
+  </data>
+  <data name="EmailEntry" xml:space="preserve">
+    <value>メールアドレスを入力してください</value>
   </data>
   <data name="Favorite" xml:space="preserve">
     <value>お気に入り</value>
@@ -159,8 +171,23 @@
   <data name="Map" xml:space="preserve">
     <value>地図</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>フルネーム</value>
+  </data>
+  <data name="NameEntry" xml:space="preserve">
+    <value>フルネームを入力してください</value>
+  </data>
+  <data name="NewPw" xml:space="preserve">
+    <value>新しいパスワード（変更しない場合は空欄のままにしてください）</value>
+  </data>
+  <data name="NewPwEntry" xml:space="preserve">
+    <value>新しいパスワードを入力してください</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>プロフィール</value>
+  </data>
+  <data name="SaveChange" xml:space="preserve">
+    <value>変更を保存する</value>
   </data>
   <data name="Setting" xml:space="preserve">
     <value>設定</value>

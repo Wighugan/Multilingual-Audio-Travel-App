@@ -70,6 +70,24 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Xác nhận mật khẩu mới.
+        /// </summary>
+        public static string CfNewPw {
+            get {
+                return ResourceManager.GetString("CfNewPw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhập lại mật khẩu mới.
+        /// </summary>
+        public static string CfNewPwEntry {
+            get {
+                return ResourceManager.GetString("CfNewPwEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chế độ tối.
         /// </summary>
         public static string Darkmode {
@@ -120,6 +138,24 @@ namespace multilingualAudioTravelApp.Languages {
         public static string EditInfo {
             get {
                 return ResourceManager.GetString("EditInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string Email {
+            get {
+                return ResourceManager.GetString("Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhập địa chỉ email của bạn.
+        /// </summary>
+        public static string EmailEntry {
+            get {
+                return ResourceManager.GetString("EmailEntry", resourceCulture);
             }
         }
         
@@ -187,11 +223,56 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Họ và tên.
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhập họ và tên.
+        /// </summary>
+        public static string NameEntry {
+            get {
+                return ResourceManager.GetString("NameEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mật khẩu mới (để trống nếu không đổi).
+        /// </summary>
+        public static string NewPw {
+            get {
+                return ResourceManager.GetString("NewPw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhập mật khẩu mới.
+        /// </summary>
+        public static string NewPwEntry {
+            get {
+                return ResourceManager.GetString("NewPwEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hồ sơ.
         /// </summary>
         public static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lưu thay đổi.
+        /// </summary>
+        public static string SaveChange {
+            get {
+                return ResourceManager.GetString("SaveChange", resourceCulture);
             }
         }
         

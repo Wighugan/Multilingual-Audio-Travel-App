@@ -120,6 +120,12 @@
   <data name="BtnLogout" xml:space="preserve">
     <value>Log out</value>
   </data>
+  <data name="CfNewPw" xml:space="preserve">
+    <value>Confirm your new password</value>
+  </data>
+  <data name="CfNewPwEntry" xml:space="preserve">
+    <value>Re-enter your new password</value>
+  </data>
   <data name="Darkmode" xml:space="preserve">
     <value>Dark mode</value>
   </data>
@@ -137,6 +143,12 @@
   </data>
   <data name="EditInfo" xml:space="preserve">
     <value>Edit your information</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EmailEntry" xml:space="preserve">
+    <value>Enter your email</value>
   </data>
   <data name="Favorite" xml:space="preserve">
     <value>Favorite</value>
@@ -159,8 +171,23 @@
   <data name="Map" xml:space="preserve">
     <value>Map</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="NameEntry" xml:space="preserve">
+    <value>Enter your full name</value>
+  </data>
+  <data name="NewPw" xml:space="preserve">
+    <value>Enter your new password (leave blank if you don't want to change)</value>
+  </data>
+  <data name="NewPwEntry" xml:space="preserve">
+    <value>Enter your new password</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="SaveChange" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Setting</value>

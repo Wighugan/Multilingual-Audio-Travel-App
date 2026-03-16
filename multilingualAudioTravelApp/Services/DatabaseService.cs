@@ -106,7 +106,7 @@ public class DatabaseService
         if (_db != null) return;
 
         _db = new SQLiteAsyncConnection(_dbPath);
-       // await _db.DropTableAsync<PoiEntity>();       // ← thêm tạm, xóa sau khi chạy 1 lần
+       //await _db.DropTableAsync<PoiEntity>();       // ← thêm tạm, xóa sau khi chạy 1 lần
 
         await _db.CreateTableAsync<PoiEntity>();
         await _db.CreateTableAsync<UserEntity>();
@@ -192,21 +192,9 @@ public class DatabaseService
     {
         var samples = new List<PoiEntity>
     {
-        new PoiEntity
+             new PoiEntity
         {
-            Image = "vinhkhanh.jpg", Latitude = 10.761923, Longitude = 106.701964, Radius = 80, Priority = 8,
-            
-            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
-            {
-                { "vi", new PoiTranslation { Name = "Quán ốc Oanh", Description = "Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh." } },
-                { "en", new PoiTranslation { Name = "Oanh Snail Restaurant", Description = "The oldest and most famous snail restaurant in Vinh Khanh area." } },
-                { "ja", new PoiTranslation { Name = "ヴィンカン通り", Description = "4区で有名なグルメ通りです。" } },
-                
-            })
-        },
-        new PoiEntity
-        {
-            Image = "ocoanh.jpg", Latitude = 10.761410, Longitude = 106.702820, Radius = 100, Priority = 10,
+            Image = "vinhkhanh.jpg", Latitude = 10.761923, Longitude = 106.701964 , Radius = 100, Priority = 10,
 
             TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
@@ -216,6 +204,21 @@ public class DatabaseService
 
             })
         },
+               
+        new PoiEntity
+        {
+            Image = "ocoanh.jpg", Latitude = 10.761410, Longitude = 106.702820 , Radius = 80, Priority = 8,
+            
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
+            {
+                { "vi", new PoiTranslation { Name = "Quán ốc Oanh", Description = "Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh." } },
+                { "en", new PoiTranslation { Name = "Oanh Snail Restaurant", Description = "The oldest and most famous snail restaurant in Vinh Khanh area." } },
+                { "ja", new PoiTranslation { Name = "ヴィンカン通り", Description = "4区で有名なグルメ通りです。" } },
+                
+            })
+        },
+
+       
         new PoiEntity
             {
                 Image = "ocphat.jpg", Latitude = 10.761921, Longitude = 106.702151, Radius = 70, Priority = 6,

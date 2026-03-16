@@ -10,6 +10,7 @@ using Mapsui.UI.Maui;
 using Microsoft.Maui.Devices.Sensors;
 using MBrush = Mapsui.Styles.Brush;
 using MColor = Mapsui.Styles.Color;
+using SkiaSharp;
 using multilingualAudioTravelApp.Services;
 
 
@@ -113,8 +114,6 @@ public partial class MainPage : ContentPage
 
     private async Task CreatePoiLayer()
     {
-        _poiLayer = new MemoryLayer { Name = "PoiLayer" };
-
         var entities = await _dbService.GetAllPoisAsync();
 
         _poiList = entities.Select(e => new PoiData
@@ -130,23 +129,48 @@ public partial class MainPage : ContentPage
         }).ToList();
 
         var features = new List<IFeature>();
+
         foreach (var poi in _poiList)
         {
             var coords = SphericalMercator.FromLonLat(poi.Longitude, poi.Latitude);
+
             var feature = new PointFeature(new MPoint(coords.x, coords.y));
+
             feature["Name"] = poi.Name;
-            feature.Styles.Add(new SymbolStyle
+
+            feature.Styles.Add(new ImageStyle
             {
-                SymbolType = SymbolType.Ellipse,
-                Fill = new MBrush(MColor.Red),
-                SymbolScale = 0.6
+                Image = new Mapsui.Styles.Image
+                {
+                    Source = "svg-content://<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"56\"><path d=\"M18 .34C8.325.34.5 8.168.5 17.81c0 3.339.962 6.441 2.594 9.094H3l7.82 15.117L18 55.903l7.187-13.895L33 26.903h-.063c1.632-2.653 2.594-5.755 2.594-9.094C35.531 8.169 27.675.34 18 .34zm0 9.438a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13z\" fill=\"#E53935\" stroke=\"#B71C1C\" stroke-width=\"1\"/></svg>"
+                },
+                SymbolScale = 1,
+                Offset = new Offset(0, 28)
             });
+
             features.Add(feature);
         }
 
-        _poiLayer.Features = features;
-        _poiLayer.DataHasChanged();
+        _poiLayer = new MemoryLayer
+        {
+            Name = "PoiLayer",
+            Features = features,
+            Style = null
+        };
+
         MyMap.Map.Layers.Add(_poiLayer);
+    }
+
+    public async Task RefreshPoiLayerAsync()
+    {
+        var oldLayer = MyMap.Map.Layers.FirstOrDefault(l => l.Name == "PoiLayer");
+
+        if (oldLayer != null)
+            MyMap.Map.Layers.Remove(oldLayer);
+
+        await CreatePoiLayer();
+
+        MyMap.Refresh();
     }
 
     // Hàm xử lý khi người dùng chạm vào bản đồ
@@ -321,19 +345,19 @@ public partial class MainPage : ContentPage
         base.OnAppearing();
         await StartListeningGps();
 
+        // Refresh POI để lấy data mới nhất từ DB
+        await RefreshPoiLayerAsync();
+
         // Kiểm tra có quán được chọn từ HomePage không
         var lat = Preferences.Get("MapTargetLat", 0.0);
         var lon = Preferences.Get("MapTargetLon", 0.0);
-        var name = Preferences.Get("MapTargetName", "");
 
         if (lat != 0 && lon != 0)
         {
-            // Xóa để lần sau không zoom lại
             Preferences.Remove("MapTargetLat");
             Preferences.Remove("MapTargetLon");
             Preferences.Remove("MapTargetName");
 
-            // Zoom vào quán được chọn
             var coords = SphericalMercator.FromLonLat(lon, lat);
             var point = new MPoint(coords.x, coords.y);
             MyMap.Map.Navigator.CenterOn(point);

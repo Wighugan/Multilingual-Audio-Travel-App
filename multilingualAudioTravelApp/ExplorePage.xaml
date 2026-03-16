@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="multilingualAudioTravelApp.ExplorePage"
     xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
-    Title="Khám Phá">
+    Title="{x:Static lang:AppStrings.TitleExplore}">
 
     <!-- Toolbar -->
     <ContentPage.ToolbarItems>

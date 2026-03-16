@@ -231,4 +231,22 @@
   <data name="AskLogOut" xml:space="preserve">
     <value>Bạn có chắc muốn đăng xuất không?</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Tìm quán ăn</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Nghe</value>
+  </data>
+  <data name="CannotFind" xml:space="preserve">
+    <value>Không tìm thấy quán nào</value>
+  </data>
+  <data name="NotSaveRes" xml:space="preserve">
+    <value>Bạn chưa lưu quán nào</value>
+  </data>
+  <data name="PressHeart" xml:space="preserve">
+    <value>Nhấn  🤍  trên quán để lưu vào đây</value>
+  </data>
 </root>

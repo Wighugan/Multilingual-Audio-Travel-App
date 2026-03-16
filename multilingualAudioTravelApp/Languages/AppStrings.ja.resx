@@ -231,4 +231,22 @@
   <data name="AskLogOut" xml:space="preserve">
     <value>本当にログアウトしますか？</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>レストランを探す</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>近い</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>再生</value>
+  </data>
+  <data name="CannotFind" xml:space="preserve">
+    <value>レストランは見つかりませんでした。</value>
+  </data>
+  <data name="NotSaveRes" xml:space="preserve">
+    <value>お気に入りのレストランは閣ありません</value>
+  </data>
+  <data name="PressHeart" xml:space="preserve">
+    <value>ショップの🤍をタップして保存してください</value>
+  </data>
 </root>

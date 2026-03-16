@@ -88,6 +88,15 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy quán nào.
+        /// </summary>
+        public static string CannotFind {
+            get {
+                return ResourceManager.GetString("CannotFind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Xác nhận mật khẩu mới.
         /// </summary>
         public static string CfNewPw {
@@ -102,6 +111,15 @@ namespace multilingualAudioTravelApp.Languages {
         public static string CfNewPwEntry {
             get {
                 return ResourceManager.GetString("CfNewPwEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đóng.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
             }
         }
         
@@ -322,11 +340,38 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bạn chưa lưu quán nào.
+        /// </summary>
+        public static string NotSaveRes {
+            get {
+                return ResourceManager.GetString("NotSaveRes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Đồng ý.
         /// </summary>
         public static string ok {
             get {
                 return ResourceManager.GetString("ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nghe.
+        /// </summary>
+        public static string Play {
+            get {
+                return ResourceManager.GetString("Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhấn  🤍  trên quán để lưu vào đây.
+        /// </summary>
+        public static string PressHeart {
+            get {
+                return ResourceManager.GetString("PressHeart", resourceCulture);
             }
         }
         
@@ -345,6 +390,15 @@ namespace multilingualAudioTravelApp.Languages {
         public static string SaveChange {
             get {
                 return ResourceManager.GetString("SaveChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tìm quán ăn.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
             }
         }
         

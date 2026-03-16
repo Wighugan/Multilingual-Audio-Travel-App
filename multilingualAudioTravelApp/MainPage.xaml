@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              x:Class="multilingualAudioTravelApp.MainPage"
-             Title="Bản Đồ">
+             xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
+             Title="{x:Static lang:AppStrings.Map}">
 
     <Grid>
 

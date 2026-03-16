@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="multilingualAudioTravelApp.FavoritePage"
-    Title="Yêu Thích">
+    xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
+    Title="{x:Static lang:AppStrings.Favorite}">
 
     <Grid>
         <CollectionView
@@ -14,9 +15,9 @@
             <CollectionView.EmptyView>
                 <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
                     <Label Text="" FontSize="60" HorizontalOptions="Center"/>
-                    <Label Text="Chưa lưu quán nào"
-                           FontSize="25" TextColor="Gray" HorizontalOptions="Center"/>
-                    <Label Text="Nhấn  🤍  trên quán để lưu vào đây"
+                    <Label Text="{x:Static lang:AppStrings.NotSaveRes}"
+                           FontSize="20" TextColor="Gray" HorizontalOptions="Center"/>
+                    <Label Text="{x:Static lang:AppStrings.PressHeart}"
                            FontSize="13" TextColor="Gray" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </CollectionView.EmptyView>

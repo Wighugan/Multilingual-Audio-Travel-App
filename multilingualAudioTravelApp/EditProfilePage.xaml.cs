@@ -30,7 +30,7 @@ public partial class EditProfilePage : ContentPage
         // Kiểm tra tên và email
         if (string.IsNullOrEmpty(newName) || string.IsNullOrEmpty(newEmail))
         {
-            ShowError("Họ tên và email không được để trống.");
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorEmail);
             return;
         }
 
@@ -39,13 +39,13 @@ public partial class EditProfilePage : ContentPage
         {
             if (newPassword.Length < 6)
             {
-                ShowError("Mật khẩu mới phải có ít nhất 6 ký tự.");
+                ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorPass);
                 return;
             }
 
             if (newPassword != confirm)
             {
-                ShowError("Mật khẩu xác nhận không khớp.");
+                ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorRepass);
                 return;
             }
         }
@@ -63,12 +63,12 @@ public partial class EditProfilePage : ContentPage
         if (success)
         {
             _currentEmail = newEmail;
-            await DisplayAlert("Thành công", "Thông tin đã được cập nhật!", "OK");
+            await DisplayAlert(multilingualAudioTravelApp.Languages.AppStrings.Success, multilingualAudioTravelApp.Languages.AppStrings.UpdateSuccess, multilingualAudioTravelApp.Languages.AppStrings.ok);
             await Shell.Current.GoToAsync("..");
         }
         else
         {
-            ShowError("Email này đã được sử dụng bởi tài khoản khác.");
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorSameEmail);
         }
     }
 

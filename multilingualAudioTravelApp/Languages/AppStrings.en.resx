@@ -195,4 +195,40 @@
   <data name="TitleExplore" xml:space="preserve">
     <value>Explore</value>
   </data>
+  <data name="ErrorEmail" xml:space="preserve">
+    <value>Full name and email address cannot be left blank.</value>
+  </data>
+  <data name="ErrorPass" xml:space="preserve">
+    <value>The new password must have at least 6 characters.</value>
+  </data>
+  <data name="ErrorRepass" xml:space="preserve">
+    <value>The verification password doesn't match.</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="UpdateSuccess" xml:space="preserve">
+    <value>The information has been successfully updated.</value>
+  </data>
+  <data name="ErrorSameEmail" xml:space="preserve">
+    <value>This email address is already used.</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Select language</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="UpdateLanguage" xml:space="preserve">
+    <value>The language has been updated!</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="AskLogOut" xml:space="preserve">
+    <value>Are you sure you want to log out?</value>
+  </data>
 </root>

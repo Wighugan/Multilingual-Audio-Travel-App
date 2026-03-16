@@ -195,4 +195,40 @@
   <data name="TitleExplore" xml:space="preserve">
     <value>Khám phá</value>
   </data>
+  <data name="ErrorEmail" xml:space="preserve">
+    <value>Họ tên và email không được để trống.</value>
+  </data>
+  <data name="ErrorPass" xml:space="preserve">
+    <value>Mật khẩu mới phải có ít nhất 6 ký tự.</value>
+  </data>
+  <data name="ErrorRepass" xml:space="preserve">
+    <value>Mật khẩu xác nhận không khớp.</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Đồng ý</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Thành công</value>
+  </data>
+  <data name="UpdateSuccess" xml:space="preserve">
+    <value>Thông tin cập nhật thành công.</value>
+  </data>
+  <data name="ErrorSameEmail" xml:space="preserve">
+    <value>Email này đã được sử dụng bởi tài khoản khác.</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Chọn ngôn ngữ</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="UpdateLanguage" xml:space="preserve">
+    <value>Đã cập nhật ngôn ngữ!</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="AskLogOut" xml:space="preserve">
+    <value>Bạn có chắc muốn đăng xuất không?</value>
+  </data>
 </root>

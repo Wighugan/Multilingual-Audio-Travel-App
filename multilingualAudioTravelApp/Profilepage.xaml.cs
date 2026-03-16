@@ -24,23 +24,23 @@ public partial class ProfilePage : ContentPage
 
             case "language":
                 string action = await DisplayActionSheet(
-                "Chọn ngôn ngữ (Select Language)",
-                "Hủy (Cancel)",
+                multilingualAudioTravelApp.Languages.AppStrings.SelectLanguage,
+                multilingualAudioTravelApp.Languages.AppStrings.Cancel,
                 null,
-                "Tiếng Việt", "English", "日本語", "한국어");
+                "Tiếng Việt", "English", "日本語"/*, "한국어"*/);
 
                 string langCode = "vi";
                 if (action == "English") langCode = "en";
                 else if (action == "日本語") langCode = "ja";
-                else if (action == "한국어") langCode = "ko";
-                else if (action == "Hủy (Cancel)" || string.IsNullOrEmpty(action)) return;
+/*                else if (action == "한국어") langCode = "ko";*/
+                else if (action == multilingualAudioTravelApp.Languages.AppStrings.Cancel || string.IsNullOrEmpty(action)) return;
                 Preferences.Set("AppLanguage", langCode);
                 var culture = new System.Globalization.CultureInfo(langCode);
                 multilingualAudioTravelApp.Languages.AppStrings.Culture = culture;
                 System.Threading.Thread.CurrentThread.CurrentCulture = culture;
                 System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
 
-                await DisplayAlert("Thành công", "Đã cập nhật ngôn ngữ!", "OK");
+                await DisplayAlert(multilingualAudioTravelApp.Languages.AppStrings.Success, multilingualAudioTravelApp.Languages.AppStrings.UpdateLanguage, multilingualAudioTravelApp.Languages.AppStrings.ok);
 
                 Application.Current.MainPage = new AppShell();
             break;
@@ -62,10 +62,10 @@ public partial class ProfilePage : ContentPage
     private async void OnLogoutClicked(object sender, EventArgs e)
     {
         bool confirm = await DisplayAlert(
-            "Đăng xuất",
-            "Bạn có chắc muốn đăng xuất không?",
-            "Đăng xuất",
-            "Hủy");
+            multilingualAudioTravelApp.Languages.AppStrings.LogOut,
+            multilingualAudioTravelApp.Languages.AppStrings.AskLogOut,
+            multilingualAudioTravelApp.Languages.AppStrings.LogOut,
+            multilingualAudioTravelApp.Languages.AppStrings.Cancel);
 
         if (!confirm) return;
 

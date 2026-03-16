@@ -195,4 +195,40 @@
   <data name="TitleExplore" xml:space="preserve">
     <value>探検する</value>
   </data>
+  <data name="ErrorEmail" xml:space="preserve">
+    <value>氏名とメールアドレスは空欄にできません。</value>
+  </data>
+  <data name="ErrorPass" xml:space="preserve">
+    <value>新しいパスワードは6文字以上でなければなりません。</value>
+  </data>
+  <data name="ErrorRepass" xml:space="preserve">
+    <value>認証パスワードが一致しません。</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>同意する</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="UpdateSuccess" xml:space="preserve">
+    <value>情報が正常に更新されました。</value>
+  </data>
+  <data name="ErrorSameEmail" xml:space="preserve">
+    <value>このメールアドレスは既に別のアカウントで使用されています。</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>言語を選択してください</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="UpdateLanguage" xml:space="preserve">
+    <value>言語が更新されました!</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>ログアウト</value>
+  </data>
+  <data name="AskLogOut" xml:space="preserve">
+    <value>本当にログアウトしますか？</value>
+  </data>
 </root>

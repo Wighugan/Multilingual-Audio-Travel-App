@@ -138,9 +138,9 @@
                         <!-- Bản đồ -->
                         <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
                             <ImageButton Source="map.png"
-                             WidthRequest="60" HeightRequest="60"
-                            CornerRadius="30" Padding="15" Aspect="AspectFit"
-                              Clicked="OnPopupMapClicked"
+                                 WidthRequest="60" HeightRequest="60"
+                                 CornerRadius="30" Padding="15" Aspect="AspectFit"
+                                 Clicked="OnPopupMapClicked"
                                  BackgroundColor="#E8F5E9"/>
                             <Label Text="{x:Static lang:AppStrings.Map}" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
                         </VerticalStackLayout>

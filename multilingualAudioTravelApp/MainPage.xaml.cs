@@ -195,7 +195,7 @@ public partial class MainPage : ContentPage
     }
 
 
-    private void OnClosePopup(object sender, EventArgs e)
+    private void OnPopupCloseClicked(object sender, EventArgs e)
     {
         PopupOverlay.IsVisible = false;
         StopSpeech();
@@ -302,7 +302,7 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private async void OnPlayStopClicked(object sender, EventArgs e)
+    private async void OnPopupPlayClicked(object sender, EventArgs e)
     {
         if (_selectedPoi == null) return;
         if (_isPlaying)

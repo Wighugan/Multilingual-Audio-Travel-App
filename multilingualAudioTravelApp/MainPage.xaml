@@ -43,19 +43,26 @@
 
                     <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" Padding="10">
 
-                        <ImageButton x:Name="PlayStopButton" 
-                            Source="play_icon.png"
-                            WidthRequest="60"
-                            HeightRequest="60"
-                            CornerRadius="30" Padding="15" Aspect="AspectFit" Clicked="OnPlayStopClicked"
-                            BackgroundColor="#E0E0E0" />
-                        <ImageButton Source="close_icon.png"
-                            WidthRequest="60"
-                            HeightRequest="60"
-                            CornerRadius="30"
-                            Padding="15" Aspect="AspectFit"
-                            Clicked="OnClosePopup"
-                            BackgroundColor="#FFE0E0" />
+                        <!-- Nghe -->
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <ImageButton x:Name="PlayStopButton"
+                                 Source="play_icon.png"
+                                 WidthRequest="60" HeightRequest="60"
+                                 CornerRadius="30" Padding="15" Aspect="AspectFit"
+                                 Clicked="OnPopupPlayClicked"
+                                 BackgroundColor="#E0E0E0"/>
+                            <Label Text="{x:Static lang:AppStrings.Play}" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <ImageButton Source="close_icon.png"
+                                 WidthRequest="60" HeightRequest="60"
+                                 CornerRadius="30" Padding="15" Aspect="AspectFit"
+                                 Clicked="OnPopupCloseClicked"
+                                 BackgroundColor="#FFE0E0"/>
+                            <Label Text="{x:Static lang:AppStrings.Close}" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
                     </HorizontalStackLayout>
 
                 </VerticalStackLayout>

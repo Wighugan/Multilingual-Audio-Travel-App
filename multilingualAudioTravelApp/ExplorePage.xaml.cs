@@ -53,14 +53,14 @@ public partial class ExplorePage : ContentPage
         }
     }
 
-    private void OnClosePopup(object sender, EventArgs e)
+    private void OnPopupCloseClicked(object sender, EventArgs e)
     {
         PopupOverlay.IsVisible = false;
         StopSpeech();
         ResetAudioState();
     }
 
-    private async void OnPlayStopClicked(object sender, EventArgs e)
+    private async void OnPopupPlayClicked(object sender, EventArgs e)
     {
         if (_selectedPoi == null) return;
 
@@ -74,6 +74,14 @@ public partial class ExplorePage : ContentPage
             PlayStopButton.Source = "stop_icon.png";
             await SpeakDescription(_selectedPoi.CurrentDescription);
         }
+    }
+
+    private async void OnPopupMapClicked(object sender, EventArgs e)
+    {
+        PopupOverlay.IsVisible = false;
+        StopSpeech();
+        ResetAudioState();
+        await Shell.Current.GoToAsync("//MainPage");
     }
 
     /*   private async Task SpeakDescription(string text)

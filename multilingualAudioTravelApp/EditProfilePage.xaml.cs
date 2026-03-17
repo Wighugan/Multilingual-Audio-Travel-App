@@ -1,4 +1,6 @@
-﻿using multilingualAudioTravelApp.Services;
+﻿using System.Text.RegularExpressions;
+using multilingualAudioTravelApp.Services;
+using System.Net.Http;
 
 namespace multilingualAudioTravelApp;
 
@@ -31,6 +33,27 @@ public partial class EditProfilePage : ContentPage
         if (string.IsNullOrEmpty(newName) || string.IsNullOrEmpty(newEmail))
         {
             ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorEmail);
+            return;
+        }
+
+        // kiểm tra tên hợp lệ hay không
+        if (!newName.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+        {
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorName);
+            return;
+        }
+
+        // kiểm tra định dạng email
+        if (!IsValidEmail(newEmail))
+        {
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorInvalidEmail);
+            return;
+        }
+
+        bool isDomainReal = await IsEmailDomainReal(newEmail);
+        if (!isDomainReal)
+        {
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorInvalidEmail);
             return;
         }
 
@@ -76,5 +99,49 @@ public partial class EditProfilePage : ContentPage
     {
         ErrorLabel.Text = message;
         ErrorLabel.IsVisible = true;
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        try
+        {
+            // Pattern chuẩn kiểm tra định dạng email (VD: abc@xyz.com)
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
+    }
+    private async Task<bool> IsEmailDomainReal(string email)
+    {
+        try
+        {
+            //Tách tên miền
+            var parts = email.Split('@');
+            if (parts.Length != 2) return false;
+            string domain = parts[1];
+
+            // hỏi tên miền có máy chủ nhận Email không
+            string url = $"https://dns.google/resolve?name={domain}&type=MX";
+
+            using var client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(3);
+            var response = await client.GetStringAsync(url);
+
+            if (response.Contains("\"Answer\":"))
+            {
+                return true;
+            }
+            return false;
+        }
+        catch
+        {
+            return true;
+        }
     }
 }

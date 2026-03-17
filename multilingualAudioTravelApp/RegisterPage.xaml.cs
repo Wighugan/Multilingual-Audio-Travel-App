@@ -34,7 +34,7 @@ public partial class RegisterPage : ContentPage
             return;
         }
 
-        // Kiểm tra mật khẩu khớp
+        // kiểm tra email đúng dịnh dạng hay không
         if (!IsValidEmail(email))
         {
             ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorInvalidEmail);

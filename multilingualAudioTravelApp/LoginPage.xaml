@@ -5,22 +5,23 @@
     x:Class="multilingualAudioTravelApp.LoginPage"
     NavigationPage.HasBackButton="False"
     Shell.NavBarIsVisible="False"
-    Title="Đăng nhập">
+    xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
+    Title= "{x:Static lang:AppStrings.LogIn}">
 
     <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
 
-        <Label Text="Đăng nhập" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
+        <Label Text="{x:Static lang:AppStrings.LogIn}" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
 
-        <Entry x:Name="EmailEntry" Placeholder="Email" Keyboard="Email"/>
+        <Entry x:Name="EmailEntry" Placeholder="{x:Static lang:AppStrings.Email}" Keyboard="Email"/>
 
-        <Entry x:Name="PasswordEntry" Placeholder="Mật khẩu" IsPassword="True"/>
+        <Entry x:Name="PasswordEntry" Placeholder="{x:Static lang:AppStrings.Pass}" IsPassword="True"/>
 
         <Label x:Name="ErrorLabel" TextColor="Red" IsVisible="False" HorizontalOptions="Center"/>
 
-        <Button Text="Đăng nhập" CornerRadius="10" HeightRequest="48" Clicked="OnLoginClicked"/>
+        <Button Text="{x:Static lang:AppStrings.LogIn}" CornerRadius="10" HeightRequest="48" Clicked="OnLoginClicked"/>
 
         <Button
-        Text="Chưa có tài khoản? Đăng ký"
+        Text="{x:Static lang:AppStrings.AskRegis}"
         BackgroundColor="Transparent"
         TextColor="Gray"
         Clicked="OnGoToRegisterClicked"/>

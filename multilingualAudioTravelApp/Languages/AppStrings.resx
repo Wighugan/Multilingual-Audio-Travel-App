@@ -123,9 +123,6 @@
   <data name="CfNewPw" xml:space="preserve">
     <value>Xác nhận mật khẩu mới</value>
   </data>
-  <data name="CfNewPwEntry" xml:space="preserve">
-    <value>Nhập lại mật khẩu mới</value>
-  </data>
   <data name="Darkmode" xml:space="preserve">
     <value>Chế độ tối</value>
   </data>
@@ -162,9 +159,6 @@
   <data name="Hello" xml:space="preserve">
     <value>Xin chào</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Trang chủ</value>
-  </data>
   <data name="Language" xml:space="preserve">
     <value>Ngôn ngữ</value>
   </data>
@@ -199,7 +193,7 @@
     <value>Họ tên và email không được để trống.</value>
   </data>
   <data name="ErrorPass" xml:space="preserve">
-    <value>Mật khẩu mới phải có ít nhất 6 ký tự.</value>
+    <value>Mật khẩu phải có ít nhất 6 ký tự.</value>
   </data>
   <data name="ErrorRepass" xml:space="preserve">
     <value>Mật khẩu xác nhận không khớp.</value>
@@ -248,5 +242,44 @@
   </data>
   <data name="PressHeart" xml:space="preserve">
     <value>Nhấn  🤍  trên quán để lưu vào đây</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="Pass" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="AskRegis" xml:space="preserve">
+    <value>Chưa có tài khoản? Đăng ký</value>
+  </data>
+  <data name="AskTypeEmail" xml:space="preserve">
+    <value>Vui lòng nhập email và mật khẩu.</value>
+  </data>
+  <data name="ErrorWrongEmailOrPass" xml:space="preserve">
+    <value>Email hoặc mật khẩu không đúng.</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="CfPass" xml:space="preserve">
+    <value>Xác nhận mật khẩu</value>
+  </data>
+  <data name="CfNewPwEntry" xml:space="preserve">
+    <value>Nhập lại mật khẩu mới</value>
+  </data>
+  <data name="AskLogIn" xml:space="preserve">
+    <value>Đã có tài khoản? Đăng nhập</value>
+  </data>
+  <data name="CreateAcc" xml:space="preserve">
+    <value>Tạo tài khoản</value>
+  </data>
+  <data name="AskFullInfo" xml:space="preserve">
+    <value>Vui lòng điền đầy đủ thông tin.</value>
+  </data>
+  <data name="CreateAccSuccess" xml:space="preserve">
+    <value>Tạo tài khoản thành công! Vui lòng đăng nhập</value>
   </data>
 </root>

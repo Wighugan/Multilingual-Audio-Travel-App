@@ -19,7 +19,7 @@ public partial class LoginPage : ContentPage
 
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
-            ErrorLabel.Text = "Vui lòng nhập email và mật khẩu.";
+            ErrorLabel.Text = multilingualAudioTravelApp.Languages.AppStrings.AskTypeEmail;
             ErrorLabel.IsVisible = true;
             return;
         }
@@ -37,7 +37,7 @@ public partial class LoginPage : ContentPage
         }
         else
         {
-            ErrorLabel.Text = "Email hoặc mật khẩu không đúng.";
+            ErrorLabel.Text = multilingualAudioTravelApp.Languages.AppStrings.ErrorWrongEmailOrPass;
             ErrorLabel.IsVisible = true;
         }
     }

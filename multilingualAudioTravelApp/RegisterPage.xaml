@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="multilingualAudioTravelApp.RegisterPage"
     Shell.NavBarIsVisible="False"
-    Title="Đăng ký">
+    xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
+    Title="{x:Static lang:AppStrings.Register}">
 
     <VerticalStackLayout
         Padding="24"
@@ -12,28 +13,28 @@
         VerticalOptions="Center">
 
         <Label
-            Text="Tạo tài khoản"
+            Text="{x:Static lang:AppStrings.CreateAcc}"
             FontSize="28"
             FontAttributes="Bold"
             HorizontalOptions="Center"/>
 
         <Entry
             x:Name="FullNameEntry"
-            Placeholder="Họ và tên"/>
+            Placeholder="{x:Static lang:AppStrings.Name}"/>
 
         <Entry
             x:Name="EmailEntry"
-            Placeholder="Email"
+            Placeholder="{x:Static lang:AppStrings.Email}"
             Keyboard="Email"/>
 
         <Entry
             x:Name="PasswordEntry"
-            Placeholder="Mật khẩu"
+            Placeholder="{x:Static lang:AppStrings.Pass}"
             IsPassword="True"/>
 
         <Entry
             x:Name="ConfirmPasswordEntry"
-            Placeholder="Xác nhận mật khẩu"
+            Placeholder="{x:Static lang:AppStrings.CfPass}"
             IsPassword="True"/>
 
         <Label
@@ -43,13 +44,13 @@
             HorizontalOptions="Center"/>
 
         <Button
-            Text="Đăng ký"
+            Text="{x:Static lang:AppStrings.Register}"
             CornerRadius="10"
             HeightRequest="48"
             Clicked="OnRegisterClicked"/>
 
         <Button
-            Text="Đã có tài khoản? Đăng nhập"
+            Text="{x:Static lang:AppStrings.AskLogIn}"
             BackgroundColor="Transparent"
             TextColor="Gray"
             Clicked="OnGoToLoginClicked"/>

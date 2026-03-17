@@ -61,11 +61,47 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vui lòng điền đầy đủ thông tin..
+        /// </summary>
+        public static string AskFullInfo {
+            get {
+                return ResourceManager.GetString("AskFullInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã có tài khoản? Đăng nhập.
+        /// </summary>
+        public static string AskLogIn {
+            get {
+                return ResourceManager.GetString("AskLogIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bạn có chắc muốn đăng xuất không?.
         /// </summary>
         public static string AskLogOut {
             get {
                 return ResourceManager.GetString("AskLogOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chưa có tài khoản? Đăng ký.
+        /// </summary>
+        public static string AskRegis {
+            get {
+                return ResourceManager.GetString("AskRegis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vui lòng nhập email và mật khẩu..
+        /// </summary>
+        public static string AskTypeEmail {
+            get {
+                return ResourceManager.GetString("AskTypeEmail", resourceCulture);
             }
         }
         
@@ -115,11 +151,38 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Xác nhận mật khẩu.
+        /// </summary>
+        public static string CfPass {
+            get {
+                return ResourceManager.GetString("CfPass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Đóng.
         /// </summary>
         public static string Close {
             get {
                 return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tạo tài khoản.
+        /// </summary>
+        public static string CreateAcc {
+            get {
+                return ResourceManager.GetString("CreateAcc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tạo tài khoản thành công! Vui lòng đăng nhập.
+        /// </summary>
+        public static string CreateAccSuccess {
+            get {
+                return ResourceManager.GetString("CreateAccSuccess", resourceCulture);
             }
         }
         
@@ -205,7 +268,7 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mật khẩu mới phải có ít nhất 6 ký tự..
+        ///   Looks up a localized string similar to Mật khẩu phải có ít nhất 6 ký tự..
         /// </summary>
         public static string ErrorPass {
             get {
@@ -228,6 +291,15 @@ namespace multilingualAudioTravelApp.Languages {
         public static string ErrorSameEmail {
             get {
                 return ResourceManager.GetString("ErrorSameEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email hoặc mật khẩu không đúng..
+        /// </summary>
+        public static string ErrorWrongEmailOrPass {
+            get {
+                return ResourceManager.GetString("ErrorWrongEmailOrPass", resourceCulture);
             }
         }
         
@@ -282,6 +354,15 @@ namespace multilingualAudioTravelApp.Languages {
         public static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đăng nhập.
+        /// </summary>
+        public static string LogIn {
+            get {
+                return ResourceManager.GetString("LogIn", resourceCulture);
             }
         }
         
@@ -358,6 +439,15 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mật khẩu.
+        /// </summary>
+        public static string Pass {
+            get {
+                return ResourceManager.GetString("Pass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nghe.
         /// </summary>
         public static string Play {
@@ -381,6 +471,15 @@ namespace multilingualAudioTravelApp.Languages {
         public static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đăng ký.
+        /// </summary>
+        public static string Register {
+            get {
+                return ResourceManager.GetString("Register", resourceCulture);
             }
         }
         

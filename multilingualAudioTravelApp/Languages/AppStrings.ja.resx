@@ -123,9 +123,6 @@
   <data name="CfNewPw" xml:space="preserve">
     <value>新しいパスワードを確認します</value>
   </data>
-  <data name="CfNewPwEntry" xml:space="preserve">
-    <value>新しいパスワードを再入力してください</value>
-  </data>
   <data name="Darkmode" xml:space="preserve">
     <value>ダークモード</value>
   </data>
@@ -162,9 +159,6 @@
   <data name="Hello" xml:space="preserve">
     <value>こんにちは</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>ホームページ</value>
-  </data>
   <data name="Language" xml:space="preserve">
     <value>言語</value>
   </data>
@@ -199,7 +193,7 @@
     <value>氏名とメールアドレスは空欄にできません。</value>
   </data>
   <data name="ErrorPass" xml:space="preserve">
-    <value>新しいパスワードは6文字以上でなければなりません。</value>
+    <value>パスワードは6文字以上でなければなりません。</value>
   </data>
   <data name="ErrorRepass" xml:space="preserve">
     <value>認証パスワードが一致しません。</value>
@@ -248,5 +242,44 @@
   </data>
   <data name="PressHeart" xml:space="preserve">
     <value>ショップの🤍をタップして保存してください</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>ログイン</value>
+  </data>
+  <data name="Pass" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>ホームページ</value>
+  </data>
+  <data name="AskRegis" xml:space="preserve">
+    <value>まだアカウントをお持ちでない方は、今すぐご登録ください</value>
+  </data>
+  <data name="AskTypeEmail" xml:space="preserve">
+    <value>メールアドレスとパスワードを入力してください。</value>
+  </data>
+  <data name="ErrorWrongEmailOrPass" xml:space="preserve">
+    <value>メールアドレスまたはパスワードが間違っています。</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>登録する</value>
+  </data>
+  <data name="CfPass" xml:space="preserve">
+    <value>パスワードを認証する</value>
+  </data>
+  <data name="CfNewPwEntry" xml:space="preserve">
+    <value>新しいパスワードを再入力してください</value>
+  </data>
+  <data name="AskLogIn" xml:space="preserve">
+    <value>既にアカウントをお持ちですか？ログインしてください</value>
+  </data>
+  <data name="CreateAcc" xml:space="preserve">
+    <value>アカウントを作成する</value>
+  </data>
+  <data name="AskFullInfo" xml:space="preserve">
+    <value>すべての情報をご記入ください。</value>
+  </data>
+  <data name="CreateAccSuccess" xml:space="preserve">
+    <value>アカウントが正常に作成されました！ログインしてください。</value>
   </data>
 </root>

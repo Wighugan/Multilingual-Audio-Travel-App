@@ -123,9 +123,6 @@
   <data name="CfNewPw" xml:space="preserve">
     <value>Confirm your new password</value>
   </data>
-  <data name="CfNewPwEntry" xml:space="preserve">
-    <value>Re-enter your new password</value>
-  </data>
   <data name="Darkmode" xml:space="preserve">
     <value>Dark mode</value>
   </data>
@@ -162,9 +159,6 @@
   <data name="Hello" xml:space="preserve">
     <value>Hello</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Homepage</value>
-  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
@@ -199,7 +193,7 @@
     <value>Full name and email address cannot be left blank.</value>
   </data>
   <data name="ErrorPass" xml:space="preserve">
-    <value>The new password must have at least 6 characters.</value>
+    <value>The password must have at least 6 characters.</value>
   </data>
   <data name="ErrorRepass" xml:space="preserve">
     <value>The verification password doesn't match.</value>
@@ -248,5 +242,44 @@
   </data>
   <data name="PressHeart" xml:space="preserve">
     <value>Press  🤍  to save restaurants</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="Pass" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Homepage</value>
+  </data>
+  <data name="AskRegis" xml:space="preserve">
+    <value>Don't have an account yet? Register now</value>
+  </data>
+  <data name="AskTypeEmail" xml:space="preserve">
+    <value>Please enter your email and password.</value>
+  </data>
+  <data name="ErrorWrongEmailOrPass" xml:space="preserve">
+    <value>Incorrect email address or password.</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="CfPass" xml:space="preserve">
+    <value>Confirm your password</value>
+  </data>
+  <data name="CfNewPwEntry" xml:space="preserve">
+    <value>Re-enter your new password</value>
+  </data>
+  <data name="AskLogIn" xml:space="preserve">
+    <value>Already have an account? Log in</value>
+  </data>
+  <data name="CreateAcc" xml:space="preserve">
+    <value>Create your account</value>
+  </data>
+  <data name="AskFullInfo" xml:space="preserve">
+    <value>Please fill in all the information.</value>
+  </data>
+  <data name="CreateAccSuccess" xml:space="preserve">
+    <value>Your account has been successfully created! Please log in.</value>
   </data>
 </root>

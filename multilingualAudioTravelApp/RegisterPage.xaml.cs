@@ -21,21 +21,21 @@ public partial class RegisterPage : ContentPage
         // Kiểm tra nhập đủ thông tin
         if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
-            ShowError("Vui lòng điền đầy đủ thông tin.");
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.AskFullInfo);
             return;
         }
 
         // Kiểm tra mật khẩu khớp
         if (password != confirm)
         {
-            ShowError("Mật khẩu xác nhận không khớp.");
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorRepass);
             return;
         }
 
         // Kiểm tra độ dài mật khẩu
         if (password.Length < 6)
         {
-            ShowError("Mật khẩu phải có ít nhất 6 ký tự.");
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorPass);
             return;
         }
 
@@ -43,12 +43,14 @@ public partial class RegisterPage : ContentPage
 
         if (success)
         {
-            await DisplayAlert("Thành công", "Tài khoản đã được tạo! Vui lòng đăng nhập.", "OK");
+            await DisplayAlert(multilingualAudioTravelApp.Languages.AppStrings.Success, 
+                multilingualAudioTravelApp.Languages.AppStrings.CreateAccSuccess,
+                multilingualAudioTravelApp.Languages.AppStrings.ok);
             Application.Current.MainPage = new NavigationPage(new LoginPage());
         }
         else
         {
-            ShowError("Email này đã được sử dụng.");
+            ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorSameEmail);
         }
     }
 

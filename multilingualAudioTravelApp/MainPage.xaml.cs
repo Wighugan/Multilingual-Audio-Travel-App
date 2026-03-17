@@ -21,6 +21,7 @@ public partial class MainPage : ContentPage
     private MemoryLayer _currentLocationLayer;
     private MemoryLayer _poiLayer;
     private bool _isTracking = false;
+    private Location _currentLocation;
     private CancellationTokenSource _speechCts;
     private DateTime _lastGeofenceCheckTime = DateTime.MinValue;
     private List<PoiData> _poiList = new List<PoiData>();
@@ -43,6 +44,7 @@ public partial class MainPage : ContentPage
     private void InitializeMap()
     {
         MyMap.Map.Layers.Add(OpenStreetMap.CreateTileLayer());
+        
         foreach (var widget in MyMap.Map.Widgets)
         {
             string widgetName = widget.GetType().Name;
@@ -56,12 +58,7 @@ public partial class MainPage : ContentPage
         _currentLocationLayer = new MemoryLayer
         {
             Name = "LocationLayer",
-            Style = new SymbolStyle
-            {
-                Fill = new MBrush(MColor.Red),
-                SymbolScale = 0.5,
-                Outline = new Pen { Color = MColor.White, Width = 2 }
-            }
+            Style = null // style riêng từng feature
         };
         MyMap.Map.Layers.Add(_currentLocationLayer);
 
@@ -84,8 +81,8 @@ public partial class MainPage : ContentPage
                 try {
                     var min = SphericalMercator.FromLonLat(106.7010, 10.7570);
                     var max = SphericalMercator.FromLonLat(106.7060, 10.7640);
-                    MyMap.Map.Navigator.OverridePanBounds = new MRect(min.x, min.y, max.x, max.y);
-                    MyMap.Map.Navigator.OverrideZoomBounds = new MMinMax(0.1, 5);
+                    //MyMap.Map.Navigator.OverridePanBounds = new MRect(min.x, min.y, max.x, max.y);
+                  //  MyMap.Map.Navigator.OverrideZoomBounds = new MMinMax(0.1, 5);
                 }
                 catch (Exception ex)
                 {
@@ -98,6 +95,9 @@ public partial class MainPage : ContentPage
             }
         });
     }
+
+
+
 
     public class PoiData
     {
@@ -422,24 +422,67 @@ public partial class MainPage : ContentPage
     {
         if (location == null) return;
 
+        // Lưu lại vị trí hiện tại để nút định vị dùng
+        _currentLocation = location;
+
         try
         {
             var smPoint = SphericalMercator.FromLonLat(location.Longitude, location.Latitude);
             var mapPoint = new MPoint(smPoint.x, smPoint.y);
 
-            var pointFeature = new PointFeature(mapPoint);
-            var features = new List<IFeature> { pointFeature };
+            var feature = new PointFeature(mapPoint);
 
-            _currentLocationLayer.Features = features;
+            // Vòng sáng xanh bên ngoài (hiệu ứng accuracy)
+            feature.Styles.Add(new SymbolStyle
+            {
+                SymbolType = SymbolType.Ellipse,
+                Fill = new MBrush(new MColor(66, 133, 244, 50)), // xanh trong suốt
+                Outline = new Pen(new MColor(66, 133, 244, 80), 1),
+                SymbolScale = 2.5,
+            });
+
+            // Viền trắng
+            feature.Styles.Add(new SymbolStyle
+            {
+                SymbolType = SymbolType.Ellipse,
+                Fill = new MBrush(MColor.White),
+                SymbolScale = 0.7,
+            });
+
+            // Chấm xanh chính giữa
+            feature.Styles.Add(new SymbolStyle
+            {
+                SymbolType = SymbolType.Ellipse,
+                Fill = new MBrush(new MColor(66, 133, 244)), // xanh Google
+                SymbolScale = 0.5,
+            });
+
+            _currentLocationLayer.Features = new List<IFeature> { feature };
             _currentLocationLayer.DataHasChanged();
 
+            // Theo dõi vị trí — tự động di chuyển bản đồ theo người dùng
             MyMap.Map.Navigator.CenterOn(mapPoint);
-
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message); // Ghi log nếu lỗi
+            Console.WriteLine(ex.Message);
         }
+    }
+    private void OnLocateMeTapped(object sender, TappedEventArgs e)
+    {
+        if (_currentLocation == null)
+        {
+            DisplayAlert("", "Chưa xác định được vị trí", "OK");
+            return;
+        }
+
+        var smPoint = SphericalMercator.FromLonLat(
+            _currentLocation.Longitude,
+            _currentLocation.Latitude);
+
+        var point = new MPoint(smPoint.x, smPoint.y);
+        MyMap.Map.Navigator.CenterOn(point);
+        MyMap.Map.Navigator.ZoomTo(4);
     }
     private void CheckGeofence(Location userLocation)
     {

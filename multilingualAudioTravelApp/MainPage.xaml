@@ -13,6 +13,26 @@
                         VerticalOptions="FillAndExpand"
                         HorizontalOptions="FillAndExpand" />
 
+        <Border
+HorizontalOptions="End"
+VerticalOptions="End"
+Margin="16,0,16,32"
+BackgroundColor="White"
+StrokeThickness="0"
+WidthRequest="48" HeightRequest="48">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="24"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.2"/>
+            </Border.Shadow>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnLocateMeTapped"/>
+            </Border.GestureRecognizers>
+            <Label Text="📍" FontSize="22"
+       HorizontalOptions="Center"
+       VerticalOptions="Center"/>
+        </Border>
         <!-- POPUP OVERLAY -->
         <Grid x:Name="PopupOverlay"
               BackgroundColor="#80000000"
@@ -67,6 +87,8 @@
 
                 </VerticalStackLayout>
             </Frame>
+
+           
 
         </Grid>
 

@@ -282,4 +282,10 @@
   <data name="CreateAccSuccess" xml:space="preserve">
     <value>Tạo tài khoản thành công! Vui lòng đăng nhập</value>
   </data>
+  <data name="ErrorInvalidEmail" xml:space="preserve">
+    <value>Email không đúng định dạng!</value>
+  </data>
+  <data name="ErrorName" xml:space="preserve">
+    <value>Tên không hợp lệ!</value>
+  </data>
 </root>

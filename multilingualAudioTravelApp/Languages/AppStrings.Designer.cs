@@ -268,6 +268,24 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email không đúng định dạng!.
+        /// </summary>
+        public static string ErrorInvalidEmail {
+            get {
+                return ResourceManager.GetString("ErrorInvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tên không hợp lệ!.
+        /// </summary>
+        public static string ErrorName {
+            get {
+                return ResourceManager.GetString("ErrorName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mật khẩu phải có ít nhất 6 ký tự..
         /// </summary>
         public static string ErrorPass {

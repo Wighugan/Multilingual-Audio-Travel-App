@@ -37,6 +37,18 @@ public class PoiEntity  //POI
         public double Latitude { get; set; }
         public double Longitude { get; set; }
     }
+
+    public class FeedbackEntity  //feedback
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string UserEmail { get; set; }
+        public int Rating { get; set; }       
+        public string Content { get; set; }
+        public string CreatedAt { get; set; }
+    }
+
+
     // Hàm tự động dịch chuỗi JSON thành Dictionary (Từ điển)
     [Ignore]
     public Dictionary<string, PoiTranslation> TranslationDict
@@ -110,8 +122,8 @@ public class DatabaseService
 
         await _db.CreateTableAsync<PoiEntity>();
         await _db.CreateTableAsync<UserEntity>();
-        await _db.CreateTableAsync<FavoriteEntity>(); 
-
+        await _db.CreateTableAsync<FavoriteEntity>();
+        await _db.CreateTableAsync<FeedbackEntity>();
         var count = await _db.Table<PoiEntity>().CountAsync();
         if (count == 0)
             await SeedDataAsync();
@@ -401,5 +413,18 @@ public class DatabaseService
             .FirstOrDefaultAsync();
         if (item != null)
             await _db.DeleteAsync(item);
+    }
+
+    //luu feedback
+    public async Task SaveFeedbackAsync(string email, int rating, string content)
+    {
+        await InitAsync();
+        await _db.InsertAsync(new FeedbackEntity
+        {
+            UserEmail = email,
+            Rating = rating,
+            Content = content,
+            CreatedAt = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+        });
     }
 }

@@ -6,6 +6,7 @@ public partial class ProfilePage : ContentPage
     {
         InitializeComponent();
         BindingContext = new ProfileViewModel();
+        _stars = new List<Label> { S1, S2, S3, S4, S5 }; 
     }
 
     private async void OnMenuSelected(object sender, SelectionChangedEventArgs e)
@@ -50,7 +51,7 @@ public partial class ProfilePage : ContentPage
                 break;
 
             case "feedback":
-                await DisplayAlert("Đánh giá & Góp ý", "Chức năng đang phát triển", "OK");
+                await ShowFeedbackPopup();
                 break;
 
             default:
@@ -75,4 +76,64 @@ public partial class ProfilePage : ContentPage
         // QUAN TRỌNG: reset toàn bộ Shell
         Application.Current.MainPage = new NavigationPage(new LoginPage());
     }
+
+
+    private int _feedbackRating = 0;
+    private List<Label> _stars;
+
+   
+
+    // Mở popup feedback
+    private async Task ShowFeedbackPopup()
+    {
+        _feedbackRating = 0;
+        FeedbackEditor.Text = "";
+        FeedbackErrorLabel.IsVisible = false;
+        foreach (var s in _stars) s.Text = "☆";
+        FeedbackOverlay.IsVisible = true;
+    }
+
+    // Bấm sao
+    private void OnStarTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not string param) return;
+        _feedbackRating = int.Parse(param);
+
+        for (int i = 0; i < _stars.Count; i++)
+            _stars[i].Text = i < _feedbackRating ? "★" : "☆";
+
+    }
+
+    // Nút Hủy
+    private void OnFeedbackCancelClicked(object sender, EventArgs e)
+    {
+        FeedbackOverlay.IsVisible = false;
+    }
+
+    // Nút Gửi
+    private async void OnFeedbackSubmitClicked(object sender, EventArgs e)
+    {
+        if (_feedbackRating == 0)
+        {
+            FeedbackErrorLabel.Text = "Vui lòng chọn số sao!";
+            FeedbackErrorLabel.IsVisible = true;
+            return;
+        }
+
+        FeedbackErrorLabel.IsVisible = false;
+
+        var email = Preferences.Get("userEmail", "anonymous");
+        var content = FeedbackEditor.Text?.Trim() ?? "";
+        var db = new Services.DatabaseService();
+
+        await db.SaveFeedbackAsync(email, _feedbackRating, content);
+        FeedbackOverlay.IsVisible = false;
+
+        await DisplayAlert("Cảm ơn!",
+            $"Bạn đã đánh giá {new string('★', _feedbackRating)}{new string('☆', 5 - _feedbackRating)}\n" +
+            (!string.IsNullOrEmpty(content) ? "Góp ý đã được ghi nhận." : ""),
+            "OK");
+    }
+
+
 }

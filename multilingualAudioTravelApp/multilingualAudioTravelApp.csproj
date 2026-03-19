@@ -73,6 +73,11 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>AppStrings.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Languages\Resource1.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resource1.resx</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -82,6 +87,7 @@
 	  </EmbeddedResource>
 	  <EmbeddedResource Update="Languages\Resource1.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
 

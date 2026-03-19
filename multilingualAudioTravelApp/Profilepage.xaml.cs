@@ -28,13 +28,13 @@ public partial class ProfilePage : ContentPage
                 multilingualAudioTravelApp.Languages.AppStrings.SelectLanguage,
                 multilingualAudioTravelApp.Languages.AppStrings.Cancel,
                 null,
-                "Tiếng Việt", "English", "日本語", "中国人"/*, "한국어"*/);
+                "Tiếng Việt", "English", "日本語", "中国人", "한국어");
 
                 string langCode = "vi";
                 if (action == "English") langCode = "en";
                 else if (action == "日本語") langCode = "ja";
                 else if (action == "中国人") langCode = "zh";
-                /*                else if (action == "한국어") langCode = "ko";*/
+                else if (action == "한국어") langCode = "ko";
                 else if (action == multilingualAudioTravelApp.Languages.AppStrings.Cancel || string.IsNullOrEmpty(action)) return;
                 Preferences.Set("AppLanguage", langCode);
                 var culture = new System.Globalization.CultureInfo(langCode);

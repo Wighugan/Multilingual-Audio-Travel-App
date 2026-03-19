@@ -229,7 +229,7 @@
     <value>レストランを探す</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>近い</value>
+    <value>閉じる</value>
   </data>
   <data name="Play" xml:space="preserve">
     <value>再生</value>

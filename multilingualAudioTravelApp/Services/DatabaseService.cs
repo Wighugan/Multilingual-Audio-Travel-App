@@ -106,7 +106,7 @@ public class DatabaseService
         if (_db != null) return;
 
         _db = new SQLiteAsyncConnection(_dbPath);
-       //await _db.DropTableAsync<PoiEntity>();       // ← thêm tạm, xóa sau khi chạy 1 lần
+    //   await _db.DropTableAsync<PoiEntity>();       // ← thêm tạm, xóa sau khi chạy 1 lần
 
         await _db.CreateTableAsync<PoiEntity>();
         await _db.CreateTableAsync<UserEntity>();
@@ -192,100 +192,103 @@ public class DatabaseService
     {
         var samples = new List<PoiEntity>
     {
-             new PoiEntity
+        new PoiEntity
         {
             Image = "vinhkhanh.jpg", Latitude = 10.761923, Longitude = 106.701964 , Radius = 100, Priority = 10,
-
             TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
                 { "vi", new PoiTranslation { Name = "Khu phố Vĩnh Khánh", Description = "Phố ẩm thực nổi tiếng quận 4." } },
                 { "en", new PoiTranslation { Name = "Vinh Khanh Food Street", Description = "A famous food street in District 4." } },
                 { "ja", new PoiTranslation { Name = "ヴィンカン通り", Description = "4区で有名なグルメ通りです。" } },
-
+                { "zh", new PoiTranslation { Name = "永庆美食街", Description = "第四郡著名的美食街。" } }
             })
         },
-               
+
         new PoiEntity
         {
             Image = "ocoanh.jpg", Latitude = 10.761410, Longitude = 106.702820 , Radius = 80, Priority = 8,
-            
             TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
                 { "vi", new PoiTranslation { Name = "Quán ốc Oanh", Description = "Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh." } },
                 { "en", new PoiTranslation { Name = "Oanh Snail Restaurant", Description = "The oldest and most famous snail restaurant in Vinh Khanh area." } },
-                { "ja", new PoiTranslation { Name = "ヴィンカン通り", Description = "4区で有名なグルメ通りです。" } },
-                
+                { "ja", new PoiTranslation { Name = "オアン貝料理店", Description = "ヴィンカンエリアで最も古く、最も有名な貝料理店です。" } }, // Đã sửa lỗi copy nhầm tiếng Nhật ở đây
+                { "zh", new PoiTranslation { Name = "Oanh 螺店", Description = "永庆地区历史最悠久、最著名的海螺海鲜店。" } }
             })
         },
 
-       
         new PoiEntity
+        {
+            Image = "ocphat.jpg", Latitude = 10.761921, Longitude = 106.702151, Radius = 70, Priority = 6,
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
-                Image = "ocphat.jpg", Latitude = 10.761921, Longitude = 106.702151, Radius = 70, Priority = 6,
-                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
-                {
-                    { "vi", new PoiTranslation { Name = "Quán Ốc Phát", Description = "Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc cho các tín đồ mê ốc." } },
-                    { "en", new PoiTranslation { Name = "Phat Snail Restaurant", Description = "Phat Snail Vinh Khanh is always a familiar destination for snail lovers." } },
-                    { "ja", new PoiTranslation { Name = "ファット貝料理店", Description = "ヴィンカン通りのファット貝料理店は、貝好きに常におなじみの場所です。" } },
-                })
-            },
-            new PoiEntity
+                { "vi", new PoiTranslation { Name = "Quán Ốc Phát", Description = "Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc cho các tín đồ mê ốc." } },
+                { "en", new PoiTranslation { Name = "Phat Snail Restaurant", Description = "Phat Snail Vinh Khanh is always a familiar destination for snail lovers." } },
+                { "ja", new PoiTranslation { Name = "ファット貝料理店", Description = "ヴィンカン通りのファット貝料理店は、貝好きに常におなじみの場所です。" } },
+                { "zh", new PoiTranslation { Name = "Phat 螺店", Description = "永庆的 Phat 螺店一直是海鲜爱好者的熟悉去处。" } }
+            })
+        },
+
+        new PoiEntity
+        {
+            Image = "bunca.jpg", Latitude = 10.761455, Longitude = 106.702660, Radius = 70, Priority = 6,
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
-                Image = "bunca.jpg", Latitude = 10.761455, Longitude = 106.702660, Radius = 70, Priority = 6,
-                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
-                {
-                    { "vi", new PoiTranslation { Name = "Quán bún cá Châu Đốc", Description = "Nước lèo thanh mát, đậm đà hương vị ăn cùng bún, chả cá và cá." } },
-                    { "en", new PoiTranslation { Name = "Chau Doc Fish Noodle Soup", Description = "Refreshing, flavorful broth served with noodles, fish cake, and fish." } },
-                    { "ja", new PoiTranslation { Name = "チャウドック魚麺", Description = "さっぱりとして風味豊かなスープに、麺、さつま揚げ、魚が入っています。" } },
-                })
-            },
-            new PoiEntity
+                { "vi", new PoiTranslation { Name = "Quán bún cá Châu Đốc", Description = "Nước lèo thanh mát, đậm đà hương vị ăn cùng bún, chả cá và cá." } },
+                { "en", new PoiTranslation { Name = "Chau Doc Fish Noodle Soup", Description = "Refreshing, flavorful broth served with noodles, fish cake, and fish." } },
+                { "ja", new PoiTranslation { Name = "チャウドック魚麺", Description = "さっぱりとして風味豊かなスープに、麺、さつま揚げ、魚が入っています。" } },
+                { "zh", new PoiTranslation { Name = "朱笃鱼汤粉", Description = "清凉浓郁的汤汁，配上米粉、鱼饼和鱼肉，风味绝佳。" } }
+            })
+        },
+
+        new PoiEntity
+        {
+            Image = "ocloan.jpg", Latitude = 10.761170, Longitude = 106.702710, Radius = 70, Priority = 6,
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
-                Image = "ocloan.jpg", Latitude = 10.761170, Longitude = 106.702710, Radius = 70, Priority = 6,
-                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
-                {
-                    { "vi", new PoiTranslation { Name = "Quán Ốc Loan", Description = "Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon." } },
-                    { "en", new PoiTranslation { Name = "Loan Snail Restaurant", Description = "Airy space, famous for its extremely delicious dipping sauce." } },
-                    { "ja", new PoiTranslation { Name = "ロアン貝料理店", Description = "風通しの良い空間で、とても美味しいディップソースで有名です。" } },
-                })
-            },
+                { "vi", new PoiTranslation { Name = "Quán Ốc Loan", Description = "Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon." } },
+                { "en", new PoiTranslation { Name = "Loan Snail Restaurant", Description = "Airy space, famous for its extremely delicious dipping sauce." } },
+                { "ja", new PoiTranslation { Name = "ロアン貝料理店", Description = "風通しの良い空間で、とても美味しいディップソースで有名です。" } },
+                { "zh", new PoiTranslation { Name = "Loan 螺店", Description = "空间通风舒适，以极其美味的特制蘸酱而闻名。" } }
+            })
+        },
 
-             new PoiEntity
+        new PoiEntity
+        {
+            Image = "sushiko.jpg", Latitude = 10.760827, Longitude = 106.704798, Radius = 70, Priority = 6,
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
-                Image = "sushiko.jpg", Latitude = 10.760827, Longitude = 106.704798, Radius = 70, Priority = 6,
-                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
-                {
-                    { "vi", new PoiTranslation { Name = "Nhà hàng Sushi KO", Description = "Nhiều món độc đáo khác, tạo nên trải nghiệm ẩm thực phong phú và hấp dẫn." } },
-                    { "en", new PoiTranslation { Name = "Sushi KO Restaurant", Description = "A variety of unique dishes creating a rich and exciting culinary experience." } },
-                    { "ja", new PoiTranslation { Name = "寿司KOレストラン", Description = "豊かで魅力的な食体験を生み出す、多彩なユニークな料理が揃っています。" } },
-                })
-            },
+                { "vi", new PoiTranslation { Name = "Nhà hàng Sushi KO", Description = "Nhiều món độc đáo khác, tạo nên trải nghiệm ẩm thực phong phú và hấp dẫn." } },
+                { "en", new PoiTranslation { Name = "Sushi KO Restaurant", Description = "A variety of unique dishes creating a rich and exciting culinary experience." } },
+                { "ja", new PoiTranslation { Name = "寿司KOレストラン", Description = "豊かで魅力的な食体験を生み出す、多彩なユニークな料理が揃っています。" } },
+                { "zh", new PoiTranslation { Name = "Sushi KO 寿司店", Description = "提供多种特色菜肴，打造丰富诱人的美食体验。" } }
+            })
+        },
 
-            new PoiEntity
+        new PoiEntity
+        {
+            Image = "chili.jpg", Latitude = 10.760774, Longitude = 106.704575, Radius = 70, Priority = 6,
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
-                Image = "chili.jpg", Latitude = 10.760774, Longitude = 106.704575, Radius = 70, Priority = 6,
-                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
-                {
-                    { "vi", new PoiTranslation { Name = "Nhà hàng nướng Chilli", Description = "Giá cả hợp lý và thực đơn đồ nướng tự chọn đa dạng. Các món ăn ở đây được tẩm ướp đậm đà, nêm nếm khéo léo." } },
-                    { "en", new PoiTranslation { Name = "Chilli BBQ Restaurant", Description = "Affordable prices with a diverse all-you-can-grill menu. Dishes are richly marinated and skillfully seasoned." } },
-                    { "ja", new PoiTranslation { Name = "チリBBQレストラン", Description = "手頃な価格で多彩な食べ放題グリルメニューを提供。料理はしっかりと下味が付けられ、丁寧に味付けされています。" } },
-                })
-            },
+                { "vi", new PoiTranslation { Name = "Nhà hàng nướng Chilli", Description = "Giá cả hợp lý và thực đơn đồ nướng tự chọn đa dạng. Các món ăn ở đây được tẩm ướp đậm đà, nêm nếm khéo léo." } },
+                { "en", new PoiTranslation { Name = "Chilli BBQ Restaurant", Description = "Affordable prices with a diverse all-you-can-grill menu. Dishes are richly marinated and skillfully seasoned." } },
+                { "ja", new PoiTranslation { Name = "チリBBQレストラン", Description = "手頃な価格で多彩な食べ放題グリルメニューを提供。料理はしっかりと下味が付けられ、丁寧に味付けされています。" } },
+                { "zh", new PoiTranslation { Name = "Chilli 烧烤餐厅", Description = "价格合理，自助烧烤菜单丰富。这里的菜肴腌制入味，调味巧妙。" } }
+            })
+        },
 
-            new PoiEntity
+        new PoiEntity
+        {
+            Image = "otxiemquan.jpg", Latitude = 10.760801, Longitude = 106.704631, Radius = 70, Priority = 6,
+            TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
             {
-                Image = "otxiemquan.jpg", Latitude = 10.760801, Longitude = 106.704631, Radius = 70, Priority = 6,
-                TranslationsJson = JsonSerializer.Serialize(new Dictionary<string, PoiTranslation>
-                {
-                    { "vi", new PoiTranslation { Name = "Ớt Xiêm Quán", Description = "Món ăn ngon, phù hợp với khẩu vị nhiều người và có giá cả vô cùng hợp lý. Menu đa dạng" } },
-                    { "en", new PoiTranslation { Name = "Ot Xiem Restaurant", Description = "Delicious food that suits many tastes at very affordable prices. Features a diverse and varied menu." } },
-                 { "ja", new PoiTranslation { Name = "オットシエムレストラン", Description = "多くの人の好みに合う美味しい料理を手頃な価格で提供。バラエティ豊かな多彩なメニューが揃っています。" } },
-                })
-            }
+                { "vi", new PoiTranslation { Name = "Ớt Xiêm Quán", Description = "Món ăn ngon, phù hợp với khẩu vị nhiều người và có giá cả vô cùng hợp lý. Menu đa dạng" } },
+                { "en", new PoiTranslation { Name = "Ot Xiem Restaurant", Description = "Delicious food that suits many tastes at very affordable prices. Features a diverse and varied menu." } },
+                { "ja", new PoiTranslation { Name = "オットシエムレストラン", Description = "多くの人の好みに合う美味しい料理を手頃な価格で提供。バラエティ豊かな多彩なメニューが揃っています。" } },
+                { "zh", new PoiTranslation { Name = "Ot Xiem 餐厅", Description = "菜肴美味，符合大众口味，价格非常合理。菜单丰富多样。" } }
+            })
+        }
+    };
 
-
-
-    }; 
         await _db.InsertAllAsync(samples);
     }
 

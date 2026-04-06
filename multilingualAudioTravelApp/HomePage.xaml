@@ -11,7 +11,7 @@
         <Grid RowDefinitions="Auto,Auto,*">
 
             <!-- APP BAR -->
-            <Grid BackgroundColor="#0A5BD3" Padding="16" ColumnDefinitions="Auto,*">
+            <Grid BackgroundColor="#0A5BD3" Padding="16" ColumnDefinitions="Auto,*,Auto">
                 <Image Source="search.png" WidthRequest="22" HeightRequest="22" VerticalOptions="Center"/>
                 <SearchBar
                     Grid.Column="1"
@@ -23,10 +23,19 @@
                     TextChanged="OnSearchTextChanged"
                     SearchButtonPressed="OnSearchButtonPressed"
                     Margin="8,0,0,0"/>
+                <ImageButton
+                    Grid.Column="2"
+                    Source="qrcode.png"
+                    BackgroundColor="Transparent"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    Padding="8"
+                    Aspect="AspectFit"
+                    Clicked="OnScanQRClicked"/>
             </Grid>
 
             <!-- TABS -->
-           
+
 
             <!-- DANH SÁCH QUÁN -->
             <CollectionView
@@ -123,7 +132,7 @@
                             <Label Text="{x:Static lang:AppStrings.Play}" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
                         </VerticalStackLayout>
 
-                        
+
 
                         <!-- Đóng -->
                         <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
@@ -144,8 +153,6 @@
                                  BackgroundColor="#E8F5E9"/>
                             <Label Text="{x:Static lang:AppStrings.Map}" FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
                         </VerticalStackLayout>
-
-                      
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>

@@ -1,10 +1,13 @@
 ﻿using Microsoft.Maui.Devices.Sensors;
 using multilingualAudioTravelApp.Services;
+using Plugin.LocalNotification;
+
 
 namespace multilingualAudioTravelApp;
 
 public partial class ExplorePage : ContentPage
 {
+    IDispatcherTimer _gpsTimer;
     private readonly DatabaseService _dbService = new DatabaseService();
     private PoiEntity _selectedPoi;
     private CancellationTokenSource _speechCts;
@@ -19,8 +22,8 @@ public partial class ExplorePage : ContentPage
     {
         base.OnAppearing();
         await LoadDataAsync();
-    }
 
+    }
     private async Task LoadDataAsync()
     {
         var entities = await _dbService.GetAllPoisAsync();
@@ -187,4 +190,5 @@ public partial class ExplorePage : ContentPage
     {
         DisplayAlert("Thông báo", "Chưa có thông báo", "OK");
     }
+
 }

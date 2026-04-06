@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using SkiaSharp.Views.Maui.Controls.Hosting;
+﻿using SkiaSharp.Views.Maui.Controls.Hosting;
+using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 
 namespace multilingualAudioTravelApp
 {
@@ -11,6 +12,7 @@ namespace multilingualAudioTravelApp
             builder
                 .UseMauiApp<App>()
                 .UseSkiaSharp()
+                .UseLocalNotification()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

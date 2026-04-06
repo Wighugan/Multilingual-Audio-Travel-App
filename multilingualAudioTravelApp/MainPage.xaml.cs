@@ -8,10 +8,11 @@ using Mapsui.Styles;
 using Mapsui.Tiling;
 using Mapsui.UI.Maui;
 using Microsoft.Maui.Devices.Sensors;
+using multilingualAudioTravelApp.Services;
+using Plugin.LocalNotification;
+using SkiaSharp;
 using MBrush = Mapsui.Styles.Brush;
 using MColor = Mapsui.Styles.Color;
-using SkiaSharp;
-using multilingualAudioTravelApp.Services;
 
 
 namespace multilingualAudioTravelApp;
@@ -23,7 +24,7 @@ public partial class MainPage : ContentPage
     private bool _isTracking = false;
     private Location _currentLocation;
     private CancellationTokenSource _speechCts;
-    private DateTime _lastGeofenceCheckTime = DateTime.MinValue;
+    private IDispatcherTimer _geofenceTimer;
     private List<PoiData> _poiList = new List<PoiData>();
     private PoiData _selectedPoi;
     private readonly DatabaseService _dbService = new DatabaseService();
@@ -95,10 +96,6 @@ public partial class MainPage : ContentPage
             }
         });
     }
-
-
-
-
     public class PoiData
     {
         public string Name { get; set; }
@@ -343,8 +340,12 @@ public partial class MainPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
+        {
+            await LocalNotificationCenter.Current.RequestNotificationPermission();
+        }
         await StartListeningGps();
-
+        StartBackgroundGeofenceTimer();
         // Refresh POI để lấy data mới nhất từ DB
         await RefreshPoiLayerAsync();
 
@@ -409,12 +410,7 @@ public partial class MainPage : ContentPage
         MainThread.BeginInvokeOnMainThread(() =>
         {
             UpdateUserLocationOnMap(e.Location);
-            if ((DateTime.Now - _lastGeofenceCheckTime).TotalSeconds < 3) //check geofence mỗi 3 giây
-            {
-                return;
-            }
-            _lastGeofenceCheckTime = DateTime.Now;
-            CheckGeofence(e.Location);
+
         });
     }
 
@@ -506,7 +502,15 @@ public partial class MainPage : ContentPage
             var poi = bestMatch.Poi;
 
             poi.LastPlayedTime = DateTime.Now;
-
+            var notification = new NotificationRequest
+            {
+                // Dùng HashCode của tên quán làm ID thông báo
+                NotificationId = Math.Abs(poi.Name.GetHashCode()),
+                Title = "📍 Hướng dẫn viên Vĩnh Khánh",
+                Description = $"Bạn đã đến {poi.Name}. Nhấn vào để xem hình ảnh và menu nhé!",
+                Schedule = new NotificationRequestSchedule { NotifyTime = DateTime.Now }
+            };
+            LocalNotificationCenter.Current.Show(notification);
             // Auto play
             MainThread.BeginInvokeOnMainThread(async () =>
             {
@@ -516,5 +520,30 @@ public partial class MainPage : ContentPage
             });
         }
     }
+    private void StartBackgroundGeofenceTimer()
+    {
+        if (_geofenceTimer != null) return; // Tránh tạo nhiều đồng hồ
 
+        _geofenceTimer = Application.Current.Dispatcher.CreateTimer();
+        _geofenceTimer.Interval = TimeSpan.FromSeconds(15);
+        _geofenceTimer.Tick += async (s, e) => await PerformGeofenceCheck();
+        _geofenceTimer.Start();
+    }
+
+    // Hàm quét GPS ngầm (không phụ thuộc vào bản đồ)
+    private async Task PerformGeofenceCheck()
+    {
+        try
+        {
+            // Lấy tọa độ tĩnh (Hoạt động ngay cả khi tắt màn hình)
+            var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(5));
+            var location = await Geolocation.Default.GetLocationAsync(request);
+
+            if (location != null)
+            {
+                CheckGeofence(location);
+            }
+        }
+        catch { /* Bỏ qua nếu mất GPS tạm thời */ }
+    }
 }

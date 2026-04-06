@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+    x:Class="multilingualAudioTravelApp.QRScanPage"
+    Title="Quét QR"
+    BackgroundColor="Black">
+
+    <Grid>
+
+        <!-- Camera quét QR -->
+        <zxing:CameraBarcodeReaderView
+            x:Name="BarcodeReader"
+            CameraLocation="Rear"
+            BarcodesDetected="OnBarcodeDetected">
+
+        </zxing:CameraBarcodeReaderView>
+
+        <!-- Khung ngắm QR ở giữa màn hình -->
+        <Border
+            WidthRequest="240"
+            HeightRequest="240"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            BackgroundColor="Transparent"
+            Stroke="White"
+            StrokeThickness="2">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
+            <BoxView BackgroundColor="Transparent"/>
+        </Border>
+
+        <!-- Label trạng thái ở giữa phía trên khung -->
+        <Label
+            x:Name="StatusLabel"
+            Text="Hướng camera vào mã QR"
+            TextColor="White"
+            FontSize="14"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Margin="0,-180,0,0"
+            BackgroundColor="#80000000"
+            Padding="12,6"/>
+
+        <!-- Nút Đóng phía dưới -->
+        <Button
+            Text="✕  Đóng"
+            BackgroundColor="#80000000"
+            TextColor="White"
+            CornerRadius="10"
+            WidthRequest="160"
+            HorizontalOptions="Center"
+            VerticalOptions="End"
+            Margin="0,0,0,50"
+            Clicked="OnCloseClicked"/>
+
+        <!-- POPUP kết quả quét -->
+        <Grid
+            x:Name="ResultPopupOverlay"
+            IsVisible="False"
+            BackgroundColor="#80000000">
+            <Frame
+                BackgroundColor="White"
+                CornerRadius="20"
+                Padding="15"
+                Margin="30"
+                VerticalOptions="Center"
+                HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label
+                        x:Name="ResultPopupTitle"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        TextColor="Black" />
+
+                    <Label
+                        x:Name="ResultPopupDescription"
+                        FontSize="14"
+                        TextColor="Gray" />
+
+                    <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" Padding="10">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <ImageButton
+                                x:Name="ResultPlayStopButton"
+                                Source="play_icon.png"
+                                WidthRequest="60"
+                                HeightRequest="60"
+                                CornerRadius="30"
+                                Padding="15"
+                                Aspect="AspectFit"
+                                Clicked="OnResultPlayClicked"
+                                BackgroundColor="#E0E0E0" />
+                            <Label Text="Nghe" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <ImageButton
+                                Source="close_icon.png"
+                                WidthRequest="60"
+                                HeightRequest="60"
+                                CornerRadius="30"
+                                Padding="15"
+                                Aspect="AspectFit"
+                                Clicked="OnResultCloseClicked"
+                                BackgroundColor="#FFE0E0" />
+                            <Label Text="Đóng" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+
+    </Grid>
+</ContentPage>

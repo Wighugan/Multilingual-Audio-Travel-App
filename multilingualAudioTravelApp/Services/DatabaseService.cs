@@ -113,7 +113,7 @@ public class DatabaseService
         _dbPath = Path.Combine(FileSystem.AppDataDirectory, "tourapp.db");
     }
 
-    private async Task InitAsync()
+    public async Task InitAsync()
     {
         if (_db != null) return;
 

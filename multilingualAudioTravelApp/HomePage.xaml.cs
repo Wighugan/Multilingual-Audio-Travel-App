@@ -196,5 +196,16 @@ public partial class HomePage : ContentPage
             selected.IsFavorite = true; // ← icon tự đổi thành ❤️
         }
     }
+    private async void OnScanQRClicked(object sender, EventArgs e)
+    {
+        // Xin quyền camera
+        var status = await Permissions.RequestAsync<Permissions.Camera>();
+        if (status != PermissionStatus.Granted)
+        {
+            await DisplayAlert("", "Cần quyền camera để quét QR", "OK");
+            return;
+        }
+        await Navigation.PushAsync(new QRScanPage());
+    }
 
 }

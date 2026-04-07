@@ -1,12 +1,8 @@
-<<<<<<< HEAD
 ﻿using SkiaSharp.Views.Maui.Controls.Hosting;
 using Microsoft.Extensions.Logging;
 using Plugin.LocalNotification;
-=======
-﻿using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using ZXing.Net.Maui.Controls;
->>>>>>> ff8a97278a0ea02e6f9fca984ac685ded32a0813
 
 namespace multilingualAudioTravelApp
 {
@@ -18,11 +14,8 @@ namespace multilingualAudioTravelApp
             builder
                 .UseMauiApp<App>()
                 .UseSkiaSharp()
-<<<<<<< HEAD
-                .UseLocalNotification()
-=======
                 .UseBarcodeReader()
->>>>>>> ff8a97278a0ea02e6f9fca984ac685ded32a0813
+                .UseLocalNotification()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

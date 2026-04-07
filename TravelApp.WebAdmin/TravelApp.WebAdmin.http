@@ -1,0 +1,6 @@
+@TravelApp.WebAdmin_HostAddress = http://localhost:5068
+
+GET {{TravelApp.WebAdmin_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

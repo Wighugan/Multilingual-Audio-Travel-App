@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36915.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "multilingualAudioTravelApp", "multilingualAudioTravelApp\multilingualAudioTravelApp.csproj", "{A30A3703-A5A4-4780-AD5E-EEF70892F3DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelApp.WebAdmin", "TravelApp.WebAdmin\TravelApp.WebAdmin.csproj", "{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,6 +18,10 @@ Global
 		{A30A3703-A5A4-4780-AD5E-EEF70892F3DD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{A30A3703-A5A4-4780-AD5E-EEF70892F3DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A30A3703-A5A4-4780-AD5E-EEF70892F3DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

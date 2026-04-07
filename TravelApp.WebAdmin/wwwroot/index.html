@@ -1,0 +1,1205 @@
+﻿
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: var(--font-sans);
+        background: var(--color-background-tertiary);
+    }
+
+    :root {
+        --sidebar-w: 220px;
+    }
+
+    #app {
+        display: flex;
+        min-height: 600px;
+    }
+
+    #sidebar {
+        width: var(--sidebar-w);
+        background: var(--color-background-primary);
+        border-right: 0.5px solid var(--color-border-tertiary);
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 0;
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+    }
+
+    .sidebar-logo {
+        padding: 0 1.25rem 1.5rem;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        margin-bottom: 0.75rem;
+    }
+
+        .sidebar-logo .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+    .logo-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: #1D9E75;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .logo-icon svg {
+            fill: white;
+        }
+
+    .sidebar-sub {
+        font-size: 11px;
+        color: var(--color-text-tertiary);
+        margin-top: 2px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 1.25rem;
+        cursor: pointer;
+        font-size: 13.5px;
+        color: var(--color-text-secondary);
+        border-left: 2px solid transparent;
+        transition: all 0.15s;
+    }
+
+        .nav-item:hover {
+            background: var(--color-background-secondary);
+            color: var(--color-text-primary);
+        }
+
+        .nav-item.active {
+            background: #E1F5EE;
+            color: #0F6E56;
+            border-left-color: #1D9E75;
+            font-weight: 500;
+        }
+
+    .nav-section {
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        color: var(--color-text-tertiary);
+        padding: 1rem 1.25rem 0.4rem;
+        text-transform: uppercase;
+    }
+
+    .nav-badge {
+        margin-left: auto;
+        background: #E1F5EE;
+        color: #0F6E56;
+        font-size: 10px;
+        font-weight: 500;
+        padding: 2px 7px;
+        border-radius: 10px;
+    }
+
+    #main {
+        flex: 1;
+        padding: 1.5rem;
+        overflow: hidden;
+    }
+
+    .page {
+        display: none;
+    }
+
+        .page.active {
+            display: block;
+        }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+        .page-header h1 {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .page-header p {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-top: 3px;
+        }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        background: var(--color-background-secondary);
+        border-radius: var(--border-radius-md);
+        padding: 1rem;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        margin-bottom: 4px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+
+    .stat-delta {
+        font-size: 11px;
+        color: var(--color-text-success);
+        margin-top: 2px;
+    }
+
+    .card {
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .card-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: var(--border-radius-md);
+        font-size: 13px;
+        cursor: pointer;
+        border: 0.5px solid var(--color-border-secondary);
+        background: transparent;
+        color: var(--color-text-primary);
+        transition: background 0.15s;
+    }
+
+        .btn:hover {
+            background: var(--color-background-secondary);
+        }
+
+    .btn-primary {
+        background: #1D9E75;
+        color: white;
+        border-color: #1D9E75;
+    }
+
+        .btn-primary:hover {
+            background: #0F6E56;
+        }
+
+    .btn-danger {
+        color: #A32D2D;
+        border-color: #F09595;
+    }
+
+        .btn-danger:hover {
+            background: #FCEBEB;
+        }
+
+    .btn-sm {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    th {
+        text-align: left;
+        font-weight: 500;
+        font-size: 11px;
+        color: var(--color-text-secondary);
+        padding: 8px 12px;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    td {
+        padding: 10px 12px;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        color: var(--color-text-primary);
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:hover td {
+        background: var(--color-background-secondary);
+    }
+
+    .badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 10px;
+    }
+
+    .badge-green {
+        background: #E1F5EE;
+        color: #0F6E56;
+    }
+
+    .badge-blue {
+        background: #E6F1FB;
+        color: #185FA5;
+    }
+
+    .badge-amber {
+        background: #FAEEDA;
+        color: #854F0B;
+    }
+
+    .badge-gray {
+        background: #F1EFE8;
+        color: #5F5E5A;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+    label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--color-text-secondary);
+    }
+
+    input, select, textarea {
+        padding: 8px 10px;
+        border-radius: var(--border-radius-md);
+        border: 0.5px solid var(--color-border-secondary);
+        background: var(--color-background-primary);
+        color: var(--color-text-primary);
+        font-size: 13px;
+        font-family: inherit;
+    }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1D9E75;
+            box-shadow: 0 0 0 3px rgba(29,158,117,0.12);
+        }
+
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .lang-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .lang-tab {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        border: 0.5px solid var(--color-border-secondary);
+        background: transparent;
+        color: var(--color-text-secondary);
+        transition: all 0.15s;
+    }
+
+        .lang-tab.active {
+            background: #1D9E75;
+            color: white;
+            border-color: #1D9E75;
+        }
+
+    .lang-fields {
+        display: none;
+    }
+
+        .lang-fields.active {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: rgba(0,0,0,0.3);
+        align-items: center;
+        justify-content: center;
+    }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+    .modal {
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 1.5rem;
+        width: 640px;
+        max-width: 96vw;
+        max-height: 88vh;
+        overflow-y: auto;
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+    }
+
+        .modal-header h2 {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+    .modal-close {
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-size: 18px;
+        color: var(--color-text-secondary);
+        line-height: 1;
+    }
+
+    .modal-footer {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 1.25rem;
+    }
+
+    .search-bar {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 1rem;
+    }
+
+        .search-bar input {
+            flex: 1;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--color-text-secondary);
+    }
+
+        .empty-state .empty-icon {
+            font-size: 32px;
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+        }
+
+    .coord-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+    }
+
+    .lang-manage-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+    }
+
+    .lang-card {
+        background: var(--color-background-secondary);
+        border-radius: var(--border-radius-md);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .lang-card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .lang-flag {
+        font-size: 20px;
+    }
+
+    .lang-info {
+        flex: 1;
+    }
+
+    .lang-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+
+    .lang-code {
+        font-size: 11px;
+        color: var(--color-text-secondary);
+    }
+
+    .lang-poi-count {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+    }
+
+    .rating-stars {
+        color: #BA7517;
+        font-size: 13px;
+    }
+
+    .feedback-content {
+        color: var(--color-text-secondary);
+        font-size: 12px;
+    }
+
+    .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #E1F5EE;
+        color: #0F6E56;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 500;
+    }
+</style>
+
+<div id="app">
+    <div id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-badge">
+                <div class="logo-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
+                </div>
+                TourApp
+            </div>
+            <div class="sidebar-sub">Admin Dashboard</div>
+        </div>
+
+        <div class="nav-section">Overview</div>
+        <div class="nav-item active" onclick="navigate('dashboard')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" /></svg>
+            Dashboard
+        </div>
+
+        <div class="nav-section">Content</div>
+        <div class="nav-item" onclick="navigate('poi')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
+            Points of Interest
+            <span class="nav-badge" id="poi-nav-count">9</span>
+        </div>
+        <div class="nav-item" onclick="navigate('languages')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" /></svg>
+            Languages
+            <span class="nav-badge" id="lang-nav-count">5</span>
+        </div>
+
+        <div class="nav-section">Users</div>
+        <div class="nav-item" onclick="navigate('accounts')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" /></svg>
+            Accounts
+            <span class="nav-badge" id="user-nav-count">4</span>
+        </div>
+        <div class="nav-item" onclick="navigate('feedback')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z" /></svg>
+            Feedback
+            <span class="nav-badge" id="feedback-nav-count">3</span>
+        </div>
+    </div>
+
+    <div id="main">
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+            <div class="page-header">
+                <h1>Dashboard</h1>
+                <p>Overview of your multilingual travel app</p>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Total POIs</div>
+                    <div class="stat-value" id="stat-pois">9</div>
+                    <div class="stat-delta">Vinh Khanh district</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Registered users</div>
+                    <div class="stat-value" id="stat-users">4</div>
+                    <div class="stat-delta">+2 this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Languages</div>
+                    <div class="stat-value" id="stat-langs">5</div>
+                    <div class="stat-delta">vi, en, ja, zh, ko</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Feedback entries</div>
+                    <div class="stat-value" id="stat-feedback">3</div>
+                    <div class="stat-delta">Avg. 4.2 stars</div>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Recent POIs</span>
+                        <button class="btn btn-sm" onclick="navigate('poi')">View all</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>Name</th><th>Coords</th><th>Priority</th></tr></thead>
+                        <tbody id="dash-poi-table"></tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Recent feedback</span>
+                        <button class="btn btn-sm" onclick="navigate('feedback')">View all</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>User</th><th>Rating</th><th>Date</th></tr></thead>
+                        <tbody id="dash-feedback-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- POI PAGE -->
+        <div class="page" id="page-poi">
+            <div class="page-header">
+                <h1>Points of Interest</h1>
+                <p>Manage all POI locations with multilingual content</p>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="search-bar" style="margin:0;flex:1;margin-right:1rem;">
+                        <input type="text" id="poi-search" placeholder="Search POIs..." oninput="renderPoiTable()">
+                    </div>
+                    <button class="btn btn-primary" onclick="openPoiModal()">+ Add POI</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name (VI)</th>
+                            <th>Image</th>
+                            <th>Coordinates</th>
+                            <th>Radius</th>
+                            <th>Priority</th>
+                            <th>Cooldown</th>
+                            <th>Languages</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="poi-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- LANGUAGES PAGE -->
+        <div class="page" id="page-languages">
+            <div class="page-header">
+                <h1>Languages</h1>
+                <p>Manage supported languages for POI translations</p>
+            </div>
+            <div class="card" style="margin-bottom:1.25rem;">
+                <div class="card-header">
+                    <span class="card-title">Add language</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;">
+                    <div class="form-group">
+                        <label>Language name</label>
+                        <input id="new-lang-name" placeholder="e.g. French">
+                    </div>
+                    <div class="form-group">
+                        <label>Language code</label>
+                        <input id="new-lang-code" placeholder="e.g. fr" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Flag emoji</label>
+                        <input id="new-lang-flag" placeholder="e.g. 🇫🇷" maxlength="4">
+                    </div>
+                    <button class="btn btn-primary" onclick="addLanguage()" style="margin-bottom:0;">+ Add</button>
+                </div>
+            </div>
+            <div class="lang-manage-grid" id="lang-grid"></div>
+        </div>
+
+        <!-- ACCOUNTS PAGE -->
+        <div class="page" id="page-accounts">
+            <div class="page-header">
+                <h1>User accounts</h1>
+                <p>View and manage registered user accounts</p>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="search-bar" style="margin:0;flex:1;margin-right:1rem;">
+                        <input type="text" id="user-search" placeholder="Search by name or email..." oninput="renderUsersTable()">
+                    </div>
+                    <button class="btn btn-primary" onclick="openUserModal()">+ Create account</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>User</th><th>Email</th><th>Status</th><th>Favorites</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="users-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FEEDBACK PAGE -->
+        <div class="page" id="page-feedback">
+            <div class="page-header">
+                <h1>Feedback</h1>
+                <p>User ratings and comments from the app</p>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr><th>User</th><th>Rating</th><th>Comment</th><th>Date</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="feedback-table"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- POI MODAL -->
+<div class="modal-overlay" id="poi-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="poi-modal-title">Add point of interest</h2>
+            <button class="modal-close" onclick="closeModal('poi-modal')">✕</button>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Image filename</label>
+                <input id="poi-image" placeholder="e.g. vinhkhanh.jpg">
+            </div>
+            <div class="form-group">
+                <label>Priority</label>
+                <input type="number" id="poi-priority" placeholder="e.g. 10" min="1" max="100">
+            </div>
+        </div>
+        <div style="margin: 1rem 0 0.5rem;">
+            <label style="font-size:12px;font-weight:500;color:var(--color-text-secondary);">Coordinates & detection</label>
+        </div>
+        <div class="coord-row" style="margin-bottom:1rem;">
+            <div class="form-group">
+                <label>Latitude</label>
+                <input type="number" id="poi-lat" placeholder="10.761923" step="0.000001">
+            </div>
+            <div class="form-group">
+                <label>Longitude</label>
+                <input type="number" id="poi-lng" placeholder="106.701964" step="0.000001">
+            </div>
+            <div class="form-group">
+                <label>Radius (m)</label>
+                <input type="number" id="poi-radius" placeholder="100">
+            </div>
+        </div>
+        <div class="form-grid" style="margin-bottom:1rem;">
+            <div class="form-group">
+                <label>Cooldown (minutes)</label>
+                <input type="number" id="poi-cooldown" placeholder="5" min="0">
+            </div>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="font-size:12px;font-weight:500;color:var(--color-text-secondary);display:block;margin-bottom:0.5rem;">Translations</label>
+            <div class="lang-tabs" id="poi-lang-tabs"></div>
+            <div id="poi-lang-fields-container"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" onclick="closeModal('poi-modal')">Cancel</button>
+            <button class="btn btn-primary" onclick="savePoi()">Save POI</button>
+        </div>
+    </div>
+</div>
+
+<!-- USER MODAL -->
+<div class="modal-overlay" id="user-modal">
+    <div class="modal" style="width:480px;">
+        <div class="modal-header">
+            <h2 id="user-modal-title">Create account</h2>
+            <button class="modal-close" onclick="closeModal('user-modal')">✕</button>
+        </div>
+        <div class="form-grid">
+            <div class="form-group full">
+                <label>Full name</label>
+                <input id="u-name" placeholder="Nguyen Van A">
+            </div>
+            <div class="form-group full">
+                <label>Email</label>
+                <input id="u-email" placeholder="user@example.com" type="email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input id="u-password" placeholder="••••••••" type="password">
+            </div>
+            <div class="form-group">
+                <label>Confirm password</label>
+                <input id="u-password2" placeholder="••••••••" type="password">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" onclick="closeModal('user-modal')">Cancel</button>
+            <button class="btn btn-primary" onclick="saveUser()">Create account</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const LANGS = [
+  { code: 'vi', name: 'Vietnamese', flag: '🇻🇳' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
+  { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
+  { code: 'ko', name: 'Korean', flag: '🇰🇷' },
+];
+
+const POIS = [
+  { id:1, image:'vinhkhanh.jpg', lat:10.761923, lng:106.701964, radius:100, priority:10, cooldown:5, translations:{
+    vi:{name:'Khu phố ẩm thực Vĩnh Khánh',desc:'Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.'},
+    en:{name:'Vinh Khanh Food Street',desc:'Famous food street in District 4 with many delicious dishes.'},
+    ja:{name:'ヴィンカン美食街',desc:'地区4の有名なグルメ通り。'},
+    zh:{name:'永庆美食街',desc:'第4区著名的美食街，美食众多。'},
+    ko:{name:'빈카인 푸드 스트리트',desc:'4구역의 유명한 음식 거리.'},
+  }},
+  { id:2, image:'ocoanh.jpg', lat:10.761410, lng:106.702820, radius:80, priority:8, cooldown:5, translations:{
+    vi:{name:'Quán Ốc Oanh',desc:'Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh.'},
+    en:{name:'Oanh Snail Restaurant',desc:'The oldest and most famous snail restaurant in Vinh Khanh.'},
+    ja:{name:'オアン貝料理店',desc:'ヴィンカン地区で最も歴史があり有名な料理店。'},
+    zh:{name:'阿恩螺蛳店',desc:'永庆地区最古老也最著名的螺蛳店。'},
+    ko:{name:'오안 달팽이 식당',desc:'빈카인 지역에서 가장 오래되고 유명한 달팽이 식당.'},
+  }},
+  { id:3, image:'ocphat.jpg', lat:10.761921, lng:106.702151, radius:70, priority:6, cooldown:5, translations:{
+    vi:{name:'Quán Ốc Phát',desc:'Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc.'},
+    en:{name:'Phat Snail Restaurant',desc:'A familiar destination for seafood lovers.'},
+    ja:{name:'ファット貝料理店',desc:'シーフード好きに馴染みのある場所。'},
+    zh:{name:'Phat螺蛳店',desc:'海鲜爱好者熟悉的去处。'},
+    ko:{name:'팟 달팽이 식당',desc:'해산물 애호가들에게 친숙한 장소.'},
+  }},
+  { id:4, image:'bunca.jpg', lat:10.761455, lng:106.702660, radius:70, priority:6, cooldown:5, translations:{
+    vi:{name:'Quán bún cá Châu Đốc',desc:'Nước lèo thanh mát, đậm đà hương vị.'},
+    en:{name:'Chau Doc Fish Noodle Soup',desc:'Refreshing, flavorful broth served with noodles.'},
+    ja:{name:'チャウドック魚麺',desc:'さっぱりとした風味豊かなスープ。'},
+    zh:{name:'朱笃鱼汤粉',desc:'清凉浓郁的汤汁。'},
+    ko:{name:'쩌우독 생선 국수',desc:'시원하고 진한 풍미의 국물.'},
+  }},
+  { id:5, image:'ocloan.jpg', lat:10.761170, lng:106.702710, radius:70, priority:6, cooldown:5, translations:{
+    vi:{name:'Quán Ốc Loan',desc:'Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon.'},
+    en:{name:'Loan Snail Restaurant',desc:'Airy space, famous for its delicious dipping sauce.'},
+    ja:{name:'ロアン貝料理店',desc:'風通しの良い空間とおいしいソース。'},
+    zh:{name:'Loan螺蛳店',desc:'空间通风，以美味蘸酱著称。'},
+    ko:{name:'로안 달팽이 식당',desc:'쾌적한 공간과 맛있는 소스로 유명.'},
+  }},
+  { id:6, image:'sushiko.jpg', lat:10.760827, lng:106.704798, radius:70, priority:6, cooldown:5, translations:{
+    vi:{name:'Nhà hàng Sushi KO',desc:'Nhiều món độc đáo, trải nghiệm ẩm thực phong phú.'},
+    en:{name:'Sushi KO Restaurant',desc:'A variety of unique dishes and rich culinary experience.'},
+    ja:{name:'寿司KOレストラン',desc:'多彩なユニークな料理が揃っています。'},
+    zh:{name:'Sushi KO 寿司店',desc:'提供多种特色菜肴。'},
+    ko:{name:'스시 KO 레스토랑',desc:'다양하고 독특한 요리.'},
+  }},
+  { id:7, image:'chili.jpg', lat:10.760774, lng:106.704575, radius:70, priority:6, cooldown:5, translations:{
+    vi:{name:'Nhà hàng nướng Chilli',desc:'Giá cả hợp lý và thực đơn đồ nướng đa dạng.'},
+    en:{name:'Chilli BBQ Restaurant',desc:'Affordable prices with a diverse all-you-can-grill menu.'},
+    ja:{name:'チリBBQレストラン',desc:'手頃な価格で多彩な食べ放題グリル。'},
+    zh:{name:'Chilli烧烤餐厅',desc:'价格合理，烧烤菜单丰富。'},
+    ko:{name:'칠리 BBQ 레스토랑',desc:'합리적인 가격의 무한 바비큐.'},
+  }},
+  { id:8, image:'otxiemquan.jpg', lat:10.760801, lng:106.704631, radius:70, priority:6, cooldown:5, translations:{
+    vi:{name:'Ớt Xiêm Quán',desc:'Món ăn ngon, giá cả hợp lý, menu đa dạng.'},
+    en:{name:'Ot Xiem Restaurant',desc:'Delicious food at very affordable prices.'},
+    ja:{name:'オットシエムレストラン',desc:'手頃な価格で美味しい料理。'},
+    zh:{name:'Ot Xiem 餐厅',desc:'美味且价格合理。'},
+    ko:{name:'엇시엠 식당',desc:'합리적인 가격의 맛있는 음식.'},
+  }},
+  { id:9, image:'vinhkhanh.jpg', lat:10.762100, lng:106.702000, radius:60, priority:5, cooldown:5, translations:{
+    vi:{name:'Cafe Vĩnh Khánh',desc:'Quán cà phê nhỏ xinh, không gian yên tĩnh.'},
+    en:{name:'Vinh Khanh Cafe',desc:'A cozy little cafe with a peaceful atmosphere.'},
+    ja:{name:'ヴィンカンカフェ',desc:'静かな雰囲気のかわいいカフェ。'},
+    zh:{name:'永庆咖啡店',desc:'小而美的咖啡店，环境安静。'},
+    ko:{name:'빈카인 카페',desc:'아늑하고 조용한 분위기의 카페.'},
+  }},
+];
+
+const USERS = [
+  { id:1, fullName:'Nguyen Van A', email:'nguyenvana@gmail.com', favorites:3 },
+  { id:2, fullName:'Tran Thi B', email:'tranthib@email.com', favorites:1 },
+  { id:3, fullName:'Le Minh C', email:'leminchc@mail.com', favorites:5 },
+  { id:4, fullName:'Pham Thu D', email:'phamthud@test.com', favorites:2 },
+];
+
+const FEEDBACKS = [
+  { id:1, email:'nguyenvana@gmail.com', rating:5, content:'App rất hay, rất hữu ích khi đi du lịch!', date:'07/04/2026 09:15' },
+  { id:2, email:'tranthib@email.com', rating:4, content:'Giao diện đẹp, thông tin chi tiết. Cần thêm nhiều POI hơn.', date:'06/04/2026 14:32' },
+  { id:3, email:'leminchc@mail.com', rating:4, content:'Very useful app! Love the multilingual support.', date:'05/04/2026 18:00' },
+];
+
+let editPoiId = null;
+let editUserId = null;
+
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (page === 'poi') renderPoiTable();
+  if (page === 'accounts') renderUsersTable();
+  if (page === 'languages') renderLangGrid();
+  if (page === 'feedback') renderFeedbackTable();
+  if (page === 'dashboard') renderDashboard();
+}
+
+function initDashboard() {
+  document.getElementById('stat-pois').textContent = POIS.length;
+  document.getElementById('stat-users').textContent = USERS.length;
+  document.getElementById('stat-langs').textContent = LANGS.length;
+  document.getElementById('stat-feedback').textContent = FEEDBACKS.length;
+  document.getElementById('poi-nav-count').textContent = POIS.length;
+  document.getElementById('user-nav-count').textContent = USERS.length;
+  document.getElementById('lang-nav-count').textContent = LANGS.length;
+  document.getElementById('feedback-nav-count').textContent = FEEDBACKS.length;
+}
+
+function renderDashboard() {
+  initDashboard();
+  const pt = document.getElementById('dash-poi-table');
+  pt.innerHTML = POIS.slice(0,5).map(p => `
+    <tr>
+      <td>${p.translations.vi.name}</td>
+      <td style="font-size:11px;color:var(--color-text-secondary)">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</td>
+      <td><span class="badge badge-green">${p.priority}</span></td>
+    </tr>
+  `).join('');
+  const ft = document.getElementById('dash-feedback-table');
+  ft.innerHTML = FEEDBACKS.map(f => `
+    <tr>
+      <td>${f.email.split('@')[0]}</td>
+      <td class="rating-stars">${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</td>
+      <td style="font-size:11px;color:var(--color-text-secondary)">${f.date.split(' ')[0]}</td>
+    </tr>
+  `).join('');
+}
+
+function renderPoiTable() {
+  const q = (document.getElementById('poi-search').value || '').toLowerCase();
+  const tbody = document.getElementById('poi-table');
+  const filtered = POIS.filter(p =>
+    p.translations.vi.name.toLowerCase().includes(q) || p.image.toLowerCase().includes(q)
+  );
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><p>No POIs found</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(p => {
+    const langCount = Object.keys(p.translations).length;
+    return `<tr>
+      <td style="font-weight:500">${p.translations.vi.name}</td>
+      <td style="font-size:12px;color:var(--color-text-secondary)">${p.image}</td>
+      <td style="font-size:12px">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</td>
+      <td>${p.radius}m</td>
+      <td><span class="badge badge-green">${p.priority}</span></td>
+      <td style="font-size:12px">${p.cooldown}min</td>
+      <td>
+        ${LANGS.slice(0, langCount).map(l => `<span title="${l.name}" style="font-size:14px">${l.flag}</span>`).join(' ')}
+      </td>
+      <td>
+        <button class="btn btn-sm" onclick="openPoiModal(${p.id})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deletePoi(${p.id})">Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderUsersTable() {
+  const q = (document.getElementById('user-search').value || '').toLowerCase();
+  const tbody = document.getElementById('users-table');
+  const filtered = USERS.filter(u =>
+    u.fullName.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+  );
+  tbody.innerHTML = filtered.map(u => {
+    const initials = u.fullName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="avatar">${initials}</div>
+          <span style="font-weight:500">${u.fullName}</span>
+        </div>
+      </td>
+      <td style="font-size:13px;color:var(--color-text-secondary)">${u.email}</td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td><span class="badge badge-blue">${u.favorites} saved</span></td>
+      <td>
+        <button class="btn btn-sm" onclick="openUserModal(${u.id})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderLangGrid() {
+  const grid = document.getElementById('lang-grid');
+  grid.innerHTML = LANGS.map(l => {
+    const poiCount = POIS.filter(p => p.translations[l.code]).length;
+    return `<div class="lang-card">
+      <div class="lang-card-header">
+        <span class="lang-flag">${l.flag}</span>
+        <div class="lang-info">
+          <div class="lang-name">${l.name}</div>
+          <div class="lang-code">Code: ${l.code}</div>
+        </div>
+      </div>
+      <div class="lang-poi-count">${poiCount} POIs translated</div>
+      <div style="display:flex;gap:6px;margin-top:4px;">
+        <button class="btn btn-sm" style="flex:1" onclick="editLang('${l.code}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteLang('${l.code}')">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderFeedbackTable() {
+  const tbody = document.getElementById('feedback-table');
+  tbody.innerHTML = FEEDBACKS.map(f => `<tr>
+    <td style="font-size:13px">${f.email}</td>
+    <td class="rating-stars">${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</td>
+    <td class="feedback-content">${f.content}</td>
+    <td style="font-size:12px;color:var(--color-text-secondary)">${f.date}</td>
+    <td><button class="btn btn-sm btn-danger" onclick="deleteFeedback(${f.id})">Delete</button></td>
+  </tr>`).join('');
+}
+
+function buildLangTabs() {
+  const tabs = document.getElementById('poi-lang-tabs');
+  const fields = document.getElementById('poi-lang-fields-container');
+  tabs.innerHTML = LANGS.map((l, i) =>
+    `<button class="lang-tab ${i===0?'active':''}" onclick="switchLangTab('${l.code}', this)">${l.flag} ${l.code.toUpperCase()}</button>`
+  ).join('');
+  fields.innerHTML = LANGS.map((l, i) =>
+    `<div class="lang-fields ${i===0?'active':''}" id="lf-${l.code}">
+      <div class="form-group">
+        <label>Name (${l.name})</label>
+        <input id="poi-name-${l.code}" placeholder="Name in ${l.name}">
+      </div>
+      <div class="form-group">
+        <label>Description (${l.name})</label>
+        <textarea id="poi-desc-${l.code}" placeholder="Description in ${l.name}"></textarea>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function switchLangTab(code, el) {
+  document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.lang-fields').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('lf-' + code).classList.add('active');
+}
+
+function openPoiModal(id) {
+  editPoiId = id || null;
+  document.getElementById('poi-modal-title').textContent = id ? 'Edit POI' : 'Add point of interest';
+  buildLangTabs();
+  if (id) {
+    const p = POIS.find(x => x.id === id);
+    document.getElementById('poi-image').value = p.image;
+    document.getElementById('poi-priority').value = p.priority;
+    document.getElementById('poi-lat').value = p.lat;
+    document.getElementById('poi-lng').value = p.lng;
+    document.getElementById('poi-radius').value = p.radius;
+    document.getElementById('poi-cooldown').value = p.cooldown;
+    LANGS.forEach(l => {
+      const t = p.translations[l.code] || {};
+      document.getElementById('poi-name-' + l.code).value = t.name || '';
+      document.getElementById('poi-desc-' + l.code).value = t.desc || '';
+    });
+  } else {
+    ['poi-image','poi-priority','poi-lat','poi-lng','poi-radius','poi-cooldown'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  }
+  document.getElementById('poi-modal').classList.add('open');
+}
+
+function savePoi() {
+  const translations = {};
+  LANGS.forEach(l => {
+    const name = document.getElementById('poi-name-' + l.code).value.trim();
+    const desc = document.getElementById('poi-desc-' + l.code).value.trim();
+    if (name) translations[l.code] = { name, desc };
+  });
+  const poi = {
+    image: document.getElementById('poi-image').value,
+    priority: parseInt(document.getElementById('poi-priority').value) || 5,
+    lat: parseFloat(document.getElementById('poi-lat').value) || 0,
+    lng: parseFloat(document.getElementById('poi-lng').value) || 0,
+    radius: parseInt(document.getElementById('poi-radius').value) || 100,
+    cooldown: parseInt(document.getElementById('poi-cooldown').value) || 5,
+    translations,
+  };
+  if (editPoiId) {
+    const idx = POIS.findIndex(p => p.id === editPoiId);
+    POIS[idx] = { ...POIS[idx], ...poi };
+  } else {
+    poi.id = POIS.length ? Math.max(...POIS.map(p=>p.id)) + 1 : 1;
+    POIS.push(poi);
+  }
+  closeModal('poi-modal');
+  renderPoiTable();
+  initDashboard();
+}
+
+function deletePoi(id) {
+  if (!confirm('Delete this POI?')) return;
+  const idx = POIS.findIndex(p => p.id === id);
+  POIS.splice(idx, 1);
+  renderPoiTable();
+  initDashboard();
+}
+
+function openUserModal(id) {
+  editUserId = id || null;
+  document.getElementById('user-modal-title').textContent = id ? 'Edit account' : 'Create account';
+  if (id) {
+    const u = USERS.find(x => x.id === id);
+    document.getElementById('u-name').value = u.fullName;
+    document.getElementById('u-email').value = u.email;
+    document.getElementById('u-password').value = '';
+    document.getElementById('u-password2').value = '';
+  } else {
+    ['u-name','u-email','u-password','u-password2'].forEach(id => document.getElementById(id).value = '');
+  }
+  document.getElementById('user-modal').classList.add('open');
+}
+
+function saveUser() {
+  const name = document.getElementById('u-name').value.trim();
+  const email = document.getElementById('u-email').value.trim();
+  const pw = document.getElementById('u-password').value;
+  const pw2 = document.getElementById('u-password2').value;
+  if (!name || !email) { alert('Name and email are required'); return; }
+  if (!editUserId && pw !== pw2) { alert('Passwords do not match'); return; }
+  if (editUserId) {
+    const idx = USERS.findIndex(u => u.id === editUserId);
+    USERS[idx].fullName = name;
+    USERS[idx].email = email;
+  } else {
+    USERS.push({ id: USERS.length + 1, fullName: name, email, favorites: 0 });
+  }
+  closeModal('user-modal');
+  renderUsersTable();
+  initDashboard();
+}
+
+function deleteUser(id) {
+  if (!confirm('Delete this account?')) return;
+  const idx = USERS.findIndex(u => u.id === id);
+  USERS.splice(idx, 1);
+  renderUsersTable();
+  initDashboard();
+}
+
+function addLanguage() {
+  const name = document.getElementById('new-lang-name').value.trim();
+  const code = document.getElementById('new-lang-code').value.trim().toLowerCase();
+  const flag = document.getElementById('new-lang-flag').value.trim();
+  if (!name || !code) { alert('Name and code are required'); return; }
+  if (LANGS.find(l => l.code === code)) { alert('Language code already exists'); return; }
+  LANGS.push({ code, name, flag: flag || '🌐' });
+  document.getElementById('new-lang-name').value = '';
+  document.getElementById('new-lang-code').value = '';
+  document.getElementById('new-lang-flag').value = '';
+  renderLangGrid();
+  initDashboard();
+}
+
+function deleteLang(code) {
+  if (!confirm(`Remove language "${code}"? This will not delete existing translations.`)) return;
+  const idx = LANGS.findIndex(l => l.code === code);
+  LANGS.splice(idx, 1);
+  renderLangGrid();
+  initDashboard();
+}
+
+function editLang(code) {
+  const l = LANGS.find(x => x.code === code);
+  const newName = prompt('Language name:', l.name);
+  if (newName) l.name = newName.trim();
+  renderLangGrid();
+}
+
+function deleteFeedback(id) {
+  if (!confirm('Delete this feedback?')) return;
+  const idx = FEEDBACKS.findIndex(f => f.id === id);
+  FEEDBACKS.splice(idx, 1);
+  renderFeedbackTable();
+  initDashboard();
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+renderDashboard();
+</script>

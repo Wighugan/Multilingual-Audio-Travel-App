@@ -1,6 +1,7 @@
 ﻿using SQLite;
 using System.Text.Json;
 using static multilingualAudioTravelApp.Services.PoiEntity;
+using System.Net.Http.Json;
 
 namespace multilingualAudioTravelApp.Services;
 
@@ -131,6 +132,31 @@ public class DatabaseService
 
     public async Task<List<PoiEntity>> GetAllPoisAsync()
     {
+        try
+        {
+            using var client = new HttpClient();
+
+            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                             ? "http://10.0.2.2:5068"
+                             : "http://localhost:5068";
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            // Gọi lên Web API để xin danh sách quán ăn
+            var poisFromServer = await client.GetFromJsonAsync<List<PoiEntity>>($"{baseUrl}/api/pois");
+
+            if (poisFromServer != null && poisFromServer.Count > 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Đã lấy dữ liệu thành công từ Web API!");
+                return poisFromServer;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"LỖI MẠNG HOẶC CHƯA MỞ SERVER: {ex.Message}");
+        }
         await InitAsync();
         return await _db.Table<PoiEntity>().ToListAsync();
     }

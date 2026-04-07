@@ -29,8 +29,6 @@ public partial class MainPage : ContentPage
     private PoiData _selectedPoi;
     private readonly DatabaseService _dbService = new DatabaseService();
 
-    // ===== AUDIO CONTROL =====
-    // ===== AUDIO CONTROL =====
     private string _currentText;
     private string[] _sentences;
     private int _currentSentenceIndex = 0;
@@ -512,12 +510,12 @@ public partial class MainPage : ContentPage
             };
             LocalNotificationCenter.Current.Show(notification);
             // Auto play
-            MainThread.BeginInvokeOnMainThread(async () =>
+            /*MainThread.BeginInvokeOnMainThread(async () =>
             {
                 try { HapticFeedback.Perform(HapticFeedbackType.LongPress); } catch { }
                 System.Diagnostics.Debug.WriteLine($"---> Tự động đọc: {poi.Name}");
                 await SpeakDescription(poi.Description);
-            });
+            });*/
         }
     }
     private void StartBackgroundGeofenceTimer()

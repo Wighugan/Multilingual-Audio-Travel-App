@@ -15,8 +15,6 @@ public class PoiEntity  //POI
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
-/*    public string Name { get; set; }
-    public string Description { get; set; }*/
     public string Image { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
@@ -25,9 +23,23 @@ public class PoiEntity  //POI
     public int CooldownMinutes { get; set; } = 5;
     public string TranslationsJson { get; set; }
     private Dictionary<string, PoiTranslation> _parsedTranslations;
+    
+    [Ignore]
+    public string FullImageUrl
+    {
+        get
+        {
+            if (Image != null && !Image.Contains("."))
+                return Image;
 
+            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                             ? "http://10.0.2.2:5068/images/"
+                             : "http://localhost:5068/images/";
+
+            return $"{baseUrl}{Image}";
+        }
+    }
     public class FavoriteEntity  //favoritePOI
-
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -341,66 +353,77 @@ public class DatabaseService
     // Đăng ký tài khoản mới
     public async Task<bool> RegisterAsync(string email, string password, string fullName)
     {
-        await InitAsync();
-
-        // Kiểm tra email đã tồn tại chưa
-        var existing = await _db.Table<UserEntity>()
-            .Where(u => u.Email == email)
-            .FirstOrDefaultAsync();
-
-        if (existing != null) return false; // Email đã dùng rồi
-
-        await _db.InsertAsync(new UserEntity
+        try
         {
-            Email = email,
-            Password = password,
-            FullName = fullName
-        });
-        return true;
+            using var client = new HttpClient();
+            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5068" : "http://localhost:5068";
+
+            // kéo danh sách về để check trùng email
+            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{baseUrl}/api/users");
+            if (users != null && users.Any(u => u.Email == email))
+                return false; // Email đã tồn tại
+
+            // đóng gói và gửi lệnh post tạo mới
+            var newUser = new UserEntity { Email = email, Password = password, FullName = fullName };
+            var response = await client.PostAsJsonAsync($"{baseUrl}/api/users", newUser);
+
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Lỗi Đăng ký: {ex.Message}");
+            return false;
+        }
     }
 
     // Đăng nhập - kiểm tra email + password
     public async Task<UserEntity> LoginAsync(string email, string password)
     {
-        await InitAsync();
+        try
+        {
+            using var client = new HttpClient();
+            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5068" : "http://localhost:5068";
 
-        return await _db.Table<UserEntity>()
-            .Where(u => u.Email == email && u.Password == password)
-            .FirstOrDefaultAsync();
+            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{baseUrl}/api/users");
+
+            return users?.FirstOrDefault(u => u.Email == email && u.Password == password);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Lỗi Đăng nhập: {ex.Message}");
+            return null;
+        }
     }
 
     // Cập nhật tên + email
     public async Task<bool> UpdateProfileAsync(string currentEmail, string newName, string newEmail, string newPassword = null)
     {
-        await InitAsync();
-
-        var user = await _db.Table<UserEntity>()
-            .Where(u => u.Email == currentEmail)
-            .FirstOrDefaultAsync();
-
-        if (user == null) return false;
-
-        if (newEmail != currentEmail)
+        try
         {
-            var existing = await _db.Table<UserEntity>()
-                .Where(u => u.Email == newEmail)
-                .FirstOrDefaultAsync();
-            if (existing != null) return false;
+            using var client = new HttpClient();
+            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5068" : "http://localhost:5068";
+
+            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{baseUrl}/api/users");
+            var user = users?.FirstOrDefault(u => u.Email == currentEmail);
+
+            if (user == null) return false;
+
+            // Đổi thông tin
+            user.FullName = newName;
+            user.Email = newEmail;
+            if (!string.IsNullOrEmpty(newPassword)) user.Password = newPassword;
+
+            var response = await client.PutAsJsonAsync($"{baseUrl}/api/users/{user.Id}", user);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Preferences.Set("userName", newName);
+                Preferences.Set("userEmail", newEmail);
+                return true;
+            }
+            return false;
         }
-
-        user.FullName = newName;
-        user.Email = newEmail;
-
-        // Chỉ đổi password nếu người dùng có nhập
-        if (!string.IsNullOrEmpty(newPassword))
-            user.Password = newPassword;
-
-        await _db.UpdateAsync(user);
-
-        Preferences.Set("userName", newName);
-        Preferences.Set("userEmail", newEmail);
-
-        return true;
+        catch { return false; }
     }
 
 
@@ -455,13 +478,29 @@ public class DatabaseService
     //luu feedback
     public async Task SaveFeedbackAsync(string email, int rating, string content)
     {
-        await InitAsync();
-        await _db.InsertAsync(new FeedbackEntity
+        try
         {
-            UserEmail = email,
-            Rating = rating,
-            Content = content,
-            CreatedAt = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
-        });
+            using var client = new HttpClient();
+            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5068" : "http://localhost:5068";
+
+            var newFeedback = new FeedbackEntity
+            {
+                UserEmail = email,
+                Rating = rating,
+                Content = content,
+                CreatedAt = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+            };
+
+            var response = await client.PostAsJsonAsync($"{baseUrl}/api/feedbacks", newFeedback);
+
+            if (response.IsSuccessStatusCode)
+            {
+                System.Diagnostics.Debug.WriteLine("Đã gửi Feedback lên Server thành công!");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Lỗi gửi Feedback: {ex.Message}");
+        }
     }
 }

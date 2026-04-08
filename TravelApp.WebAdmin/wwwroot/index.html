@@ -1,4 +1,6 @@
-﻿
+﻿<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
     * {
         box-sizing: border-box;
@@ -7,7 +9,7 @@
     }
 
     body {
-        font-family: var(--font-sans);
+        font-family:'Inter', sans-serif;
         background: var(--color-background-tertiary);
     }
 
@@ -22,20 +24,21 @@
 
     #sidebar {
         width: var(--sidebar-w);
-        background: var(--color-background-primary);
+        background: #97d4c5;
         border-right: 0.5px solid var(--color-border-tertiary);
         display: flex;
         flex-direction: column;
-        padding: 1.5rem 0;
+        padding: 1.0rem 0;
         position: sticky;
         top: 0;
-        align-self: flex-start;
+        height: 100vh;
     }
 
     .sidebar-logo {
         padding: 0 1.25rem 1.5rem;
         border-bottom: 0.5px solid var(--color-border-tertiary);
         margin-bottom: 0.75rem;
+        background: #97d4c5;
     }
 
         .sidebar-logo .logo-badge {
@@ -80,12 +83,12 @@
     }
 
         .nav-item:hover {
-            background: var(--color-background-secondary);
+            background: #a6d8c6;
             color: var(--color-text-primary);
         }
 
         .nav-item.active {
-            background: #E1F5EE;
+            background: #bffde7;
             color: #0F6E56;
             border-left-color: #1D9E75;
             font-weight: 500;
@@ -197,7 +200,7 @@
         align-items: center;
         gap: 6px;
         padding: 7px 14px;
-        border-radius: var(--border-radius-md);
+        border-radius: 6px;
         font-size: 13px;
         cursor: pointer;
         border: 0.5px solid var(--color-border-secondary);
@@ -207,7 +210,7 @@
     }
 
         .btn:hover {
-            background: var(--color-background-secondary);
+            background: #a6d8c6;
         }
 
     .btn-primary {
@@ -317,9 +320,9 @@
 
     input, select, textarea {
         padding: 8px 10px;
-        border-radius: var(--border-radius-md);
-        border: 0.5px solid var(--color-border-secondary);
-        background: var(--color-background-primary);
+        border-radius: 10px;
+        border: 0.5px solid darkgrey;
+        background: #d4d4d4;
         color: var(--color-text-primary);
         font-size: 13px;
         font-family: inherit;
@@ -385,9 +388,9 @@
         }
 
     .modal {
-        background: var(--color-background-primary);
+        background: #c9c9c9;
         border: 0.5px solid var(--color-border-tertiary);
-        border-radius: var(--border-radius-lg);
+        border-radius: 25px;
         padding: 1.5rem;
         width: 640px;
         max-width: 96vw;
@@ -521,6 +524,32 @@
         font-size: 12px;
         font-weight: 500;
     }
+
+    #toast {
+        visibility: hidden;
+        min-width: 250px;
+        background-color: #1D9E75;
+        color: white;
+        text-align: center;
+        border-radius: 8px;
+        padding: 12px 20px;
+        position: fixed;
+        z-index: 9999;
+        right: 20px;
+        top: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+        #toast.show {
+            visibility: visible;
+            transform: translateY(0);
+            opacity: 1;
+        }
 </style>
 
 <div id="app">
@@ -636,7 +665,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Name (VI)</th>
+                            <th>Name</th>
                             <th>Image</th>
                             <th>Coordinates</th>
                             <th>Radius</th>
@@ -695,7 +724,7 @@
                 </div>
                 <table>
                     <thead>
-                        <tr><th>User</th><th>Email</th><th>Status</th><th>Favorites</th><th>Actions</th></tr>
+                        <tr><th>User</th><th>Email</th><th>Status</th><th>Account Type</th><th>Actions</th></tr>
                     </thead>
                     <tbody id="users-table"></tbody>
                 </table>
@@ -730,7 +759,7 @@
         <div class="form-grid">
             <div class="form-group">
                 <label>Image filename</label>
-                <input id="poi-image" placeholder="e.g. vinhkhanh.jpg">
+                <input type="file" id="poi-file-upload" accept="image/*">
             </div>
             <div class="form-group">
                 <label>Priority</label>
@@ -804,154 +833,231 @@
     </div>
 </div>
 
+<div id="toast">Lưu thành công!</div>
+
 <script>
-const LANGS = [
-  { code: 'vi', name: 'Vietnamese', flag: '🇻🇳' },
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
-  { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
-  { code: 'ko', name: 'Korean', flag: '🇰🇷' },
-];
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
 
-const POIS = [
-  { id:1, image:'vinhkhanh.jpg', lat:10.761923, lng:106.701964, radius:100, priority:10, cooldown:5, translations:{
-    vi:{name:'Khu phố ẩm thực Vĩnh Khánh',desc:'Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.'},
-    en:{name:'Vinh Khanh Food Street',desc:'Famous food street in District 4 with many delicious dishes.'},
-    ja:{name:'ヴィンカン美食街',desc:'地区4の有名なグルメ通り。'},
-    zh:{name:'永庆美食街',desc:'第4区著名的美食街，美食众多。'},
-    ko:{name:'빈카인 푸드 스트리트',desc:'4구역의 유명한 음식 거리.'},
-  }},
-  { id:2, image:'ocoanh.jpg', lat:10.761410, lng:106.702820, radius:80, priority:8, cooldown:5, translations:{
-    vi:{name:'Quán Ốc Oanh',desc:'Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh.'},
-    en:{name:'Oanh Snail Restaurant',desc:'The oldest and most famous snail restaurant in Vinh Khanh.'},
-    ja:{name:'オアン貝料理店',desc:'ヴィンカン地区で最も歴史があり有名な料理店。'},
-    zh:{name:'阿恩螺蛳店',desc:'永庆地区最古老也最著名的螺蛳店。'},
-    ko:{name:'오안 달팽이 식당',desc:'빈카인 지역에서 가장 오래되고 유명한 달팽이 식당.'},
-  }},
-  { id:3, image:'ocphat.jpg', lat:10.761921, lng:106.702151, radius:70, priority:6, cooldown:5, translations:{
-    vi:{name:'Quán Ốc Phát',desc:'Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc.'},
-    en:{name:'Phat Snail Restaurant',desc:'A familiar destination for seafood lovers.'},
-    ja:{name:'ファット貝料理店',desc:'シーフード好きに馴染みのある場所。'},
-    zh:{name:'Phat螺蛳店',desc:'海鲜爱好者熟悉的去处。'},
-    ko:{name:'팟 달팽이 식당',desc:'해산물 애호가들에게 친숙한 장소.'},
-  }},
-  { id:4, image:'bunca.jpg', lat:10.761455, lng:106.702660, radius:70, priority:6, cooldown:5, translations:{
-    vi:{name:'Quán bún cá Châu Đốc',desc:'Nước lèo thanh mát, đậm đà hương vị.'},
-    en:{name:'Chau Doc Fish Noodle Soup',desc:'Refreshing, flavorful broth served with noodles.'},
-    ja:{name:'チャウドック魚麺',desc:'さっぱりとした風味豊かなスープ。'},
-    zh:{name:'朱笃鱼汤粉',desc:'清凉浓郁的汤汁。'},
-    ko:{name:'쩌우독 생선 국수',desc:'시원하고 진한 풍미의 국물.'},
-  }},
-  { id:5, image:'ocloan.jpg', lat:10.761170, lng:106.702710, radius:70, priority:6, cooldown:5, translations:{
-    vi:{name:'Quán Ốc Loan',desc:'Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon.'},
-    en:{name:'Loan Snail Restaurant',desc:'Airy space, famous for its delicious dipping sauce.'},
-    ja:{name:'ロアン貝料理店',desc:'風通しの良い空間とおいしいソース。'},
-    zh:{name:'Loan螺蛳店',desc:'空间通风，以美味蘸酱著称。'},
-    ko:{name:'로안 달팽이 식당',desc:'쾌적한 공간과 맛있는 소스로 유명.'},
-  }},
-  { id:6, image:'sushiko.jpg', lat:10.760827, lng:106.704798, radius:70, priority:6, cooldown:5, translations:{
-    vi:{name:'Nhà hàng Sushi KO',desc:'Nhiều món độc đáo, trải nghiệm ẩm thực phong phú.'},
-    en:{name:'Sushi KO Restaurant',desc:'A variety of unique dishes and rich culinary experience.'},
-    ja:{name:'寿司KOレストラン',desc:'多彩なユニークな料理が揃っています。'},
-    zh:{name:'Sushi KO 寿司店',desc:'提供多种特色菜肴。'},
-    ko:{name:'스시 KO 레스토랑',desc:'다양하고 독특한 요리.'},
-  }},
-  { id:7, image:'chili.jpg', lat:10.760774, lng:106.704575, radius:70, priority:6, cooldown:5, translations:{
-    vi:{name:'Nhà hàng nướng Chilli',desc:'Giá cả hợp lý và thực đơn đồ nướng đa dạng.'},
-    en:{name:'Chilli BBQ Restaurant',desc:'Affordable prices with a diverse all-you-can-grill menu.'},
-    ja:{name:'チリBBQレストラン',desc:'手頃な価格で多彩な食べ放題グリル。'},
-    zh:{name:'Chilli烧烤餐厅',desc:'价格合理，烧烤菜单丰富。'},
-    ko:{name:'칠리 BBQ 레스토랑',desc:'합리적인 가격의 무한 바비큐.'},
-  }},
-  { id:8, image:'otxiemquan.jpg', lat:10.760801, lng:106.704631, radius:70, priority:6, cooldown:5, translations:{
-    vi:{name:'Ớt Xiêm Quán',desc:'Món ăn ngon, giá cả hợp lý, menu đa dạng.'},
-    en:{name:'Ot Xiem Restaurant',desc:'Delicious food at very affordable prices.'},
-    ja:{name:'オットシエムレストラン',desc:'手頃な価格で美味しい料理。'},
-    zh:{name:'Ot Xiem 餐厅',desc:'美味且价格合理。'},
-    ko:{name:'엇시엠 식당',desc:'합리적인 가격의 맛있는 음식.'},
-  }},
-  { id:9, image:'vinhkhanh.jpg', lat:10.762100, lng:106.702000, radius:60, priority:5, cooldown:5, translations:{
-    vi:{name:'Cafe Vĩnh Khánh',desc:'Quán cà phê nhỏ xinh, không gian yên tĩnh.'},
-    en:{name:'Vinh Khanh Cafe',desc:'A cozy little cafe with a peaceful atmosphere.'},
-    ja:{name:'ヴィンカンカフェ',desc:'静かな雰囲気のかわいいカフェ。'},
-    zh:{name:'永庆咖啡店',desc:'小而美的咖啡店，环境安静。'},
-    ko:{name:'빈카인 카페',desc:'아늑하고 조용한 분위기의 카페.'},
-  }},
-];
+        setTimeout(() => toast.classList.remove("show"), 3000);
+    }
 
-const USERS = [
-  { id:1, fullName:'Nguyen Van A', email:'nguyenvana@gmail.com', favorites:3 },
-  { id:2, fullName:'Tran Thi B', email:'tranthib@email.com', favorites:1 },
-  { id:3, fullName:'Le Minh C', email:'leminchc@mail.com', favorites:5 },
-  { id:4, fullName:'Pham Thu D', email:'phamthud@test.com', favorites:2 },
-];
+    const LANGS = [
+        { code: 'vi', name: 'Vietnamese', flag: '🇻🇳' },
+        { code: 'en', name: 'English', flag: '🇬🇧' },
+        { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
+        { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
+        { code: 'ko', name: 'Korean', flag: '🇰🇷' },
+    ];
 
-const FEEDBACKS = [
-  { id:1, email:'nguyenvana@gmail.com', rating:5, content:'App rất hay, rất hữu ích khi đi du lịch!', date:'07/04/2026 09:15' },
-  { id:2, email:'tranthib@email.com', rating:4, content:'Giao diện đẹp, thông tin chi tiết. Cần thêm nhiều POI hơn.', date:'06/04/2026 14:32' },
-  { id:3, email:'leminchc@mail.com', rating:4, content:'Very useful app! Love the multilingual support.', date:'05/04/2026 18:00' },
-];
+    async function loadDataFromServer() {
+        try {
+            const response = await fetch('/api/pois');
+            const rawData = await response.json(); // Lấy dữ liệu gốc từ C# API
 
-let editPoiId = null;
-let editUserId = null;
+            // Phiên dịch cho HTML
+            POIS = rawData.map(p => {
+                let transObj = {};
+                if (p.translationsJson) {
+                    let parsed = JSON.parse(p.translationsJson); // Biến String thành Object
 
-function navigate(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  event.currentTarget.classList.add('active');
-  if (page === 'poi') renderPoiTable();
-  if (page === 'accounts') renderUsersTable();
-  if (page === 'languages') renderLangGrid();
-  if (page === 'feedback') renderFeedbackTable();
-  if (page === 'dashboard') renderDashboard();
-}
+                    // Đổi Name (C#) thành name (HTML)
+                    for (let lang in parsed) {
+                        transObj[lang] = {
+                            name: parsed[lang].Name || parsed[lang].name,
+                            desc: parsed[lang].Description || parsed[lang].desc
+                        };
+                    }
+                }
 
-function initDashboard() {
-  document.getElementById('stat-pois').textContent = POIS.length;
-  document.getElementById('stat-users').textContent = USERS.length;
-  document.getElementById('stat-langs').textContent = LANGS.length;
-  document.getElementById('stat-feedback').textContent = FEEDBACKS.length;
-  document.getElementById('poi-nav-count').textContent = POIS.length;
-  document.getElementById('user-nav-count').textContent = USERS.length;
-  document.getElementById('lang-nav-count').textContent = LANGS.length;
-  document.getElementById('feedback-nav-count').textContent = FEEDBACKS.length;
-}
+                // Trả ra một Object chuẩn xác 100% với form mẫu cũ của HTML
+                return {
+                    id: p.id,
+                    image: p.image,
+                    lat: p.latitude,            // Dịch latitude -> lat
+                    lng: p.longitude,           // Dịch longitude -> lng
+                    radius: p.radius,
+                    priority: p.priority,
+                    cooldown: p.cooldownMinutes, // Dịch cooldownMinutes -> cooldown
+                    translations: transObj       // Gắn cục đa ngôn ngữ đã dịch vào
+                };
+            });
 
-function renderDashboard() {
-  initDashboard();
-  const pt = document.getElementById('dash-poi-table');
-  pt.innerHTML = POIS.slice(0,5).map(p => `
+            renderPoiTable(); // Vẽ lại bảng POI
+            initDashboard();  // Cập nhật lại các con số thống kê ở trên cùng
+        } catch (error) {
+            console.error("Lỗi khi tải dữ liệu:", error);
+        }
+    }
+    async function loadUsersFromServer() {
+        try {
+            const res = await fetch('/api/users');
+            USERS = await res.json();
+            renderUsersTable();
+            initDashboard();
+        } catch (e) { console.error("Lỗi tải Users"); }
+    }
+
+    async function loadFeedbacksFromServer() {
+        try {
+            const res = await fetch('/api/feedbacks');
+            FEEDBACKS = await res.json();
+            renderFeedbackTable();
+            initDashboard();
+        } catch (e) { console.error("Lỗi tải Feedbacks"); }
+    }
+
+    loadUsersFromServer();
+    loadFeedbacksFromServer();
+    loadDataFromServer();
+    let POIS = [];
+    /*const POIS = [
+      { id:1, image:'vinhkhanh.jpg', lat:10.761923, lng:106.701964, radius:100, priority:10, cooldown:5, translations:{
+        vi:{name:'Khu phố ẩm thực Vĩnh Khánh',desc:'Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.'},
+        en:{name:'Vinh Khanh Food Street',desc:'Famous food street in District 4 with many delicious dishes.'},
+        ja:{name:'ヴィンカン美食街',desc:'地区4の有名なグルメ通り。'},
+        zh:{name:'永庆美食街',desc:'第4区著名的美食街，美食众多。'},
+        ko:{name:'빈카인 푸드 스트리트',desc:'4구역의 유명한 음식 거리.'},
+      }},
+      { id:2, image:'ocoanh.jpg', lat:10.761410, lng:106.702820, radius:80, priority:8, cooldown:5, translations:{
+        vi:{name:'Quán Ốc Oanh',desc:'Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh.'},
+        en:{name:'Oanh Snail Restaurant',desc:'The oldest and most famous snail restaurant in Vinh Khanh.'},
+        ja:{name:'オアン貝料理店',desc:'ヴィンカン地区で最も歴史があり有名な料理店。'},
+        zh:{name:'阿恩螺蛳店',desc:'永庆地区最古老也最著名的螺蛳店。'},
+        ko:{name:'오안 달팽이 식당',desc:'빈카인 지역에서 가장 오래되고 유명한 달팽이 식당.'},
+      }},
+      { id:3, image:'ocphat.jpg', lat:10.761921, lng:106.702151, radius:70, priority:6, cooldown:5, translations:{
+        vi:{name:'Quán Ốc Phát',desc:'Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc.'},
+        en:{name:'Phat Snail Restaurant',desc:'A familiar destination for seafood lovers.'},
+        ja:{name:'ファット貝料理店',desc:'シーフード好きに馴染みのある場所。'},
+        zh:{name:'Phat螺蛳店',desc:'海鲜爱好者熟悉的去处。'},
+        ko:{name:'팟 달팽이 식당',desc:'해산물 애호가들에게 친숙한 장소.'},
+      }},
+      { id:4, image:'bunca.jpg', lat:10.761455, lng:106.702660, radius:70, priority:6, cooldown:5, translations:{
+        vi:{name:'Quán bún cá Châu Đốc',desc:'Nước lèo thanh mát, đậm đà hương vị.'},
+        en:{name:'Chau Doc Fish Noodle Soup',desc:'Refreshing, flavorful broth served with noodles.'},
+        ja:{name:'チャウドック魚麺',desc:'さっぱりとした風味豊かなスープ。'},
+        zh:{name:'朱笃鱼汤粉',desc:'清凉浓郁的汤汁。'},
+        ko:{name:'쩌우독 생선 국수',desc:'시원하고 진한 풍미의 국물.'},
+      }},
+      { id:5, image:'ocloan.jpg', lat:10.761170, lng:106.702710, radius:70, priority:6, cooldown:5, translations:{
+        vi:{name:'Quán Ốc Loan',desc:'Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon.'},
+        en:{name:'Loan Snail Restaurant',desc:'Airy space, famous for its delicious dipping sauce.'},
+        ja:{name:'ロアン貝料理店',desc:'風通しの良い空間とおいしいソース。'},
+        zh:{name:'Loan螺蛳店',desc:'空间通风，以美味蘸酱著称。'},
+        ko:{name:'로안 달팽이 식당',desc:'쾌적한 공간과 맛있는 소스로 유명.'},
+      }},
+      { id:6, image:'sushiko.jpg', lat:10.760827, lng:106.704798, radius:70, priority:6, cooldown:5, translations:{
+        vi:{name:'Nhà hàng Sushi KO',desc:'Nhiều món độc đáo, trải nghiệm ẩm thực phong phú.'},
+        en:{name:'Sushi KO Restaurant',desc:'A variety of unique dishes and rich culinary experience.'},
+        ja:{name:'寿司KOレストラン',desc:'多彩なユニークな料理が揃っています。'},
+        zh:{name:'Sushi KO 寿司店',desc:'提供多种特色菜肴。'},
+        ko:{name:'스시 KO 레스토랑',desc:'다양하고 독특한 요리.'},
+      }},
+      { id:7, image:'chili.jpg', lat:10.760774, lng:106.704575, radius:70, priority:6, cooldown:5, translations:{
+        vi:{name:'Nhà hàng nướng Chilli',desc:'Giá cả hợp lý và thực đơn đồ nướng đa dạng.'},
+        en:{name:'Chilli BBQ Restaurant',desc:'Affordable prices with a diverse all-you-can-grill menu.'},
+        ja:{name:'チリBBQレストラン',desc:'手頃な価格で多彩な食べ放題グリル。'},
+        zh:{name:'Chilli烧烤餐厅',desc:'价格合理，烧烤菜单丰富。'},
+        ko:{name:'칠리 BBQ 레스토랑',desc:'합리적인 가격의 무한 바비큐.'},
+      }},
+      { id:8, image:'otxiemquan.jpg', lat:10.760801, lng:106.704631, radius:70, priority:6, cooldown:5, translations:{
+        vi:{name:'Ớt Xiêm Quán',desc:'Món ăn ngon, giá cả hợp lý, menu đa dạng.'},
+        en:{name:'Ot Xiem Restaurant',desc:'Delicious food at very affordable prices.'},
+        ja:{name:'オットシエムレストラン',desc:'手頃な価格で美味しい料理。'},
+        zh:{name:'Ot Xiem 餐厅',desc:'美味且价格合理。'},
+        ko:{name:'엇시엠 식당',desc:'합리적인 가격의 맛있는 음식.'},
+      }},
+      { id:9, image:'vinhkhanh.jpg', lat:10.762100, lng:106.702000, radius:60, priority:5, cooldown:5, translations:{
+        vi:{name:'Cafe Vĩnh Khánh',desc:'Quán cà phê nhỏ xinh, không gian yên tĩnh.'},
+        en:{name:'Vinh Khanh Cafe',desc:'A cozy little cafe with a peaceful atmosphere.'},
+        ja:{name:'ヴィンカンカフェ',desc:'静かな雰囲気のかわいいカフェ。'},
+        zh:{name:'永庆咖啡店',desc:'小而美的咖啡店，环境安静。'},
+        ko:{name:'빈카인 카페',desc:'아늑하고 조용한 분위기의 카페.'},
+      }},
+    ];
+    */
+    let USERS = [];
+    let FEEDBACKS = [];
+    let editPoiId = null;
+    let editUserId = null;
+
+    function navigate(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if (page === 'poi') renderPoiTable();
+        if (page === 'accounts') renderUsersTable();
+        if (page === 'languages') renderLangGrid();
+        if (page === 'feedback') renderFeedbackTable();
+        if (page === 'dashboard') renderDashboard();
+    }
+
+    function initDashboard() {
+        document.getElementById('stat-pois').textContent = POIS.length;
+        document.getElementById('stat-users').textContent = USERS.length;
+        document.getElementById('stat-langs').textContent = LANGS.length;
+        document.getElementById('stat-feedback').textContent = FEEDBACKS.length;
+        document.getElementById('poi-nav-count').textContent = POIS.length;
+        document.getElementById('user-nav-count').textContent = USERS.length;
+        document.getElementById('lang-nav-count').textContent = LANGS.length;
+        document.getElementById('feedback-nav-count').textContent = FEEDBACKS.length;
+    }
+
+    function renderDashboard() {
+        initDashboard();
+        const pt = document.getElementById('dash-poi-table');
+        pt.innerHTML = POIS.slice(0, 5).map(p => `
     <tr>
-      <td>${p.translations.vi.name}</td>
-      <td style="font-size:11px;color:var(--color-text-secondary)">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</td>
-      <td><span class="badge badge-green">${p.priority}</span></td>
+      <td>${p.translations?.vi?.name || '(Chưa có tên)'}</td>
+      <td style="font-size:11px;color:var(--color-text-secondary)">${p.lat ? p.lat.toFixed(4) : 0}, ${p.lng ? p.lng.toFixed(4) : 0}</td>
+      <td><span class="badge badge-green">${p.priority || 5}</span></td>
     </tr>
   `).join('');
-  const ft = document.getElementById('dash-feedback-table');
-  ft.innerHTML = FEEDBACKS.map(f => `
-    <tr>
-      <td>${f.email.split('@')[0]}</td>
-      <td class="rating-stars">${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</td>
-      <td style="font-size:11px;color:var(--color-text-secondary)">${f.date.split(' ')[0]}</td>
-    </tr>
-  `).join('');
-}
 
-function renderPoiTable() {
-  const q = (document.getElementById('poi-search').value || '').toLowerCase();
-  const tbody = document.getElementById('poi-table');
-  const filtered = POIS.filter(p =>
-    p.translations.vi.name.toLowerCase().includes(q) || p.image.toLowerCase().includes(q)
-  );
-  if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><p>No POIs found</p></div></td></tr>';
-    return;
-  }
-  tbody.innerHTML = filtered.map(p => {
-    const langCount = Object.keys(p.translations).length;
-    return `<tr>
-      <td style="font-weight:500">${p.translations.vi.name}</td>
+        const ft = document.getElementById('dash-feedback-table');
+        ft.innerHTML = FEEDBACKS.slice(0, 5).map(f => {
+            const matchedUser = USERS.find(u => u.email === f.userEmail);
+            const fullName = matchedUser ? matchedUser.fullName : 'Khách';
+
+            const dateStr = f.createdAt ? f.createdAt.split(' ')[0] : '';
+            const rate = f.rating || 5;
+
+            return `<tr>
+      <td style="font-size:12px; font-weight:500;">
+        ${fullName}
+        <div style="font-size:10px; color:var(--color-text-secondary); font-weight:normal;">${f.userEmail || ''}</div>
+      </td>
+      <td class="rating-stars">${'★'.repeat(rate)}${'☆'.repeat(5 - rate)}</td>
+      <td style="font-size:11px;color:var(--color-text-secondary)">${dateStr}</td>
+    </tr>`;
+        }).join('');
+    }
+
+    function renderPoiTable() {
+        const q = (document.getElementById('poi-search').value || '').toLowerCase();
+        const tbody = document.getElementById('poi-table');
+
+        const filtered = POIS.filter(p => {
+            const viName = p.translations?.vi?.name || '';
+            const imgName = p.image || '';
+            return viName.toLowerCase().includes(q) || imgName.toLowerCase().includes(q);
+        });
+
+        if (!filtered.length) {
+            tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><p>No POIs found</p></div></td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(p => {
+            const langCount = Object.keys(p.translations || {}).length;
+            const displayName = p.translations?.vi?.name || '(Chưa có tên)';
+
+            return `<tr>
+      <td style="font-weight:500">${displayName}</td>
       <td style="font-size:12px;color:var(--color-text-secondary)">${p.image}</td>
       <td style="font-size:12px">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</td>
       <td>${p.radius}m</td>
@@ -965,40 +1071,49 @@ function renderPoiTable() {
         <button class="btn btn-sm btn-danger" onclick="deletePoi(${p.id})">Delete</button>
       </td>
     </tr>`;
-  }).join('');
-}
+        }).join('');
+    }
 
-function renderUsersTable() {
-  const q = (document.getElementById('user-search').value || '').toLowerCase();
-  const tbody = document.getElementById('users-table');
-  const filtered = USERS.filter(u =>
-    u.fullName.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
-  );
-  tbody.innerHTML = filtered.map(u => {
-    const initials = u.fullName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    return `<tr>
+    function renderUsersTable() {
+        const q = (document.getElementById('user-search').value || '').toLowerCase();
+        const tbody = document.getElementById('users-table');
+
+        const filtered = USERS.filter(u =>
+            (u.fullName || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q)
+        );
+
+        if (!filtered.length) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;">Chưa có người dùng nào</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(u => {
+            const name = u.fullName || 'No Name';
+            const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+            return `<tr>
       <td>
         <div style="display:flex;align-items:center;gap:10px;">
           <div class="avatar">${initials}</div>
-          <span style="font-weight:500">${u.fullName}</span>
+          <span style="font-weight:500">${name}</span>
         </div>
       </td>
-      <td style="font-size:13px;color:var(--color-text-secondary)">${u.email}</td>
+      <td style="font-size:13px;color:var(--color-text-secondary)">${u.email || ''}</td>
       <td><span class="badge badge-green">Active</span></td>
-      <td><span class="badge badge-blue">${u.favorites} saved</span></td>
+      <td><span class="badge badge-blue">Thành viên</span></td>
       <td>
         <button class="btn btn-sm" onclick="openUserModal(${u.id})">Edit</button>
         <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
       </td>
     </tr>`;
-  }).join('');
-}
+        }).join('');
+    }
 
-function renderLangGrid() {
-  const grid = document.getElementById('lang-grid');
-  grid.innerHTML = LANGS.map(l => {
-    const poiCount = POIS.filter(p => p.translations[l.code]).length;
-    return `<div class="lang-card">
+    function renderLangGrid() {
+        const grid = document.getElementById('lang-grid');
+        grid.innerHTML = LANGS.map(l => {
+            const poiCount = POIS.filter(p => p.translations[l.code]).length;
+            return `<div class="lang-card">
       <div class="lang-card-header">
         <span class="lang-flag">${l.flag}</span>
         <div class="lang-info">
@@ -1012,28 +1127,54 @@ function renderLangGrid() {
         <button class="btn btn-sm btn-danger" onclick="deleteLang('${l.code}')">Remove</button>
       </div>
     </div>`;
-  }).join('');
-}
+        }).join('');
+    }
 
-function renderFeedbackTable() {
-  const tbody = document.getElementById('feedback-table');
-  tbody.innerHTML = FEEDBACKS.map(f => `<tr>
-    <td style="font-size:13px">${f.email}</td>
-    <td class="rating-stars">${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</td>
-    <td class="feedback-content">${f.content}</td>
-    <td style="font-size:12px;color:var(--color-text-secondary)">${f.date}</td>
+    function renderFeedbackTable() {
+        const tbody = document.getElementById('feedback-table');
+        if (!FEEDBACKS || FEEDBACKS.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;">Chưa có đánh giá nào</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = FEEDBACKS.map(f => {
+            const matchedUser = USERS.find(u => u.email === f.userEmail);
+            const fullName = matchedUser ? matchedUser.fullName : 'Khách vãng lai';
+            const email = f.userEmail || 'Không rõ email';
+
+            const initials = fullName !== 'Khách vãng lai'
+                ? fullName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+                : '👤';
+
+            const dateStr = f.createdAt || 'Đang cập nhật';
+            const rate = f.rating || 5;
+
+            return `<tr>
+    <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div class="avatar">${initials}</div>
+            <div>
+                <div style="font-weight:500; font-size:13px; color:var(--color-text-primary);">${fullName}</div>
+                <div style="font-size:11px; color:var(--color-text-secondary);">${email}</div>
+            </div>
+        </div>
+    </td>
+    <td class="rating-stars">${'★'.repeat(rate)}${'☆'.repeat(5 - rate)}</td>
+    <td class="feedback-content">${f.content || ''}</td>
+    <td style="font-size:12px;color:var(--color-text-secondary)">${dateStr}</td>
     <td><button class="btn btn-sm btn-danger" onclick="deleteFeedback(${f.id})">Delete</button></td>
-  </tr>`).join('');
-}
+  </tr>`;
+        }).join('');
+    }
 
-function buildLangTabs() {
-  const tabs = document.getElementById('poi-lang-tabs');
-  const fields = document.getElementById('poi-lang-fields-container');
-  tabs.innerHTML = LANGS.map((l, i) =>
-    `<button class="lang-tab ${i===0?'active':''}" onclick="switchLangTab('${l.code}', this)">${l.flag} ${l.code.toUpperCase()}</button>`
-  ).join('');
-  fields.innerHTML = LANGS.map((l, i) =>
-    `<div class="lang-fields ${i===0?'active':''}" id="lf-${l.code}">
+    function buildLangTabs() {
+        const tabs = document.getElementById('poi-lang-tabs');
+        const fields = document.getElementById('poi-lang-fields-container');
+        tabs.innerHTML = LANGS.map((l, i) =>
+            `<button class="lang-tab ${i === 0 ? 'active' : ''}" onclick="switchLangTab('${l.code}', this)">${l.flag} ${l.code.toUpperCase()}</button>`
+        ).join('');
+        fields.innerHTML = LANGS.map((l, i) =>
+            `<div class="lang-fields ${i === 0 ? 'active' : ''}" id="lf-${l.code}">
       <div class="form-group">
         <label>Name (${l.name})</label>
         <input id="poi-name-${l.code}" placeholder="Name in ${l.name}">
@@ -1043,163 +1184,276 @@ function buildLangTabs() {
         <textarea id="poi-desc-${l.code}" placeholder="Description in ${l.name}"></textarea>
       </div>
     </div>`
-  ).join('');
-}
+        ).join('');
+    }
 
-function switchLangTab(code, el) {
-  document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.lang-fields').forEach(f => f.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('lf-' + code).classList.add('active');
-}
+    function switchLangTab(code, el) {
+        document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.lang-fields').forEach(f => f.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('lf-' + code).classList.add('active');
+    }
 
-function openPoiModal(id) {
-  editPoiId = id || null;
-  document.getElementById('poi-modal-title').textContent = id ? 'Edit POI' : 'Add point of interest';
-  buildLangTabs();
-  if (id) {
-    const p = POIS.find(x => x.id === id);
-    document.getElementById('poi-image').value = p.image;
-    document.getElementById('poi-priority').value = p.priority;
-    document.getElementById('poi-lat').value = p.lat;
-    document.getElementById('poi-lng').value = p.lng;
-    document.getElementById('poi-radius').value = p.radius;
-    document.getElementById('poi-cooldown').value = p.cooldown;
-    LANGS.forEach(l => {
-      const t = p.translations[l.code] || {};
-      document.getElementById('poi-name-' + l.code).value = t.name || '';
-      document.getElementById('poi-desc-' + l.code).value = t.desc || '';
+    function openPoiModal(poiId = null) {
+        editPoiId = poiId;
+        const modal = document.getElementById('poi-modal');
+
+        // Trỏ đúng ID của nút chọn file mới
+        const fileInput = document.getElementById('poi-file-upload');
+
+        if (poiId) {
+            const poi = POIS.find(p => p.id === poiId);
+            if (!poi) return;
+
+            if (document.getElementById('poi-lat')) document.getElementById('poi-lat').value = poi.lat || '';
+            if (document.getElementById('poi-lng')) document.getElementById('poi-lng').value = poi.lng || '';
+            if (document.getElementById('poi-priority')) document.getElementById('poi-priority').value = poi.priority || 5;
+            if (document.getElementById('poi-radius')) document.getElementById('poi-radius').value = poi.radius || 100;
+            if (document.getElementById('poi-cooldown')) document.getElementById('poi-cooldown').value = poi.cooldown || 5;
+
+            if (fileInput) fileInput.value = "";
+
+            LANGS.forEach(l => {
+                const nameEl = document.getElementById('poi-name-' + l.code);
+                const descEl = document.getElementById('poi-desc-' + l.code);
+                if (nameEl && descEl) {
+                    nameEl.value = poi.translations[l.code]?.name || '';
+                    descEl.value = poi.translations[l.code]?.desc || '';
+                }
+            });
+        } else {
+            if (document.getElementById('poi-lat')) document.getElementById('poi-lat').value = '';
+            if (document.getElementById('poi-lng')) document.getElementById('poi-lng').value = '';
+            if (document.getElementById('poi-priority')) document.getElementById('poi-priority').value = 5;
+            if (document.getElementById('poi-radius')) document.getElementById('poi-radius').value = 100;
+            if (document.getElementById('poi-cooldown')) document.getElementById('poi-cooldown').value = 5;
+
+            if (fileInput) fileInput.value = "";
+
+            LANGS.forEach(l => {
+                const nameEl = document.getElementById('poi-name-' + l.code);
+                const descEl = document.getElementById('poi-desc-' + l.code);
+                if (nameEl && descEl) {
+                    nameEl.value = '';
+                    descEl.value = '';
+                }
+            });
+        }
+
+        modal.classList.add('open');
+    }
+
+    async function savePoi() {
+        const fileInput = document.getElementById('poi-file-upload');
+        let finalImageName = "";
+
+        // xử lý ảnh
+        if (fileInput.files.length > 0) {
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            try {
+                const uploadRes = await fetch('/api/pois/upload', { method: 'POST', body: formData });
+                const uploadData = await uploadRes.json();
+                finalImageName = uploadData.fileName;
+            } catch (err) {
+                alert("Lỗi tải ảnh lên Server!"); return;
+            }
+        } else {
+            if (editPoiId) {
+                // không chọn ảnh mới thì lấy lại tên ảnh cũ
+                const oldPoi = POIS.find(p => p.id === editPoiId);
+                finalImageName = oldPoi.image;
+            } else {
+                alert("Vui lòng chọn hình ảnh cho quán ăn!"); return;
+            }
+        }
+
+        const translations = {};
+        LANGS.forEach(l => {
+            const name = document.getElementById('poi-name-' + l.code).value.trim();
+            const desc = document.getElementById('poi-desc-' + l.code).value.trim();
+            if (name || desc) translations[l.code] = { Name: name, Description: desc };
+        });
+
+        // Đóng gói cục dữ liệu
+        const poi = {
+            image: finalImageName,
+            priority: parseInt(document.getElementById('poi-priority').value) || 5,
+            latitude: parseFloat(document.getElementById('poi-lat').value) || 0,
+            longitude: parseFloat(document.getElementById('poi-lng').value) || 0,
+            radius: parseInt(document.getElementById('poi-radius').value) || 100,
+            cooldownMinutes: parseInt(document.getElementById('poi-cooldown').value) || 5,
+            translationsJson: JSON.stringify(translations)
+        };
+
+        if (editPoiId) {
+            poi.id = editPoiId;
+            const response = await fetch('/api/pois/' + editPoiId, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(poi)
+            });
+            if (response.ok) {
+                closeModal('poi-modal');
+                loadDataFromServer();
+                showToast("✅ Đã cập nhật thành công!");
+            } else alert("Lỗi khi cập nhật!");
+        } else {
+            const response = await fetch('/api/pois', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(poi)
+            });
+            if (response.ok) {
+                closeModal('poi-modal');
+                loadDataFromServer();
+                showToast("✅ Đã thêm quán mới!");
+            } else alert("Lỗi khi thêm Database!");
+        }
+    }
+    /*function savePoi() {
+      const translations = {};
+      LANGS.forEach(l => {
+        const name = document.getElementById('poi-name-' + l.code).value.trim();
+        const desc = document.getElementById('poi-desc-' + l.code).value.trim();
+        if (name) translations[l.code] = { name, desc };
+      });
+      const poi = {
+        image: document.getElementById('poi-image').value,
+        priority: parseInt(document.getElementById('poi-priority').value) || 5,
+        lat: parseFloat(document.getElementById('poi-lat').value) || 0,
+        lng: parseFloat(document.getElementById('poi-lng').value) || 0,
+        radius: parseInt(document.getElementById('poi-radius').value) || 100,
+        cooldown: parseInt(document.getElementById('poi-cooldown').value) || 5,
+        translations,
+      };
+      if (editPoiId) {
+        const idx = POIS.findIndex(p => p.id === editPoiId);
+        POIS[idx] = { ...POIS[idx], ...poi };
+      } else {
+        poi.id = POIS.length ? Math.max(...POIS.map(p=>p.id)) + 1 : 1;
+        POIS.push(poi);
+      }
+      closeModal('poi-modal');
+      renderPoiTable();
+      initDashboard();
+    }*/
+
+    async function deletePoi(id) {
+        if (!confirm('Delete this POI?')) return;
+
+        // Bắn lệnh DELETE lên API (Ví dụ: /api/pois/5)
+        await fetch('/api/pois/' + id, {
+            method: 'DELETE'
+        });
+
+        loadDataFromServer(); // Tải lại bảng sau khi xóa
+    }
+    /*function deletePoi(id) {
+      if (!confirm('Delete this POI?')) return;
+      const idx = POIS.findIndex(p => p.id === id);
+      POIS.splice(idx, 1);
+      renderPoiTable();
+      initDashboard();
+    }
+    */
+    function openUserModal(id) {
+        editUserId = id || null;
+        document.getElementById('user-modal-title').textContent = id ? 'Edit account' : 'Create account';
+        if (id) {
+            const u = USERS.find(x => x.id === id);
+            document.getElementById('u-name').value = u.fullName;
+            document.getElementById('u-email').value = u.email;
+            document.getElementById('u-password').value = '';
+            document.getElementById('u-password2').value = '';
+        } else {
+            ['u-name', 'u-email', 'u-password', 'u-password2'].forEach(id => document.getElementById(id).value = '');
+        }
+        document.getElementById('user-modal').classList.add('open');
+    }
+
+    async function saveUser() {
+        const name = document.getElementById('u-name').value.trim();
+        const email = document.getElementById('u-email').value.trim();
+        const pw = document.getElementById('u-password').value;
+        const pw2 = document.getElementById('u-password2').value;
+
+        if (!name || !email) { alert('Vui lòng nhập tên và email'); return; }
+        if (!editUserId && pw !== pw2) { alert('Mật khẩu không khớp'); return; }
+
+        const userObj = { fullName: name, email: email, password: pw };
+
+        if (editUserId) {
+            // sửa
+            userObj.id = editUserId;
+            await fetch('/api/users/' + editUserId, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userObj)
+            });
+        } else {
+            // thêm mới
+            await fetch('/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userObj)
+            });
+        }
+
+        closeModal('user-modal');
+        showToast("Đã lưu User!");
+        loadUsersFromServer();
+    }
+
+    async function deleteUser(id) {
+        if (!confirm('Xóa tài khoản này?')) return;
+        await fetch('/api/users/' + id, { method: 'DELETE' });
+        loadUsersFromServer();
+    }
+
+    async function deleteFeedback(id) {
+        if (!confirm('Xóa bình luận này?')) return;
+        await fetch('/api/feedbacks/' + id, { method: 'DELETE' });
+        loadFeedbacksFromServer();
+    }
+
+    function addLanguage() {
+        const name = document.getElementById('new-lang-name').value.trim();
+        const code = document.getElementById('new-lang-code').value.trim().toLowerCase();
+        const flag = document.getElementById('new-lang-flag').value.trim();
+        if (!name || !code) { alert('Name and code are required'); return; }
+        if (LANGS.find(l => l.code === code)) { alert('Language code already exists'); return; }
+        LANGS.push({ code, name, flag: flag || '🌐' });
+        document.getElementById('new-lang-name').value = '';
+        document.getElementById('new-lang-code').value = '';
+        document.getElementById('new-lang-flag').value = '';
+        renderLangGrid();
+        initDashboard();
+    }
+
+    function deleteLang(code) {
+        if (!confirm(`Remove language "${code}"? This will not delete existing translations.`)) return;
+        const idx = LANGS.findIndex(l => l.code === code);
+        LANGS.splice(idx, 1);
+        renderLangGrid();
+        initDashboard();
+    }
+
+    function editLang(code) {
+        const l = LANGS.find(x => x.code === code);
+        const newName = prompt('Language name:', l.name);
+        if (newName) l.name = newName.trim();
+        renderLangGrid();
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('open');
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+        m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
     });
-  } else {
-    ['poi-image','poi-priority','poi-lat','poi-lng','poi-radius','poi-cooldown'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-  }
-  document.getElementById('poi-modal').classList.add('open');
-}
 
-function savePoi() {
-  const translations = {};
-  LANGS.forEach(l => {
-    const name = document.getElementById('poi-name-' + l.code).value.trim();
-    const desc = document.getElementById('poi-desc-' + l.code).value.trim();
-    if (name) translations[l.code] = { name, desc };
-  });
-  const poi = {
-    image: document.getElementById('poi-image').value,
-    priority: parseInt(document.getElementById('poi-priority').value) || 5,
-    lat: parseFloat(document.getElementById('poi-lat').value) || 0,
-    lng: parseFloat(document.getElementById('poi-lng').value) || 0,
-    radius: parseInt(document.getElementById('poi-radius').value) || 100,
-    cooldown: parseInt(document.getElementById('poi-cooldown').value) || 5,
-    translations,
-  };
-  if (editPoiId) {
-    const idx = POIS.findIndex(p => p.id === editPoiId);
-    POIS[idx] = { ...POIS[idx], ...poi };
-  } else {
-    poi.id = POIS.length ? Math.max(...POIS.map(p=>p.id)) + 1 : 1;
-    POIS.push(poi);
-  }
-  closeModal('poi-modal');
-  renderPoiTable();
-  initDashboard();
-}
-
-function deletePoi(id) {
-  if (!confirm('Delete this POI?')) return;
-  const idx = POIS.findIndex(p => p.id === id);
-  POIS.splice(idx, 1);
-  renderPoiTable();
-  initDashboard();
-}
-
-function openUserModal(id) {
-  editUserId = id || null;
-  document.getElementById('user-modal-title').textContent = id ? 'Edit account' : 'Create account';
-  if (id) {
-    const u = USERS.find(x => x.id === id);
-    document.getElementById('u-name').value = u.fullName;
-    document.getElementById('u-email').value = u.email;
-    document.getElementById('u-password').value = '';
-    document.getElementById('u-password2').value = '';
-  } else {
-    ['u-name','u-email','u-password','u-password2'].forEach(id => document.getElementById(id).value = '');
-  }
-  document.getElementById('user-modal').classList.add('open');
-}
-
-function saveUser() {
-  const name = document.getElementById('u-name').value.trim();
-  const email = document.getElementById('u-email').value.trim();
-  const pw = document.getElementById('u-password').value;
-  const pw2 = document.getElementById('u-password2').value;
-  if (!name || !email) { alert('Name and email are required'); return; }
-  if (!editUserId && pw !== pw2) { alert('Passwords do not match'); return; }
-  if (editUserId) {
-    const idx = USERS.findIndex(u => u.id === editUserId);
-    USERS[idx].fullName = name;
-    USERS[idx].email = email;
-  } else {
-    USERS.push({ id: USERS.length + 1, fullName: name, email, favorites: 0 });
-  }
-  closeModal('user-modal');
-  renderUsersTable();
-  initDashboard();
-}
-
-function deleteUser(id) {
-  if (!confirm('Delete this account?')) return;
-  const idx = USERS.findIndex(u => u.id === id);
-  USERS.splice(idx, 1);
-  renderUsersTable();
-  initDashboard();
-}
-
-function addLanguage() {
-  const name = document.getElementById('new-lang-name').value.trim();
-  const code = document.getElementById('new-lang-code').value.trim().toLowerCase();
-  const flag = document.getElementById('new-lang-flag').value.trim();
-  if (!name || !code) { alert('Name and code are required'); return; }
-  if (LANGS.find(l => l.code === code)) { alert('Language code already exists'); return; }
-  LANGS.push({ code, name, flag: flag || '🌐' });
-  document.getElementById('new-lang-name').value = '';
-  document.getElementById('new-lang-code').value = '';
-  document.getElementById('new-lang-flag').value = '';
-  renderLangGrid();
-  initDashboard();
-}
-
-function deleteLang(code) {
-  if (!confirm(`Remove language "${code}"? This will not delete existing translations.`)) return;
-  const idx = LANGS.findIndex(l => l.code === code);
-  LANGS.splice(idx, 1);
-  renderLangGrid();
-  initDashboard();
-}
-
-function editLang(code) {
-  const l = LANGS.find(x => x.code === code);
-  const newName = prompt('Language name:', l.name);
-  if (newName) l.name = newName.trim();
-  renderLangGrid();
-}
-
-function deleteFeedback(id) {
-  if (!confirm('Delete this feedback?')) return;
-  const idx = FEEDBACKS.findIndex(f => f.id === id);
-  FEEDBACKS.splice(idx, 1);
-  renderFeedbackTable();
-  initDashboard();
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
-});
-
-renderDashboard();
+    buildLangTabs();
+    renderDashboard();
 </script>

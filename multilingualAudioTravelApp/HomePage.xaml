@@ -62,7 +62,7 @@
                             <Grid HeightRequest="230">
 
                                 <!-- ẢNH -->
-                                <Image Source="{Binding Image}" Aspect="AspectFill" InputTransparent="True"/>
+                                <Image Source="{Binding FullImageUrl}" Aspect="AspectFill" InputTransparent="True"/>
 
                                 <!-- OVERLAY TỐI -->
                                 <BoxView BackgroundColor="#50000000" InputTransparent="True"/>

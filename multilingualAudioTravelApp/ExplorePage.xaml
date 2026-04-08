@@ -36,7 +36,7 @@
                          </Frame.GestureRecognizers>
 
                         <Grid HeightRequest="220" InputTransparent="True">
-                            <Image Source="{Binding Image}" Aspect="AspectFill"/>
+                            <Image Source="{Binding FullImageUrl}" Aspect="AspectFill"/>
                             <BoxView BackgroundColor="#80000000"/>
                             <Label Text="{Binding CurrentName}"
                                    TextColor="White" 

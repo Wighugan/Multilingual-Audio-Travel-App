@@ -21,6 +21,7 @@ public partial class MainPage : ContentPage
 {
     private MemoryLayer _currentLocationLayer;
     private MemoryLayer _poiLayer;
+    private MemoryLayer _poiHeatmapLayer;
     private bool _isTracking = false;
     private Location _currentLocation;
     private CancellationTokenSource _speechCts;
@@ -124,12 +125,14 @@ public partial class MainPage : ContentPage
         }).ToList();
 
         var features = new List<IFeature>();
+        var heatmapFeatures = new List<IFeature>();
 
         foreach (var poi in _poiList)
         {
             var coords = SphericalMercator.FromLonLat(poi.Longitude, poi.Latitude);
+            var point = new MPoint(coords.x, coords.y);
 
-            var feature = new PointFeature(new MPoint(coords.x, coords.y));
+            var feature = new PointFeature(point);
 
             feature["Name"] = poi.Name;
 
@@ -144,7 +147,37 @@ public partial class MainPage : ContentPage
             });
 
             features.Add(feature);
+
+            // Heatmap POI: style giống user location nhưng đổi sang màu đỏ
+            var heatFeature = new PointFeature(point);
+            heatFeature.Styles.Add(new SymbolStyle
+            {
+                SymbolType = SymbolType.Ellipse,
+                Fill = new MBrush(new MColor(229, 57, 53, 50)),
+                Outline = new Pen(new MColor(183, 28, 28, 80), 1),
+                SymbolScale = 2.5,
+            });
+            heatFeature.Styles.Add(new SymbolStyle
+            {
+                SymbolType = SymbolType.Ellipse,
+                Fill = new MBrush(MColor.White),
+                SymbolScale = 0.7,
+            });
+            heatFeature.Styles.Add(new SymbolStyle
+            {
+                SymbolType = SymbolType.Ellipse,
+                Fill = new MBrush(new MColor(229, 57, 53)),
+                SymbolScale = 0.5,
+            });
+            heatmapFeatures.Add(heatFeature);
         }
+
+        _poiHeatmapLayer = new MemoryLayer
+        {
+            Name = "PoiHeatmapLayer",
+            Features = heatmapFeatures,
+            Style = null
+        };
 
         _poiLayer = new MemoryLayer
         {
@@ -153,12 +186,17 @@ public partial class MainPage : ContentPage
             Style = null
         };
 
+        MyMap.Map.Layers.Add(_poiHeatmapLayer);
         MyMap.Map.Layers.Add(_poiLayer);
     }
 
     public async Task RefreshPoiLayerAsync()
     {
+        var oldHeatmapLayer = MyMap.Map.Layers.FirstOrDefault(l => l.Name == "PoiHeatmapLayer");
         var oldLayer = MyMap.Map.Layers.FirstOrDefault(l => l.Name == "PoiLayer");
+
+        if (oldHeatmapLayer != null)
+            MyMap.Map.Layers.Remove(oldHeatmapLayer);
 
         if (oldLayer != null)
             MyMap.Map.Layers.Remove(oldLayer);
@@ -408,6 +446,7 @@ public partial class MainPage : ContentPage
         MainThread.BeginInvokeOnMainThread(() =>
         {
             UpdateUserLocationOnMap(e.Location);
+            CheckGeofence(e.Location);
 
         });
     }
@@ -509,13 +548,14 @@ public partial class MainPage : ContentPage
                 Schedule = new NotificationRequestSchedule { NotifyTime = DateTime.Now }
             };
             LocalNotificationCenter.Current.Show(notification);
-            // Auto play
-            /*MainThread.BeginInvokeOnMainThread(async () =>
+            // Auto play khi đi vào vùng POI
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
                 try { HapticFeedback.Perform(HapticFeedbackType.LongPress); } catch { }
                 System.Diagnostics.Debug.WriteLine($"---> Tự động đọc: {poi.Name}");
+                _selectedPoi = poi;
                 await SpeakDescription(poi.Description);
-            });*/
+            });
         }
     }
     private void StartBackgroundGeofenceTimer()

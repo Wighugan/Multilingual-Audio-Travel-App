@@ -9,6 +9,8 @@ public class PoiCardItem : INotifyPropertyChanged
     private void OnPropertyChanged(string name) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
+    public string FullImageUrl { get; set; }
+
     public string Name { get; set; }
     public string Image { get; set; }
     public string Description { get; set; }
@@ -16,6 +18,8 @@ public class PoiCardItem : INotifyPropertyChanged
     public double Longitude { get; set; }
     public string ShortDescription => Description?.Length > 50
         ? Description.Substring(0, 50) + "..." : Description;
+
+
 
     private bool _isFavorite;
     public bool IsFavorite
@@ -58,6 +62,7 @@ public partial class HomePage : ContentPage
         {
             Name = e.CurrentName,
             Image = e.Image,
+            FullImageUrl = e.FullImageUrl,
             Description = e.CurrentDescription,
             Latitude = e.Latitude,
             Longitude = e.Longitude,
@@ -101,7 +106,7 @@ public partial class HomePage : ContentPage
         if (e.Parameter is not PoiCardItem selected) return;
 
         _selectedPoi = selected;
-        PopupImage.Source = selected.Image;
+        PopupImage.Source = selected.FullImageUrl;
         PopupTitle.Text = selected.Name;
         PopupDescription.Text = selected.Description;
         PopupOverlay.IsVisible = true;
@@ -196,6 +201,7 @@ public partial class HomePage : ContentPage
             selected.IsFavorite = true; // ← icon tự đổi thành ❤️
         }
     }
+
     private async void OnScanQRClicked(object sender, EventArgs e)
     {
         // Xin quyền camera
@@ -207,5 +213,4 @@ public partial class HomePage : ContentPage
         }
         await Navigation.PushAsync(new QRScanPage());
     }
-
 }

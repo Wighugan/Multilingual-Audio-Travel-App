@@ -26,12 +26,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();*/
 }
 
-//app.UseHttpsRedirection();
-
-// 2. KÍCH HOẠT CORS
 app.UseCors("AllowAll");
-
-// 3. KÍCH HOẠT HIỂN THỊ FILE HTML TRONG THƯ MỤC wwwroot
 app.UseDefaultFiles(); // Tự động tìm file index.html
 app.UseStaticFiles();  // Cho phép đọc file tĩnh (ảnh, css)
 

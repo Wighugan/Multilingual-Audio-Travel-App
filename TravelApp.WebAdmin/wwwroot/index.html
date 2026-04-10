@@ -566,25 +566,31 @@
 
         <div class="nav-section">Overview</div>
         <div class="nav-item active" onclick="navigate('dashboard')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" /></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+            </svg>
             Dashboard
         </div>
 
         <div class="nav-section">Content</div>
         <div class="nav-item" onclick="navigate('poi')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
-            Points of Interest
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+            <span id="poi-menu-text">Points of Interest</span>
             <span class="nav-badge" id="poi-nav-count">9</span>
         </div>
-        <div class="nav-item" onclick="navigate('languages')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" /></svg>
+        <div class="nav-item" id="nav-languages" onclick="navigate('languages')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" />
+            </svg>
             Languages
             <span class="nav-badge" id="lang-nav-count">5</span>
         </div>
-
-        <div class="nav-section">Users</div>
-        <div class="nav-item" onclick="navigate('accounts')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" /></svg>
+        <div class="nav-item" id="nav-accounts" onclick="navigate('accounts')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+            </svg>
             Accounts
             <span class="nav-badge" id="user-nav-count">4</span>
         </div>
@@ -660,7 +666,7 @@
                     <div class="search-bar" style="margin:0;flex:1;margin-right:1rem;">
                         <input type="text" id="poi-search" placeholder="Search POIs..." oninput="renderPoiTable()">
                     </div>
-                    <button class="btn btn-primary" onclick="openPoiModal()">+ Add POI</button>
+                    <button id="btn-add-poi" class="btn btn-primary" onclick="openPoiModal()">+ Add POI</button>
                 </div>
                 <table>
                     <thead>
@@ -672,6 +678,7 @@
                             <th>Priority</th>
                             <th>Cooldown</th>
                             <th>Languages</th>
+                            <th>Owner</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -788,6 +795,11 @@
                 <label>Cooldown (minutes)</label>
                 <input type="number" id="poi-cooldown" placeholder="5" min="0">
             </div>
+            <div class="form-group">
+                <label>Assign to Owner</label>
+                <select id="poi-owner">
+                </select>
+            </div>
         </div>
         <div style="margin-bottom:0.75rem;">
             <label style="font-size:12px;font-weight:500;color:var(--color-text-secondary);display:block;margin-bottom:0.5rem;">Translations</label>
@@ -825,10 +837,18 @@
                 <label>Confirm password</label>
                 <input id="u-password2" placeholder="••••••••" type="password">
             </div>
+            <div class="form-group full">
+                <label>Account Role (Phân quyền)</label>
+                <select id="u-role">
+                    <option value="Customer">Customer (Khách du lịch)</option>
+                    <option value="Owner">Owner (Chủ quán)</option>
+                    <option value="Admin">Admin (Quản trị viên)</option>
+                </select>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn" onclick="closeModal('user-modal')">Cancel</button>
-            <button class="btn btn-primary" onclick="saveUser()">Create account</button>
+            <button class="btn btn-primary" onclick="saveUser()">Save account</button>
         </div>
     </div>
 </div>
@@ -836,6 +856,20 @@
 <div id="toast">Lưu thành công!</div>
 
 <script>
+    const currentRole = localStorage.getItem("userRole"); 
+    const currentUserId = localStorage.getItem("userId");
+    if (!currentRole) {
+        window.location.href = "login.html";
+    }
+    if (currentRole === "Owner") {
+        document.getElementById("nav-accounts").style.display = "none";
+        document.getElementById("nav-languages").style.display = "none";
+
+        document.getElementById("poi-menu-text").textContent = "Quán của tôi";
+
+        document.getElementById("btn-add-poi").style.display = "none";
+    }
+
     function showToast(message) {
         const toast = document.getElementById("toast");
         toast.textContent = message;
@@ -854,8 +888,8 @@
 
     async function loadDataFromServer() {
         try {
-            const response = await fetch('/api/pois');
-            const rawData = await response.json(); // Lấy dữ liệu gốc từ C# API
+            const response = await fetch(`/api/pois?userId=${currentUserId}&role=${currentRole}`);
+            const rawData = await response.json();
 
             // Phiên dịch cho HTML
             POIS = rawData.map(p => {
@@ -872,7 +906,6 @@
                     }
                 }
 
-                // Trả ra một Object chuẩn xác 100% với form mẫu cũ của HTML
                 return {
                     id: p.id,
                     image: p.image,
@@ -881,7 +914,8 @@
                     radius: p.radius,
                     priority: p.priority,
                     cooldown: p.cooldownMinutes, // Dịch cooldownMinutes -> cooldown
-                    translations: transObj       // Gắn cục đa ngôn ngữ đã dịch vào
+                    translations: transObj,       // Gắn cục đa ngôn ngữ đã dịch vào
+                    ownerId: p.ownerId
                 };
             });
 
@@ -913,6 +947,11 @@
     loadFeedbacksFromServer();
     loadDataFromServer();
     let POIS = [];
+    let USERS = [];
+    let FEEDBACKS = [];
+    let editPoiId = null;
+    let editUserId = null;
+    let currentEditUser = null;
     /*const POIS = [
       { id:1, image:'vinhkhanh.jpg', lat:10.761923, lng:106.701964, radius:100, priority:10, cooldown:5, translations:{
         vi:{name:'Khu phố ẩm thực Vĩnh Khánh',desc:'Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.'},
@@ -979,10 +1018,6 @@
       }},
     ];
     */
-    let USERS = [];
-    let FEEDBACKS = [];
-    let editPoiId = null;
-    let editUserId = null;
 
     function navigate(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1055,7 +1090,8 @@
         tbody.innerHTML = filtered.map(p => {
             const langCount = Object.keys(p.translations || {}).length;
             const displayName = p.translations?.vi?.name || '(Chưa có tên)';
-
+            const ownerObj = USERS.find(u => u.id === p.ownerId);
+            const ownerName = ownerObj ? ownerObj.fullName : (p.ownerId ? 'Unknown' : 'Admin');
             return `<tr>
       <td style="font-weight:500">${displayName}</td>
       <td style="font-size:12px;color:var(--color-text-secondary)">${p.image}</td>
@@ -1066,6 +1102,7 @@
       <td>
         ${LANGS.slice(0, langCount).map(l => `<span title="${l.name}" style="font-size:14px">${l.flag}</span>`).join(' ')}
       </td>
+      <td><span class="badge badge-gray">${ownerName}</span></td>
       <td>
         <button class="btn btn-sm" onclick="openPoiModal(${p.id})">Edit</button>
         <button class="btn btn-sm btn-danger" onclick="deletePoi(${p.id})">Delete</button>
@@ -1090,6 +1127,10 @@
         tbody.innerHTML = filtered.map(u => {
             const name = u.fullName || 'No Name';
             const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+            const userRole = u.role || u.Role || 'Customer';
+            let roleBadge = `<span class="badge badge-gray">Customer</span>`;
+            if (u.role === 'Admin') roleBadge = `<span class="badge badge-amber">Admin</span>`;
+            if (u.role === 'Owner') roleBadge = `<span class="badge badge-blue">Owner</span>`;
 
             return `<tr>
       <td>
@@ -1100,7 +1141,7 @@
       </td>
       <td style="font-size:13px;color:var(--color-text-secondary)">${u.email || ''}</td>
       <td><span class="badge badge-green">Active</span></td>
-      <td><span class="badge badge-blue">Thành viên</span></td>
+      <td>${roleBadge}</td>
       <td>
         <button class="btn btn-sm" onclick="openUserModal(${u.id})">Edit</button>
         <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
@@ -1197,10 +1238,12 @@
     function openPoiModal(poiId = null) {
         editPoiId = poiId;
         const modal = document.getElementById('poi-modal');
-
-        // Trỏ đúng ID của nút chọn file mới
         const fileInput = document.getElementById('poi-file-upload');
-
+        const ownerSelect = document.getElementById('poi-owner');
+        const owners = USERS.filter(u => u.role === 'Owner');
+        ownerSelect.innerHTML = '<option value="">-- Thêm chủ quán --</option>' +
+            owners.map(o => `<option value="${o.id}">${o.fullName} (${o.email})</option>`).join('');
+        
         if (poiId) {
             const poi = POIS.find(p => p.id === poiId);
             if (!poi) return;
@@ -1210,6 +1253,7 @@
             if (document.getElementById('poi-priority')) document.getElementById('poi-priority').value = poi.priority || 5;
             if (document.getElementById('poi-radius')) document.getElementById('poi-radius').value = poi.radius || 100;
             if (document.getElementById('poi-cooldown')) document.getElementById('poi-cooldown').value = poi.cooldown || 5;
+            ownerSelect.value = poi.ownerId || '';
 
             if (fileInput) fileInput.value = "";
 
@@ -1227,6 +1271,7 @@
             if (document.getElementById('poi-priority')) document.getElementById('poi-priority').value = 5;
             if (document.getElementById('poi-radius')) document.getElementById('poi-radius').value = 100;
             if (document.getElementById('poi-cooldown')) document.getElementById('poi-cooldown').value = 5;
+            ownerSelect.value = '';
 
             if (fileInput) fileInput.value = "";
 
@@ -1253,6 +1298,7 @@
             formData.append("file", fileInput.files[0]);
             try {
                 const uploadRes = await fetch('/api/pois/upload', { method: 'POST', body: formData });
+                if (!uploadRes.ok) throw new Error("Upload failed");
                 const uploadData = await uploadRes.json();
                 finalImageName = uploadData.fileName;
             } catch (err) {
@@ -1260,9 +1306,7 @@
             }
         } else {
             if (editPoiId) {
-                // không chọn ảnh mới thì lấy lại tên ảnh cũ
-                const oldPoi = POIS.find(p => p.id === editPoiId);
-                finalImageName = oldPoi.image;
+                finalImageName = POIS.find(p => p.id === editPoiId).image;
             } else {
                 alert("Vui lòng chọn hình ảnh cho quán ăn!"); return;
             }
@@ -1275,6 +1319,8 @@
             if (name || desc) translations[l.code] = { Name: name, Description: desc };
         });
 
+        const selectedOwnerId = document.getElementById('poi-owner').value;
+
         // Đóng gói cục dữ liệu
         const poi = {
             image: finalImageName,
@@ -1283,7 +1329,8 @@
             longitude: parseFloat(document.getElementById('poi-lng').value) || 0,
             radius: parseInt(document.getElementById('poi-radius').value) || 100,
             cooldownMinutes: parseInt(document.getElementById('poi-cooldown').value) || 5,
-            translationsJson: JSON.stringify(translations)
+            translationsJson: JSON.stringify(translations),
+            ownerId: selectedOwnerId ? parseInt(selectedOwnerId) : null
         };
 
         if (editPoiId) {
@@ -1296,7 +1343,7 @@
             if (response.ok) {
                 closeModal('poi-modal');
                 loadDataFromServer();
-                showToast("✅ Đã cập nhật thành công!");
+                showToast("Đã cập nhật thành công!");
             } else alert("Lỗi khi cập nhật!");
         } else {
             const response = await fetch('/api/pois', {
@@ -1307,7 +1354,7 @@
             if (response.ok) {
                 closeModal('poi-modal');
                 loadDataFromServer();
-                showToast("✅ Đã thêm quán mới!");
+                showToast("Đã thêm quán mới!");
             } else alert("Lỗi khi thêm Database!");
         }
     }
@@ -1364,10 +1411,12 @@
             const u = USERS.find(x => x.id === id);
             document.getElementById('u-name').value = u.fullName;
             document.getElementById('u-email').value = u.email;
+            document.getElementById('u-role').value = u.role || 'Customer';
             document.getElementById('u-password').value = '';
             document.getElementById('u-password2').value = '';
         } else {
             ['u-name', 'u-email', 'u-password', 'u-password2'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('u-role').value = 'Customer';
         }
         document.getElementById('user-modal').classList.add('open');
     }
@@ -1377,32 +1426,48 @@
         const email = document.getElementById('u-email').value.trim();
         const pw = document.getElementById('u-password').value;
         const pw2 = document.getElementById('u-password2').value;
+        const role = document.getElementById('u-role').value;
 
         if (!name || !email) { alert('Vui lòng nhập tên và email'); return; }
         if (!editUserId && pw !== pw2) { alert('Mật khẩu không khớp'); return; }
-
-        const userObj = { fullName: name, email: email, password: pw };
-
-        if (editUserId) {
-            // sửa
-            userObj.id = editUserId;
-            await fetch('/api/users/' + editUserId, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userObj)
-            });
-        } else {
-            // thêm mới
-            await fetch('/api/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userObj)
-            });
+        const userObj = { fullName: name, email: email, password: pw, role: role };
+        if (pw) {
+            userObj.password = pw;
         }
+        try {
+            if (editUserId) {
+                userObj.id = editUserId;
+                const response = await fetch('/api/users/' + editUserId, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userObj)
+                });
 
-        closeModal('user-modal');
-        showToast("Đã lưu User!");
-        loadUsersFromServer();
+                if (!response.ok) {
+                    const err = await response.text();
+                    alert("C# từ chối cập nhật. Lỗi:\n" + err);
+                    return;
+                }
+            } else {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userObj)
+                });
+
+                if (!response.ok) {
+                    const err = await response.text();
+                    alert("C# từ chối thêm mới. Lỗi:\n" + err);
+                    return;
+                }
+            }
+            closeModal('user-modal');
+            showToast("Đã lưu tài khoản thành công!");
+            loadUsersFromServer();
+
+        } catch (error) {
+            alert("Lỗi kết nối với Web API: " + error.message);
+        }
     }
 
     async function deleteUser(id) {

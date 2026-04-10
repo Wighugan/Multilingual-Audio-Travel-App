@@ -17,13 +17,18 @@ namespace TravelApp.WebAdmin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPois()
+        public async Task<IActionResult> GetAllPois([FromQuery] int userId = 0, [FromQuery] string role = "")
         {
-            var poisFromServer = await _context.Pois.ToListAsync();
-            return Ok(poisFromServer);
+            if (role == "Owner")
+            {
+                var myPois = await _context.Pois.Where(p => p.OwnerId == userId).ToListAsync();
+                return Ok(myPois);
+            }
+
+            var allPois = await _context.Pois.ToListAsync();
+            return Ok(allPois);
         }
-        
-        //them poi
+
         [HttpPost]
         public async Task<IActionResult> AddPoi([FromBody] PoiEntity newPoi)
         {
@@ -32,12 +37,16 @@ namespace TravelApp.WebAdmin.Controllers
             return Ok(newPoi);
         }
 
-        //xoa poi
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePoi(int id)
+        public async Task<IActionResult> DeletePoi(int id, [FromQuery] int userId = 0, [FromQuery] string role = "")
         {
             var poi = await _context.Pois.FindAsync(id);
             if (poi == null) return NotFound();
+
+            if (role == "Owner" && poi.OwnerId != userId)
+            {
+                return BadRequest("Lỗi: Bạn không có quyền xóa quán của người khác!");
+            }
 
             _context.Pois.Remove(poi);
             await _context.SaveChangesAsync();
@@ -45,10 +54,23 @@ namespace TravelApp.WebAdmin.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePoi(int id, [FromBody] PoiEntity updatedPoi)
+        public async Task<IActionResult> UpdatePoi(int id, [FromBody] PoiEntity updatedPoi, [FromQuery] int userId = 0, [FromQuery] string role = "")
         {
             if (id != updatedPoi.Id)
                 return BadRequest("ID không khớp.");
+
+            if (role == "Owner")
+            {
+                var existingPoi = await _context.Pois.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
+                if (existingPoi == null || existingPoi.OwnerId != userId)
+                {
+                    return BadRequest("Lỗi: Bạn không có quyền sửa thông tin quán này!");
+                }
+
+                updatedPoi.OwnerId = existingPoi.OwnerId;
+            }
+
             _context.Entry(updatedPoi).State = EntityState.Modified;
 
             try
@@ -69,31 +91,25 @@ namespace TravelApp.WebAdmin.Controllers
             return _context.Pois.Any(e => e.Id == id);
         }
 
-        //them anh
         [HttpPost("upload")]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("Chưa có file nào được chọn.");
 
-            // 1. Chỉ định đường dẫn lưu vào thư mục wwwroot/images
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
-            // 2. Nếu chưa có thư mục images thì tự động tạo mới
             if (!Directory.Exists(uploadsFolder))
                 Directory.CreateDirectory(uploadsFolder);
 
-            // 3. Đổi tên file để tránh trùng lặp (ví dụ: 1234-5678_anhquoc.jpg)
             var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            // 4. Lưu file vào ổ cứng
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            // 5. Trả về tên file để HTML lưu vào Database
             return Ok(new { fileName = uniqueFileName });
         }
     }

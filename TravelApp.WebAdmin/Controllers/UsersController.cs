@@ -28,6 +28,37 @@ namespace TravelApp.WebAdmin.Controllers
             return Ok(user);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserEntity updatedUser)
+        {
+            if (id != updatedUser.Id)
+                return BadRequest("ID không khớp.");
+
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null)
+                return NotFound("Không tìm thấy tài khoản.");
+
+            existingUser.FullName = updatedUser.FullName;
+            existingUser.Email = updatedUser.Email;
+            existingUser.Role = updatedUser.Role;
+
+            if (!string.IsNullOrWhiteSpace(updatedUser.Password))
+            {
+                existingUser.Password = updatedUser.Password;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return Ok();
+        }
+
         // xóa user
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)

@@ -1,0 +1,560 @@
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: var(--font-sans);
+    }
+
+    #login-screen, #dashboard-screen {
+        transition: opacity 0.25s;
+    }
+
+    #dashboard-screen {
+        display: none;
+    }
+
+    .scene {
+        min-height: 580px;
+        background: var(--color-background-tertiary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 400px;
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 2rem 2rem 1.75rem;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1.75rem;
+    }
+
+    .brand-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: #1D9E75;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .brand-icon svg {
+            fill: white;
+            width: 18px;
+            height: 18px;
+        }
+
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-name {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+
+    .brand-sub {
+        font-size: 11px;
+        color: var(--color-text-tertiary);
+        margin-top: 1px;
+    }
+
+    .login-heading {
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        margin-bottom: 4px;
+    }
+
+    .login-sub {
+        font-size: 13px;
+        color: var(--color-text-secondary);
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 1rem;
+    }
+
+    label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--color-text-secondary);
+    }
+
+    .input-wrap {
+        position: relative;
+    }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 9px 36px 9px 10px;
+            border: 0.5px solid var(--color-border-secondary);
+            border-radius: var(--border-radius-md);
+            background: var(--color-background-primary);
+            color: var(--color-text-primary);
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+            .input-wrap input:focus {
+                outline: none;
+                border-color: #1D9E75;
+                box-shadow: 0 0 0 3px rgba(29,158,117,0.12);
+            }
+
+            .input-wrap input.err {
+                border-color: #E24B4A;
+                box-shadow: 0 0 0 3px rgba(226,75,74,0.1);
+            }
+
+    .eye-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--color-text-tertiary);
+        padding: 0;
+        line-height: 1;
+    }
+
+        .eye-btn:hover {
+            color: var(--color-text-secondary);
+        }
+
+    .remember-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+    }
+
+    .remember-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        cursor: pointer;
+    }
+
+        .remember-label input[type=checkbox] {
+            width: 14px;
+            height: 14px;
+            accent-color: #1D9E75;
+        }
+
+    .forgot-link {
+        font-size: 12px;
+        color: #1D9E75;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .forgot-link:hover {
+            color: #0F6E56;
+        }
+
+    .btn-login {
+        width: 100%;
+        padding: 10px;
+        background: #1D9E75;
+        color: white;
+        border: none;
+        border-radius: var(--border-radius-md);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+        .btn-login:hover {
+            background: #0F6E56;
+        }
+
+        .btn-login:disabled {
+            background: #9FE1CB;
+            cursor: not-allowed;
+        }
+
+    .error-msg {
+        display: none;
+        background: #FCEBEB;
+        border: 0.5px solid #F09595;
+        border-radius: var(--border-radius-md);
+        padding: 9px 12px;
+        font-size: 12px;
+        color: #A32D2D;
+        margin-bottom: 1rem;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .error-msg.show {
+            display: flex;
+        }
+
+    .hint-box {
+        margin-top: 1.25rem;
+        padding: 10px 12px;
+        background: var(--color-background-secondary);
+        border-radius: var(--border-radius-md);
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+    }
+
+        .hint-box strong {
+            color: var(--color-text-primary);
+            font-weight: 500;
+        }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 1.25rem 0 0;
+        font-size: 11px;
+        color: var(--color-text-tertiary);
+    }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 0.5px;
+            background: var(--color-border-tertiary);
+        }
+
+    .footer-text {
+        text-align: center;
+        font-size: 11px;
+        color: var(--color-text-tertiary);
+        margin-top: 1rem;
+    }
+
+    .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255,255,255,0.4);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .success-screen {
+        min-height: 580px;
+        background: var(--color-background-tertiary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .success-card {
+        width: 100%;
+        max-width: 400px;
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 2.5rem 2rem;
+        text-align: center;
+    }
+
+    .success-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #E1F5EE;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.25rem;
+    }
+
+        .success-icon svg {
+            fill: #1D9E75;
+            width: 24px;
+            height: 24px;
+        }
+
+    .success-title {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: var(--color-text-primary);
+    }
+
+    .success-sub {
+        font-size: 13px;
+        color: var(--color-text-secondary);
+        margin-bottom: 1.5rem;
+    }
+
+    .user-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--color-background-secondary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        margin-bottom: 1.5rem;
+    }
+
+    .user-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #1D9E75;
+    }
+
+    .btn-dashboard {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 20px;
+        background: #1D9E75;
+        color: white;
+        border: none;
+        border-radius: var(--border-radius-md);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+        .btn-dashboard:hover {
+            background: #0F6E56;
+        }
+
+    .btn-back {
+        display: block;
+        margin: 0.75rem auto 0;
+        background: none;
+        border: none;
+        color: var(--color-text-tertiary);
+        font-size: 12px;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+        .btn-back:hover {
+            color: var(--color-text-secondary);
+        }
+</style>
+
+<div id="login-screen">
+    <div class="scene">
+        <div class="login-card">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">TourApp</span>
+                    <span class="brand-sub">Admin Dashboard</span>
+                </div>
+            </div>
+
+            <h1 class="login-heading">Sign in</h1>
+            <p class="login-sub">Access the admin panel to manage POIs, accounts and languages.</p>
+
+            <div class="error-msg" id="error-msg">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#A32D2D" style="flex-shrink:0"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" /></svg>
+                <span id="error-text">Invalid email or password.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <div class="input-wrap">
+                    <input type="email" id="email" placeholder="admin@tourapp.vn" autocomplete="email" oninput="clearErr()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrap">
+                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" oninput="clearErr()" onkeydown="if(event.key==='Enter')doLogin()">
+                    <button class="eye-btn" onclick="togglePw()" title="Show/hide password" id="eye-btn">
+                        <svg id="eye-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="remember-row">
+                <label class="remember-label">
+                    <input type="checkbox" id="remember"> Remember me
+                </label>
+                <a class="forgot-link" onclick="showForgot()">Forgot password?</a>
+            </div>
+
+            <button class="btn-login" id="login-btn" onclick="doLogin()">
+                <div class="spinner" id="spinner"></div>
+                <span id="btn-label">Sign in</span>
+            </button>
+
+            <div class="hint-box">
+                <strong>Demo credentials:</strong><br>
+                Admin: <strong>admin@tourapp.vn</strong> (Pass: admin)<br>
+                Chủ quán: <strong>chuquan@tourapp.vn</strong> (Pass: 123)
+            </div>
+
+            <div class="divider">secured access</div>
+            <p class="footer-text">TourApp v1.0 &nbsp;·&nbsp; Vinh Khanh District 4</p>
+        </div>
+    </div>
+</div>
+
+<div id="success-screen" style="display:none">
+    <div class="success-screen">
+        <div class="success-card">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" /></svg>
+            </div>
+            <h2 class="success-title">Welcome back</h2>
+            <p class="success-sub" id="success-name">Signed in as admin</p>
+            <div class="user-pill">
+                <div class="user-dot"></div>
+                <span id="success-email">admin@tourapp.vn</span>
+            </div>
+            <br>
+            <button class="btn-dashboard" onclick="goToDashboard()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" /></svg>
+                Go to dashboard
+            </button>
+            <button class="btn-back" onclick="backToLogin()">Sign in with a different account</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. CẬP NHẬT DATABASE MẪU (THÊM ROLE VÀ ID)
+    const MOCK_USERS = [
+        { id: 1, email: 'admin@tourapp.vn', password: 'admin', name: 'Super Admin', role: 'Admin' },
+        { id: 2, email: 'chuquan@tourapp.vn', password: '123', name: 'Chủ quán Ốc Oanh', role: 'Owner' }
+    ];
+
+    let pwVisible = false;
+
+    function togglePw() {
+        pwVisible = !pwVisible;
+        const inp = document.getElementById('password');
+        inp.type = pwVisible ? 'text' : 'password';
+        document.getElementById('eye-icon').innerHTML = pwVisible
+            ? '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>'
+            : '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
+    }
+
+    function clearErr() {
+        document.getElementById('error-msg').classList.remove('show');
+        document.getElementById('email').classList.remove('err');
+        document.getElementById('password').classList.remove('err');
+    }
+
+    function showErr(msg) {
+        document.getElementById('error-text').textContent = msg;
+        document.getElementById('error-msg').classList.add('show');
+        document.getElementById('email').classList.add('err');
+        document.getElementById('password').classList.add('err');
+    }
+
+    function doLogin() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        clearErr();
+
+        if (!email) { showErr('Please enter your email address.'); return; }
+        if (!password) { showErr('Please enter your password.'); return; }
+
+        const btn = document.getElementById('login-btn');
+        const spinner = document.getElementById('spinner');
+        const label = document.getElementById('btn-label');
+        btn.disabled = true;
+        spinner.style.display = 'block';
+        label.textContent = 'Signing in...';
+
+        // Giả lập thời gian load mạng (900ms)
+        setTimeout(() => {
+            // 2. TÌM USER TRONG DATABASE MẪU
+            const match = MOCK_USERS.find(a => a.email === email && a.password === password);
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            label.textContent = 'Sign in';
+
+            if (match) {
+                // 3. LƯU THÔNG TIN PHÂN QUYỀN VÀO TRÌNH DUYỆT
+                localStorage.setItem('userId', match.id);
+                localStorage.setItem('userRole', match.role);
+
+                // Cập nhật giao diện màn hình thành công
+                document.getElementById('success-name').textContent = match.role === 'Admin' ? 'Signed in as Admin' : 'Signed in as Owner';
+                document.getElementById('success-email').textContent = match.email;
+
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('success-screen').style.display = 'block';
+            } else {
+                showErr('Invalid email or password. Please try again.');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        }, 900);
+    }
+
+    function backToLogin() {
+        // Xóa session khi back lại
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userRole');
+
+        document.getElementById('success-screen').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'block';
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+        clearErr();
+    }
+
+    function goToDashboard() {
+        // 4. CHUYỂN HƯỚNG SANG TRANG INDEX KÈM THEO SESSION ĐÃ LƯU
+        window.location.href = 'index.html';
+    }
+
+    function showForgot() {
+        alert('Please contact your system administrator to reset your password.');
+    }
+</script>

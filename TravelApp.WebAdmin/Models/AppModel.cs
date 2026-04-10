@@ -13,6 +13,7 @@ namespace TravelApp.WebAdmin.Models
         public int Priority { get; set; }
         public int CooldownMinutes { get; set; } = 5;
         public string TranslationsJson { get; set; }
+        public int? OwnerId { get; set; }
     }
 
     public class UserEntity
@@ -22,6 +23,7 @@ namespace TravelApp.WebAdmin.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public string FullName { get; set; }
+        public string Role { get; set; }
     }
 
     public class FavoriteEntity

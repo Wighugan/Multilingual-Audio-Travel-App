@@ -766,7 +766,7 @@
         <div class="form-grid">
             <div class="form-group">
                 <label>Image filename</label>
-                <input type="file" id="poi-file-upload" accept="image/*">
+                <input type="file" id="poi-file-upload" accept="image/*" multiple>
             </div>
             <div class="form-group">
                 <label>Priority</label>
@@ -1295,12 +1295,14 @@
         // xử lý ảnh
         if (fileInput.files.length > 0) {
             const formData = new FormData();
-            formData.append("file", fileInput.files[0]);
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append("files", fileInput.files[i]);
+            }
             try {
-                const uploadRes = await fetch('/api/pois/upload', { method: 'POST', body: formData });
+                const uploadRes = await fetch('/api/pois/upload-multiple', { method: 'POST', body: formData });
                 if (!uploadRes.ok) throw new Error("Upload failed");
                 const uploadData = await uploadRes.json();
-                finalImageName = uploadData.fileName;
+                finalImageName = uploadData.fileNames.join(',');
             } catch (err) {
                 alert("Lỗi tải ảnh lên Server!"); return;
             }

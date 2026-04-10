@@ -112,5 +112,34 @@ namespace TravelApp.WebAdmin.Controllers
 
             return Ok(new { fileName = uniqueFileName });
         }
+
+        // upload nhiều ảnh
+        [HttpPost("upload-multiple")]
+        public async Task<IActionResult> UploadMultipleImages(List<IFormFile> files)
+        {
+            if (files == null || files.Count == 0)
+                return BadRequest("Chưa có file nào được chọn.");
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            var uploadedFileNames = new List<string>();
+
+            // Lặp qua từng file để lưu
+            foreach (var file in files)
+            {
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                uploadedFileNames.Add(uniqueFileName);
+            }
+
+            return Ok(new { fileNames = uploadedFileNames });
+        }
     }
 }

@@ -86,7 +86,7 @@
                                         <RoundRectangle CornerRadius="18"/>
                                     </Border.StrokeShape>
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnFavoriteTapped" CommandParameter="{Binding .}"/>
+                                        <TapGestureRecognizer Tapped="OnHeartTapped" CommandParameter="{Binding .}"/>
                                     </Border.GestureRecognizers>
 
                                     <!-- ← Bind HeartIcon thay vì hardcode 🤍 -->

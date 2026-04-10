@@ -10,6 +10,7 @@ public class PoiCardItem : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     public string FullImageUrl { get; set; }
+    public PoiEntity SourcePoi { get; set; }
 
     public string Name { get; set; }
     public string Image { get; set; }
@@ -66,6 +67,7 @@ public partial class HomePage : ContentPage
             Description = e.CurrentDescription,
             Latitude = e.Latitude,
             Longitude = e.Longitude,
+            SourcePoi = e,
             IsFavorite = favNames.Contains(e.CurrentName) // ← set trạng thái
         }).ToList();
 
@@ -179,26 +181,24 @@ public partial class HomePage : ContentPage
         catch (OperationCanceledException) { }
     }
 
-    private async void OnFavoriteTapped(object sender, TappedEventArgs e)
+    private async void OnHeartTapped(object sender, TappedEventArgs e)
     {
-        if (e.Parameter is not PoiCardItem selected) return;
+        if (e.Parameter is not PoiCardItem item) return;
 
         var email = Preferences.Get("userEmail", "");
-        if (string.IsNullOrEmpty(email))
-        {
-            await DisplayAlert("", "Vui lòng đăng nhập để lưu yêu thích", "OK");
-            return;
-        }
+        if (string.IsNullOrEmpty(email)) return;
 
-        if (selected.IsFavorite)
+        if (item.IsFavorite)
         {
-            await _dbService.RemoveFavoriteAsync(email, selected.Name);
-            selected.IsFavorite = false; // ← icon tự đổi thành 🤍
+            await _dbService.RemoveFavoriteAsync(email, item.Name);
+            item.IsFavorite = false;
         }
         else
         {
-            await _dbService.AddFavoriteAsync(email, selected);
-            selected.IsFavorite = true; // ← icon tự đổi thành ❤️
+            if (item.SourcePoi == null) return;
+            // Dùng SourcePoi để lưu đúng URL ảnh
+            await _dbService.AddFavoriteAsync(email, item.SourcePoi);
+            item.IsFavorite = true;
         }
     }
 

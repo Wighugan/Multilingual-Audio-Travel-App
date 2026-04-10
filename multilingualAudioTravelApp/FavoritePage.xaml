@@ -28,9 +28,10 @@
                         <Grid ColumnDefinitions="120,*,Auto" HeightRequest="100">
 
                             <!-- ẢNH -->
-                            <Image
-                                Source="{Binding PoiImage}"
-                                Aspect="AspectFill"/>
+                            <Image Source="{Binding PoiImage}"
+                          Aspect="AspectFill"
+                             HeightRequest="80"
+                                 WidthRequest="80"/>
 
                             <!-- TÊN + MÔ TẢ -->
                             <VerticalStackLayout

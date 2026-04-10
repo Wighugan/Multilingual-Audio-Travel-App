@@ -3,6 +3,7 @@ using System.Text.Json;
 using static multilingualAudioTravelApp.Services.PoiEntity;
 using System.Net.Http.Json;
 
+
 namespace multilingualAudioTravelApp.Services;
 
 public class PoiTranslation
@@ -120,6 +121,9 @@ public class DatabaseService
 {
     private SQLiteAsyncConnection _db;
     private readonly string _dbPath;
+    private string ApiBaseUrl => DeviceInfo.Platform == DevicePlatform.Android
+        ? "http://10.0.2.2:5068"
+        : "http://localhost:5068";
 
     public DatabaseService()
     {
@@ -430,6 +434,21 @@ public class DatabaseService
     // Lấy danh sách yêu thích của user
     public async Task<List<FavoriteEntity>> GetFavoritesAsync(string userEmail)
     {
+        try
+        {
+            using var client = new HttpClient();
+            var encodedEmail = Uri.EscapeDataString(userEmail ?? string.Empty);
+            var favorites = await client.GetFromJsonAsync<List<FavoriteEntity>>(
+                $"{ApiBaseUrl}/api/favorites?userEmail={encodedEmail}");
+
+            if (favorites != null)
+                return favorites;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Lỗi lấy favorites từ server: {ex.Message}");
+        }
+
         await InitAsync();
         return await _db.Table<FavoriteEntity>()
             .Where(f => f.UserEmail == userEmail)
@@ -439,34 +458,71 @@ public class DatabaseService
     // Kiểm tra đã bookmark chưa
     public async Task<bool> IsFavoriteAsync(string userEmail, string poiName)
     {
-        await InitAsync();
-        var item = await _db.Table<FavoriteEntity>()
-            .Where(f => f.UserEmail == userEmail && f.PoiName == poiName)
-            .FirstOrDefaultAsync();
-        return item != null;
+        var list = await GetFavoritesAsync(userEmail);
+        return list.Any(f => f.PoiName == poiName);
     }
 
     // Thêm vào yêu thích
-    public async Task AddFavoriteAsync(string userEmail, PoiCardItem poi)
+    // Thêm vào yêu thích — sửa lại để lưu đúng URL ảnh
+    public async Task AddFavoriteAsync(string userEmail, PoiEntity poi)
     {
-        await InitAsync();
-        var exists = await IsFavoriteAsync(userEmail, poi.Name);
+        // Kiểm tra trùng trước
+        var exists = await IsFavoriteAsync(userEmail, poi.CurrentName);
         if (exists) return;
 
-        await _db.InsertAsync(new FavoriteEntity
+        var favorite = new FavoriteEntity
         {
             UserEmail = userEmail,
-            PoiName = poi.Name,
-            PoiImage = poi.Image,
-            PoiDescription = poi.Description,
+            PoiName = poi.CurrentName,       // tên theo ngôn ngữ hiện tại
+            PoiImage = poi.FullImageUrl,       // URL đầy đủ → hiển thị được
+            PoiDescription = poi.CurrentDescription,
             Latitude = poi.Latitude,
             Longitude = poi.Longitude
-        });
+        };
+
+        // Ưu tiên ghi lên SQL Server qua API
+        try
+        {
+            using var client = new HttpClient();
+            var response = await client.PostAsJsonAsync(
+                $"{ApiBaseUrl}/api/favorites", favorite);
+
+            if (response.IsSuccessStatusCode)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[Favorite] Đã lưu '{poi.CurrentName}' lên SQL Server.");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[Favorite] Lỗi lưu lên server, fallback SQLite: {ex.Message}");
+        }
+
+        // Fallback: ghi vào SQLite local nếu mất mạng
+        await InitAsync();
+        await _db.InsertAsync(favorite);
     }
 
     // Xóa khỏi yêu thích
     public async Task RemoveFavoriteAsync(string userEmail, string poiName)
     {
+        try
+        {
+            using var client = new HttpClient();
+            var encodedEmail = Uri.EscapeDataString(userEmail ?? string.Empty);
+            var encodedPoiName = Uri.EscapeDataString(poiName ?? string.Empty);
+            var response = await client.DeleteAsync(
+                $"{ApiBaseUrl}/api/favorites/by-user?userEmail={encodedEmail}&poiName={encodedPoiName}");
+            if (response.IsSuccessStatusCode)
+                return;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Lỗi xóa favorite trên server: {ex.Message}");
+        }
+
         await InitAsync();
         var item = await _db.Table<FavoriteEntity>()
             .Where(f => f.UserEmail == userEmail && f.PoiName == poiName)

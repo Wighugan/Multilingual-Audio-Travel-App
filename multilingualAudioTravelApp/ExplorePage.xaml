@@ -60,8 +60,24 @@
                    HasShadow="True">
 
                 <VerticalStackLayout Spacing="10">
-                    <Image x:Name="PopupImage" HeightRequest="180" Aspect="AspectFill" />
+                    <Grid HeightRequest="200">
+                        <CarouselView x:Name="PopupCarousel"
+                          IndicatorView="{x:Reference indicatorView}">
+                            <CarouselView.ItemTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding .}" Aspect="AspectFill" />
+                                </DataTemplate>
+                            </CarouselView.ItemTemplate>
+                        </CarouselView>
 
+                        <IndicatorView x:Name="indicatorView"
+                           IndicatorsShape="Circle"
+                           IndicatorColor="#D3D3D3"
+                           SelectedIndicatorColor="#1D9E75"
+                           HorizontalOptions="Center"
+                           VerticalOptions="End"
+                           Margin="0,0,0,10" />
+                    </Grid>
                     <Label x:Name="PopupTitle" FontSize="20" FontAttributes="Bold" TextColor="Black" />
 
                     <Label x:Name="PopupDescription" FontSize="14" TextColor="Gray" />

@@ -30,14 +30,46 @@ public class PoiEntity  //POI
     {
         get
         {
-            if (Image != null && !Image.Contains("."))
-                return Image;
+            if (string.IsNullOrEmpty(Image))
+                return "placeholder.png";
+
+            string firstImage = Image.Split(',').FirstOrDefault();
+
+            if (!firstImage.Contains("."))
+                return firstImage;
 
             string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
                              ? "http://10.0.2.2:5068/images/"
                              : "http://localhost:5068/images/";
 
-            return $"{baseUrl}{Image}";
+            return $"{baseUrl}{firstImage}";
+        }
+    }
+    [Ignore]
+    public List<string> ImageUrls
+    {
+        get
+        {
+            var list = new List<string>();
+            if (string.IsNullOrEmpty(Image))
+            {
+                list.Add("placeholder.png");
+                return list;
+            }
+
+            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                             ? "http://10.0.2.2:5068/images/"
+                             : "http://localhost:5068/images/";
+
+            var fileNames = Image.Split(',');
+            foreach (var fileName in fileNames)
+            {
+                if (fileName.Contains("."))
+                    list.Add($"{baseUrl}{fileName}");
+                else
+                    list.Add(fileName);
+            }
+            return list;
         }
     }
     public class FavoriteEntity  //favoritePOI
@@ -61,7 +93,6 @@ public class PoiEntity  //POI
         public string Content { get; set; }
         public string CreatedAt { get; set; }
     }
-
 
     // Hàm tự động dịch chuỗi JSON thành Dictionary (Từ điển)
     [Ignore]
@@ -109,7 +140,7 @@ public class PoiEntity  //POI
     }
 }
 
-public class UserEntity  //user
+    public class UserEntity  //user
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
@@ -117,7 +148,7 @@ public class UserEntity  //user
     public string Password { get; set; }
     public string FullName { get; set; }
 }
-public class DatabaseService
+    public class DatabaseService
 {
     private SQLiteAsyncConnection _db;
     private readonly string _dbPath;

@@ -106,6 +106,7 @@ public partial class MainPage : ContentPage
         public TimeSpan CooldownDuration { get; set; } = TimeSpan.FromMinutes(5);
         public double Radius { get; set; } = 50;
         public int Priority { get; set; } = 1;
+        public List<String> ImageUrls { get; set; }
     }
 
     private async Task CreatePoiLayer()
@@ -121,6 +122,7 @@ public partial class MainPage : ContentPage
             Longitude = e.Longitude,
             Radius = e.Radius,
             Priority = e.Priority,
+            ImageUrls = e.ImageUrls,
             CooldownDuration = TimeSpan.FromMinutes(e.CooldownMinutes)
         }).ToList();
 
@@ -221,12 +223,11 @@ public partial class MainPage : ContentPage
             {
                 PopupTitle.Text = _selectedPoi.Name;
                 PopupDescription.Text = _selectedPoi.Description;
-                PopupImage.Source = _selectedPoi.Image;
+                PopupCarousel.ItemsSource = _selectedPoi.ImageUrls; 
                 PopupOverlay.IsVisible = true;
             }
         }
     }
-
 
     private void OnPopupCloseClicked(object sender, EventArgs e)
     {
@@ -351,7 +352,6 @@ public partial class MainPage : ContentPage
         }
     }
 
-
     private void StopSpeech()
     {
         if (_speechCts != null)
@@ -450,7 +450,6 @@ public partial class MainPage : ContentPage
 
         });
     }
-
     private void UpdateUserLocationOnMap(Location location)
     {
         if (location == null) return;

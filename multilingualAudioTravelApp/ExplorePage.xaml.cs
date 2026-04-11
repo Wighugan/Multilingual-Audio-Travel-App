@@ -51,7 +51,7 @@ public partial class ExplorePage : ContentPage
             _selectedPoi = selectedItem;
             PopupTitle.Text = _selectedPoi.CurrentName;
             PopupDescription.Text = _selectedPoi.CurrentDescription;
-            PopupImage.Source = _selectedPoi.Image;
+            PopupCarousel.ItemsSource = _selectedPoi.ImageUrls; 
             PopupOverlay.IsVisible = true;
         }
     }

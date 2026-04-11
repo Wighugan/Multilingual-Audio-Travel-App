@@ -14,12 +14,12 @@
                         HorizontalOptions="FillAndExpand" />
 
         <Border
-HorizontalOptions="End"
-VerticalOptions="End"
-Margin="16,0,16,32"
-BackgroundColor="White"
-StrokeThickness="0"
-WidthRequest="48" HeightRequest="48">
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Margin="16,0,16,32"
+            BackgroundColor="White"
+            StrokeThickness="0"
+            WidthRequest="48" HeightRequest="48">
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="24"/>
             </Border.StrokeShape>
@@ -48,9 +48,24 @@ WidthRequest="48" HeightRequest="48">
                 
                 <VerticalStackLayout Spacing="10">
 
-                    <Image x:Name="PopupImage"
-                           HeightRequest="180"
-                           Aspect="AspectFill" />
+                    <Grid HeightRequest="200">
+                        <CarouselView x:Name="PopupCarousel"
+                          IndicatorView="{x:Reference indicatorView}">
+                            <CarouselView.ItemTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding .}" Aspect="AspectFill" />
+                                </DataTemplate>
+                            </CarouselView.ItemTemplate>
+                        </CarouselView>
+
+                        <IndicatorView x:Name="indicatorView"
+                           IndicatorsShape="Circle"
+                           IndicatorColor="#D3D3D3"
+                           SelectedIndicatorColor="#1D9E75"
+                           HorizontalOptions="Center"
+                           VerticalOptions="End"
+                           Margin="0,0,0,10" />
+                    </Grid>
 
                     <Label x:Name="PopupTitle"
                            FontSize="20"

@@ -11,7 +11,7 @@ public class PoiCardItem : INotifyPropertyChanged
 
     public string FullImageUrl { get; set; }
     public PoiEntity SourcePoi { get; set; }
-
+    public List<string> ImageUrls { get; set; }
     public string Name { get; set; }
     public string Image { get; set; }
     public string Description { get; set; }
@@ -64,6 +64,7 @@ public partial class HomePage : ContentPage
             Name = e.CurrentName,
             Image = e.Image,
             FullImageUrl = e.FullImageUrl,
+            ImageUrls = e.ImageUrls,
             Description = e.CurrentDescription,
             Latitude = e.Latitude,
             Longitude = e.Longitude,
@@ -108,7 +109,7 @@ public partial class HomePage : ContentPage
         if (e.Parameter is not PoiCardItem selected) return;
 
         _selectedPoi = selected;
-        PopupImage.Source = selected.FullImageUrl;
+        PopupCarousel.ItemsSource = selected.ImageUrls;
         PopupTitle.Text = selected.Name;
         PopupDescription.Text = selected.Description;
         PopupOverlay.IsVisible = true;

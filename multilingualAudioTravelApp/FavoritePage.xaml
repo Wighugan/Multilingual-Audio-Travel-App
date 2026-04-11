@@ -24,42 +24,60 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="0,6" CornerRadius="16" HasShadow="False" Padding="0">
-                        <Grid ColumnDefinitions="120,*,Auto" HeightRequest="100">
+                    <Frame Margin="0,6" CornerRadius="16" HasShadow="False" Padding="0"
+                           BackgroundColor="White">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnFavoriteRowTapped" CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
 
-                            <!-- ẢNH -->
-                            <Image Source="{Binding PoiImage}"
-                          Aspect="AspectFill"
-                             HeightRequest="80"
-                                 WidthRequest="80"/>
+                        <Grid ColumnDefinitions="*,Auto" HeightRequest="100">
 
-                            <!-- TÊN + MÔ TẢ -->
-                            <VerticalStackLayout
-                                Grid.Column="1"
-                                Padding="12,10"
-                                Spacing="4"
-                                VerticalOptions="Center">
-                                <Label
-                                    Text="{Binding PoiName}"
-                                    FontSize="15"
-                                    FontAttributes="Bold"
-                                    MaxLines="1"
-                                    LineBreakMode="TailTruncation"/>
-                                <Label
-                                    Text="{Binding PoiDescription}"
-                                    FontSize="12"
-                                    TextColor="Gray"
-                                    MaxLines="2"
-                                    LineBreakMode="TailTruncation"/>
-                            </VerticalStackLayout>
+                            <!-- Vùng ảnh + tên (tap bubble lên Frame) -->
+                            <Grid
+                                Grid.Column="0"
+                                ColumnDefinitions="120,*"
+                                ColumnSpacing="0">
 
+                                <!-- ẢNH -->
+                                <Image
+                                    Grid.Column="0"
+                                    Source="{Binding PoiImage}"
+                                    Aspect="AspectFill"
+                                    HeightRequest="80"
+                                    WidthRequest="80"
+                                    VerticalOptions="Center"
+                                    InputTransparent="True"/>
+
+                                <!-- TÊN + MÔ TẢ -->
+                                <VerticalStackLayout
+                                    Grid.Column="1"
+                                    Padding="12,10"
+                                    Spacing="4"
+                                    VerticalOptions="Center"
+                                    InputTransparent="True">
+                                    <Label
+                                        Text="{Binding PoiName}"
+                                        FontSize="15"
+                                        FontAttributes="Bold"
+                                        MaxLines="1"
+                                        LineBreakMode="TailTruncation"/>
+                                    <Label
+                                        Text="{Binding PoiDescription}"
+                                        FontSize="12"
+                                        TextColor="Gray"
+                                        MaxLines="2"
+                                        LineBreakMode="TailTruncation"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Nút Bỏ lưu — dừng bubble, xử lý riêng -->
                             <Border
-                                Grid.Column="2"
+                                Grid.Column="1"
                                 BackgroundColor="#FFF0F0"
                                 StrokeThickness="0"
                                 Margin="8"
                                 Padding="10,6"
-                                VerticalOptions="Center">   
+                                VerticalOptions="Center">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20"/>
                                 </Border.StrokeShape>
@@ -67,12 +85,12 @@
                                     <TapGestureRecognizer Tapped="OnRemoveFavoriteTapped" CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>
                                 <Label
-                                Text="Bỏ lưu"
-                                TextColor="#E53935"
-                                FontSize="12"
-                                FontAttributes="Bold"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"/>  
+                                    Text="Bỏ lưu"
+                                    TextColor="#E53935"
+                                    FontSize="12"
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
                             </Border>
 
                         </Grid>

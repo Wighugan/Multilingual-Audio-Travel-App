@@ -35,6 +35,9 @@ public class PoiCardItem : INotifyPropertyChanged
 
 public partial class HomePage : ContentPage
 {
+    /// <summary>Mở popup phát khi chuyển từ trang Yêu thích (OnAppearing sẽ xử lý).</summary>
+    internal static PoiCardItem PendingPoiToShow;
+
     private readonly DatabaseService _dbService = new DatabaseService();
     private List<PoiCardItem> _allPois = new();
     private bool _isSearching = false;
@@ -49,7 +52,15 @@ public partial class HomePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        // Capture trước khi LoadPois (tránh bị clear giữa chừng)
+        var pending = PendingPoiToShow;
+        PendingPoiToShow = null;
+
         await LoadPois();
+
+        if (pending != null)
+            OpenPoiPopup(pending);
     }
 
     private async Task LoadPois()
@@ -107,9 +118,21 @@ public partial class HomePage : ContentPage
     private void OnPoiTapped(object sender, TappedEventArgs e)
     {
         if (e.Parameter is not PoiCardItem selected) return;
+        OpenPoiPopup(selected);
+    }
 
+    private void OpenPoiPopup(PoiCardItem selected)
+    {
         _selectedPoi = selected;
-        PopupCarousel.ItemsSource = selected.ImageUrls;
+
+        // Guard null khi đến từ FavoritePage mà POI không còn trong DB
+        var images = selected.ImageUrls?.Count > 0
+            ? selected.ImageUrls
+            : (!string.IsNullOrEmpty(selected.FullImageUrl)
+                ? new List<string> { selected.FullImageUrl }
+                : new List<string> { "placeholder.png" });
+
+        PopupCarousel.ItemsSource = images;
         PopupTitle.Text = selected.Name;
         PopupDescription.Text = selected.Description;
         PopupOverlay.IsVisible = true;
@@ -213,5 +236,13 @@ public partial class HomePage : ContentPage
             return;
         }
         await Navigation.PushAsync(new QRScanPage());
+    }
+    // Thêm vào HomePage.xaml.cs
+    public void ShowPendingPopup()
+    {
+        var pending = PendingPoiToShow;
+        PendingPoiToShow = null;
+        if (pending != null)
+            OpenPoiPopup(pending);
     }
 }

@@ -8,6 +8,10 @@ public partial class FavoritePage : ContentPage
     private readonly DatabaseService _dbService = new DatabaseService();
     private bool _removeTapping = false;
 
+    // State cho popup thuyết minh
+    private FavoriteEntity _selectedFav;
+    private CancellationTokenSource _speechCts;
+
     public FavoritePage()
     {
         InitializeComponent();
@@ -19,6 +23,14 @@ public partial class FavoritePage : ContentPage
         await LoadFavorites();
     }
 
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        StopSpeech(); // dừng đọc khi rời trang
+    }
+
+    // ── Load danh sách ──────────────────────────────────────────
+
     private async Task LoadFavorites()
     {
         var email = Preferences.Get("userEmail", "");
@@ -26,49 +38,85 @@ public partial class FavoritePage : ContentPage
         FavCollection.ItemsSource = favorites;
     }
 
+    // ── Bấm vào card → mở popup ─────────────────────────────────
+
+    // ✅ SỬA - hiện overlay loading NGAY LẬP TỨC trước khi await
     private async void OnFavoriteRowTapped(object sender, TappedEventArgs e)
     {
         if (_removeTapping) return;
         if (e.Parameter is not FavoriteEntity fav) return;
 
+        _selectedFav = fav;
+
+        // Hiện overlay NGAY để chặn tap bubble lên Shell
+        FavPopupOverlay.IsVisible = true;
+        FavPopupTitle.Text = fav.PoiName;
+        FavPopupDescription.Text = fav.PoiDescription ?? "";
+        FavPopupCarousel.ItemsSource = new List<string> {
+        string.IsNullOrWhiteSpace(fav.PoiImage) ? "placeholder.png" : fav.PoiImage
+    };
+        FavPlayStopButton.Source = "play_icon.png";
+
+        // Sau đó mới load thêm dữ liệu đầy đủ từ DB (update lại nếu có)
         var entities = await _dbService.GetAllPoisAsync();
         var poi = entities.FirstOrDefault(p => p.CurrentName == fav.PoiName);
 
-        PoiCardItem card;
         if (poi != null)
         {
-            card = new PoiCardItem
-            {
-                Name = poi.CurrentName,
-                Image = poi.Image,
-                FullImageUrl = poi.FullImageUrl,
-                ImageUrls = poi.ImageUrls,
-                Description = poi.CurrentDescription,
-                Latitude = poi.Latitude,
-                Longitude = poi.Longitude,
-                SourcePoi = poi,
-                IsFavorite = true
-            };
+            var images = poi.ImageUrls?.Count > 0
+                ? poi.ImageUrls
+                : new List<string> { poi.FullImageUrl ?? "placeholder.png" };
+            FavPopupCarousel.ItemsSource = images;
+            FavPopupDescription.Text = poi.CurrentDescription ?? fav.PoiDescription ?? "";
         }
-        else
-        {
-            var img = string.IsNullOrWhiteSpace(fav.PoiImage) ? "placeholder.png" : fav.PoiImage.Trim();
-            card = new PoiCardItem
-            {
-                Name = fav.PoiName,
-                Description = fav.PoiDescription ?? "",
-                Latitude = fav.Latitude,
-                Longitude = fav.Longitude,
-                FullImageUrl = img,
-                ImageUrls = new List<string> { img },
-                SourcePoi = null,
-                IsFavorite = true
-            };
-        }
-
-        HomePage.PendingPoiToShow = card;
-        await Shell.Current.GoToAsync("//HomePage");
     }
+
+    // ── Nút Nghe / Dừng ─────────────────────────────────────────
+
+    private async void OnFavPopupPlayClicked(object sender, EventArgs e)
+    {
+        if (_selectedFav == null) return;
+
+        if (_speechCts != null) // đang đọc → dừng
+        {
+            StopSpeech();
+            FavPlayStopButton.Source = "play_icon.png";
+        }
+        else // chưa đọc → bắt đầu
+        {
+            FavPlayStopButton.Source = "stop_icon.png";
+            var text = FavPopupDescription.Text;
+            await SpeakAsync(text);
+            FavPlayStopButton.Source = "play_icon.png";
+        }
+    }
+
+    // ── Nút Bản đồ ──────────────────────────────────────────────
+
+    private async void OnFavPopupMapClicked(object sender, EventArgs e)
+    {
+        if (_selectedFav == null) return;
+
+        FavPopupOverlay.IsVisible = false;
+        StopSpeech();
+
+        Preferences.Set("MapTargetLat", _selectedFav.Latitude);
+        Preferences.Set("MapTargetLon", _selectedFav.Longitude);
+        Preferences.Set("MapTargetName", _selectedFav.PoiName);
+
+        await Shell.Current.GoToAsync("//MainPage");
+    }
+
+    // ── Nút Đóng ────────────────────────────────────────────────
+
+    private void OnFavPopupCloseClicked(object sender, EventArgs e)
+    {
+        FavPopupOverlay.IsVisible = false;
+        StopSpeech();
+        FavPlayStopButton.Source = "play_icon.png";
+    }
+
+    // ── Bỏ lưu ──────────────────────────────────────────────────
 
     private async void OnRemoveFavoriteTapped(object sender, TappedEventArgs e)
     {
@@ -92,5 +140,34 @@ public partial class FavoritePage : ContentPage
         {
             _removeTapping = false;
         }
+    }
+
+    // ── TTS helpers ──────────────────────────────────────────────
+
+    private async Task SpeakAsync(string text)
+    {
+        StopSpeech();
+        _speechCts = new CancellationTokenSource();
+        try
+        {
+            var locales = await TextToSpeech.Default.GetLocalesAsync();
+            string savedLang = Preferences.Get("VoiceLanguage", "vi");
+            var voice = locales.FirstOrDefault(l => l.Language.StartsWith(savedLang));
+
+            await TextToSpeech.Default.SpeakAsync(text, new SpeechOptions
+            {
+                Locale = voice,
+                Volume = 1.0f,
+                Pitch = 1.0f
+            }, _speechCts.Token);
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    private void StopSpeech()
+    {
+        _speechCts?.Cancel();
+        _speechCts?.Dispose();
+        _speechCts = null;
     }
 }

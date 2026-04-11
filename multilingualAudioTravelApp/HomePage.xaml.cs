@@ -52,13 +52,9 @@ public partial class HomePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        // Capture trước khi LoadPois (tránh bị clear giữa chừng)
-        var pending = PendingPoiToShow;
+        var pending = PendingPoiToShow;   // ← logic cũ vẫn còn
         PendingPoiToShow = null;
-
         await LoadPois();
-
         if (pending != null)
             OpenPoiPopup(pending);
     }
@@ -238,11 +234,5 @@ public partial class HomePage : ContentPage
         await Navigation.PushAsync(new QRScanPage());
     }
     // Thêm vào HomePage.xaml.cs
-    public void ShowPendingPopup()
-    {
-        var pending = PendingPoiToShow;
-        PendingPoiToShow = null;
-        if (pending != null)
-            OpenPoiPopup(pending);
-    }
+    
 }

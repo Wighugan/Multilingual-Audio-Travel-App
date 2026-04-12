@@ -19,11 +19,17 @@ namespace TravelApp.WebAdmin.Models
     public class UserEntity
     {
         [Key]
-        public int Id { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string FullName { get; set; }
-        public string Role { get; set; }
+        
+            public int Id { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public string FullName { get; set; }
+            public string Role { get; set; }
+            // ← thêm vào đây
+            public bool IsPremium { get; set; } = false;
+            public string? PremiumToken { get; set; }
+            public string? PremiumExpiry { get; set; }
+        
     }
 
     public class FavoriteEntity

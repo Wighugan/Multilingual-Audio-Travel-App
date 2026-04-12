@@ -7,8 +7,12 @@ public partial class ProfilePage : ContentPage
         InitializeComponent();
         BindingContext = new ProfileViewModel();
         _stars = new List<Label> { S1, S2, S3, S4, S5 }; 
-    }
 
+    }
+    private async void OnPremiumBannerTapped(object sender, TappedEventArgs e)
+    {
+        await Navigation.PushAsync(new PremiumPage());
+    }
     private async void OnMenuSelected(object sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is not ProfileMenu menu)
@@ -55,6 +59,16 @@ public partial class ProfilePage : ContentPage
                 await ShowFeedbackPopup();
                 break;
 
+            case "myqr":
+                var email = Preferences.Get("userEmail", "");
+                if (!Preferences.Get($"IsPremium_{email}", false))
+                {
+                    await DisplayAlert("Chưa có Premium", "Vui lòng đăng ký để trải nghiệm các tính năng", "OK");
+                    return;
+                }
+                await Navigation.PushAsync(new MyQRPage());
+                break;
+
             default:
                 await DisplayAlert(menu.Title, "Chức năng đang phát triển", "OK");
                 break;
@@ -63,18 +77,20 @@ public partial class ProfilePage : ContentPage
 
     private async void OnLogoutClicked(object sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert(
-            multilingualAudioTravelApp.Languages.AppStrings.LogOut,
-            multilingualAudioTravelApp.Languages.AppStrings.AskLogOut,
-            multilingualAudioTravelApp.Languages.AppStrings.LogOut,
-            multilingualAudioTravelApp.Languages.AppStrings.Cancel);
-
+        bool confirm = await DisplayAlert("Đăng xuất", "Bạn có chắc muốn đăng xuất?", "Có", "Hủy");
         if (!confirm) return;
 
-        // xoá trạng thái login (giả lập)
-        Preferences.Remove("isLoggedIn");
+        // Xóa Premium của email này khỏi Preferences
+        var email = Preferences.Get("userEmail", "");
+        Preferences.Remove($"IsPremium_{email}");
+        Preferences.Remove($"PremiumToken_{email}");
+        Preferences.Remove($"PremiumExpiry_{email}");
 
-        // QUAN TRỌNG: reset toàn bộ Shell
+        // Xóa thông tin đăng nhập
+        Preferences.Remove("isLoggedIn");
+        Preferences.Remove("userEmail");
+        Preferences.Remove("userName");
+
         Application.Current.MainPage = new NavigationPage(new LoginPage());
     }
 

@@ -5,7 +5,16 @@
     x:Class="multilingualAudioTravelApp.ProfilePage"
     xmlns:lang="clr-namespace:multilingualAudioTravelApp.Languages"
     Title="{x:Static lang:AppStrings.Profile}">
-
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" Padding="0,0,8,0" VerticalOptions="Center">
+            <Label Text="{x:Static lang:AppStrings.Profile}"
+                   FontSize="20" FontAttributes="Bold"
+                   VerticalOptions="Center" Margin="16,0,0,0"/>
+            <Switch Grid.Column="1"
+                    IsToggled="{Binding IsDarkMode}"
+                    VerticalOptions="Center"/>
+        </Grid>
+    </Shell.TitleView>
     <Grid>
 
         <!-- NỘI DUNG CHÍNH -->
@@ -45,15 +54,35 @@
                         HorizontalOptions="Center"/>
 
                 </VerticalStackLayout>
+                <!-- ── BANNER NÂNG CẤP PREMIUM ── -->
+                <Frame BackgroundColor="#FFF3E0" CornerRadius="16"
+                       Padding="16" HasShadow="False"
+                       BorderColor="#FFCC80">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPremiumBannerTapped"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Text="💎" FontSize="32" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Nâng cấp Premium"
+                                   FontSize="15" FontAttributes="Bold" TextColor="Black"/>
+                            <Label Text="Tham gia trả phí để mở khóa toàn bộ tính năng và nhận sự hỗ trợ của chúng tôi"
+                                   FontSize="12" TextColor="Black"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="›"
+                               FontSize="22" TextColor="#E65100"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
 
-                <!-- Dark mode -->
+                <!-- Dark mode --><!--
                 <Grid ColumnDefinitions="*,Auto">
                     <VerticalStackLayout>
                         <Label Text="{x:Static lang:AppStrings.Darkmode}" FontSize="16"/>
                         <Label Text="On/Off" FontSize="12" TextColor="Gray"/>
                     </VerticalStackLayout>
                     <Switch Grid.Column="1" IsToggled="{Binding IsDarkMode}"/>
-                </Grid>
+                </Grid>-->
 
                 <BoxView HeightRequest="1" BackgroundColor="#DDDDDD"/>
 

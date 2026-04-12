@@ -112,5 +112,165 @@
             </Frame>
         </Grid>
 
+        <!-- POPUP KẾT QUẢ QUÉT QR PREMIUM -->
+        <Grid x:Name="PremiumPopupOverlay"
+              IsVisible="False"
+              BackgroundColor="#80000000"
+              ZIndex="999">
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                   CornerRadius="20" Padding="20"
+                   Margin="30" VerticalOptions="Center" HasShadow="True">
+                <VerticalStackLayout Spacing="14">
+
+                    <!-- Icon + Tiêu đề -->
+                    <Label Text="⭐" FontSize="40" HorizontalOptions="Center"/>
+                    <Label x:Name="PremiumPopupTitle"
+                           FontSize="18" FontAttributes="Bold"
+                           HorizontalOptions="Center"/>
+
+                    <!-- Thông tin -->
+                    <Frame CornerRadius="12" Padding="14"
+                           HasShadow="False" BorderColor="#E0E0E0">
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Email" FontSize="13" TextColor="Gray"/>
+                                <Label x:Name="PremiumEmailLabel"
+                                       Grid.Column="1" FontSize="13" FontAttributes="Bold"/>
+                            </Grid>
+                            <BoxView HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Hết hạn" FontSize="13" TextColor="Gray"/>
+                                <Label x:Name="PremiumExpiryLabel"
+                                       Grid.Column="1" FontSize="13" FontAttributes="Bold"/>
+                            </Grid>
+                            <BoxView HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Trạng thái" FontSize="13" TextColor="Gray"/>
+                                <Label x:Name="PremiumStatusLabel"
+                                       Grid.Column="1" FontSize="13" FontAttributes="Bold"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Nút đóng -->
+                    <Button Text="Đóng"
+                            BackgroundColor="#E0E0E0"
+                            TextColor="#333333"
+                            CornerRadius="12"
+                            HeightRequest="46"
+                            Clicked="OnPremiumPopupCloseClicked"/>
+
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+
+        <!-- POPUP DANH SÁCH QUÁN PREMIUM (nằm ngoài, ngang hàng root) -->
+        <Grid x:Name="PremiumListOverlay"
+              IsVisible="False"
+              BackgroundColor="#80000000"
+              ZIndex="999">
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                   CornerRadius="20" Padding="0"
+                   Margin="20" VerticalOptions="Center"
+                   HasShadow="True" HeightRequest="520">
+                <Grid RowDefinitions="Auto,*,Auto">
+
+                    <!-- Header -->
+                    <VerticalStackLayout Grid.Row="0" Padding="20,16" Spacing="4">
+                        <Label Text="⭐ Danh sách quán Premium"
+                               FontSize="17" FontAttributes="Bold"/>
+                        <Label Text="Bấm vào quán để nghe thuyết minh"
+                               FontSize="12" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                    <BoxView Grid.Row="0" VerticalOptions="End"
+                             HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
+
+                    <!-- Danh sách quán -->
+                    <CollectionView Grid.Row="1"
+                                    x:Name="PremiumPoiList"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="80,*" HeightRequest="80">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Tapped="OnPremiumPoiTapped"
+                                            CommandParameter="{Binding .}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Image Grid.Column="0"
+                                           Source="{Binding FullImageUrl}"
+                                           Aspect="AspectFill"
+                                           HeightRequest="80" WidthRequest="80"
+                                           InputTransparent="True"/>
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Padding="12,10" Spacing="4"
+                                                         VerticalOptions="Center"
+                                                         InputTransparent="True">
+                                        <Label Text="{Binding CurrentName}"
+                                               FontSize="14" FontAttributes="Bold"
+                                               MaxLines="1" LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding CurrentDescription}"
+                                               FontSize="12" TextColor="Gray"
+                                               MaxLines="2" LineBreakMode="TailTruncation"/>
+                                    </VerticalStackLayout>
+                                    <BoxView Grid.ColumnSpan="2" VerticalOptions="End"
+                                             HeightRequest="0.5" BackgroundColor="#E0E0E0"
+                                             InputTransparent="True"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Popup nghe thuyết minh (chồng lên list) -->
+                    <Grid Grid.Row="1"
+                          x:Name="PremiumSpeakOverlay"
+                          IsVisible="False"
+                          BackgroundColor="#80000000"
+                          ZIndex="99">
+                        <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                               CornerRadius="16" Padding="20"
+                               Margin="16" VerticalOptions="Center">
+                            <VerticalStackLayout Spacing="12">
+                                <Label x:Name="PremiumSpeakTitle"
+                                       FontSize="17" FontAttributes="Bold"
+                                       HorizontalOptions="Center"/>
+                                <Label x:Name="PremiumSpeakDesc"
+                                       FontSize="13" TextColor="Gray"
+                                       MaxLines="4" LineBreakMode="WordWrap"/>
+                                <HorizontalStackLayout Spacing="16"
+                                                       HorizontalOptions="Center" Padding="8">
+                                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                        <ImageButton x:Name="PremiumPlayBtn"
+                                                     Source="play_icon.png"
+                                                     WidthRequest="56" HeightRequest="56"
+                                                     CornerRadius="28" Padding="14"
+                                                     BackgroundColor="#E0E0E0"
+                                                     Clicked="OnPremiumPlayClicked"/>
+                                        <Label Text="Nghe" FontSize="11"
+                                               TextColor="Gray" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                        <ImageButton Source="close_icon.png"
+                                                     WidthRequest="56" HeightRequest="56"
+                                                     CornerRadius="28" Padding="14"
+                                                     BackgroundColor="#FFE0E0"
+                                                     Clicked="OnPremiumSpeakCloseClicked"/>
+                                        <Label Text="Đóng" FontSize="11"
+                                               TextColor="Gray" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </Grid>
+
+                    <!-- Nút đóng danh sách -->
+                    <Button Grid.Row="2" Text="Đóng"
+                            BackgroundColor="#EEEEEE" TextColor="#333333"
+                            CornerRadius="0" HeightRequest="50"
+                            Clicked="OnPremiumListCloseClicked"/>
+                </Grid>
+            </Frame>
+        </Grid>
+
     </Grid>
 </ContentPage>

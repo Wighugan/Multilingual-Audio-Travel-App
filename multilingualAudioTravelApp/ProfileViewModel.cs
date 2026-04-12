@@ -43,6 +43,11 @@ public class ProfileViewModel
                 Title = multilingualAudioTravelApp.Languages.AppStrings.FvCafe,
                 Description = multilingualAudioTravelApp.Languages.AppStrings.DesFvCafe
             },
+
+            new ProfileMenu { 
+                Key = "myqr", 
+                Title = "QR của tôi", 
+                Description = "Hiện mã QR Premium cá nhân" },
             new ProfileMenu
             {
                 Key = "feedback",

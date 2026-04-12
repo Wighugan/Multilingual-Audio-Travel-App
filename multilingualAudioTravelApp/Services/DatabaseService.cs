@@ -140,15 +140,19 @@ public class PoiEntity  //POI
     }
 }
 
-    public class UserEntity  //user
+public class UserEntity
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
     public string FullName { get; set; }
+    public string Role { get; set; } 
+    public bool IsPremium { get; set; } = false;
+    public string PremiumToken { get; set; }
+    public string PremiumExpiry { get; set; }
 }
-    public class DatabaseService
+public class DatabaseService
 {
     private SQLiteAsyncConnection _db;
     private readonly string _dbPath;
@@ -417,11 +421,21 @@ public class PoiEntity  //POI
         try
         {
             using var client = new HttpClient();
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5068" : "http://localhost:5068";
+            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                ? "http://10.0.2.2:5068" : "http://localhost:5068";
 
             var users = await client.GetFromJsonAsync<List<UserEntity>>($"{baseUrl}/api/users");
+            var user = users?.FirstOrDefault(u => u.Email == email && u.Password == password);
 
-            return users?.FirstOrDefault(u => u.Email == email && u.Password == password);
+            // ── Sau khi login thành công, đồng bộ Premium về Preferences ──
+            if (user != null && user.IsPremium)
+            {
+                Preferences.Set($"IsPremium_{email}", true);
+                Preferences.Set($"PremiumToken_{email}", user.PremiumToken ?? "");
+                Preferences.Set($"PremiumExpiry_{email}", user.PremiumExpiry ?? "");
+            }
+
+            return user;
         }
         catch (Exception ex)
         {

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+             x:Class="multilingualAudioTravelApp.MyQRPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20" VerticalOptions="Center">
+
+            <!-- Tiêu đề -->
+            <Label Text="Mã QR Premium của bạn"
+                   FontSize="22" FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+
+            <Label Text="Quét mã này để nghe thuyết minh không giới hạn"
+                   FontSize="13" TextColor="Gray"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"/>
+
+            <!-- Khung chứa QR -->
+            <Frame CornerRadius="20" Padding="24"
+                   HasShadow="False" BorderColor="#E0E0E0"
+                   HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="16">
+
+                    <!-- Ảnh QR sinh từ token -->
+                    <zxing:BarcodeGeneratorView
+                        x:Name="QRImage"
+                        Format="QrCode"
+                        WidthRequest="220"
+                        HeightRequest="220"
+                        HorizontalOptions="Center"
+                        ForegroundColor="{AppThemeBinding Light=Black, Dark=White}"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"/>
+
+                    <!-- Badge Premium -->
+                    <Border BackgroundColor="#1D9E75"
+                            StrokeThickness="0"
+                            HorizontalOptions="Center"
+                            Padding="16,6">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Label Text="⭐ PREMIUM"
+                               TextColor="White"
+                               FontSize="13" FontAttributes="Bold"/>
+                    </Border>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Thông tin gói -->
+            <Frame CornerRadius="16" Padding="16"
+                   HasShadow="False" BorderColor="#E0E0E0">
+                <VerticalStackLayout Spacing="8">
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Email" FontSize="13" TextColor="Gray"/>
+                        <Label x:Name="EmailLabel" Grid.Column="1"
+                               FontSize="13" FontAttributes="Bold"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Ngày hết hạn" FontSize="13" TextColor="Gray"/>
+                        <Label x:Name="ExpiryLabel" Grid.Column="1"
+                               FontSize="13" FontAttributes="Bold" TextColor="#1D9E75"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Trạng thái" FontSize="13" TextColor="Gray"/>
+                        <Label x:Name="StatusLabel" Grid.Column="1"
+                               FontSize="13" FontAttributes="Bold"/>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Nút gia hạn -->
+            <Button x:Name="RenewButton"
+                    Text="Gia hạn Premium"
+                    BackgroundColor="#FF6F00"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    IsVisible="False"
+                    Clicked="OnRenewClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

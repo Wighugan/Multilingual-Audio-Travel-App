@@ -41,6 +41,9 @@ namespace TravelApp.WebAdmin.Controllers
             existingUser.FullName = updatedUser.FullName;
             existingUser.Email = updatedUser.Email;
             existingUser.Role = updatedUser.Role;
+            existingUser.IsPremium = updatedUser.IsPremium;
+            existingUser.PremiumToken = updatedUser.PremiumToken;
+            existingUser.PremiumExpiry = updatedUser.PremiumExpiry;
 
             if (!string.IsNullOrWhiteSpace(updatedUser.Password))
             {

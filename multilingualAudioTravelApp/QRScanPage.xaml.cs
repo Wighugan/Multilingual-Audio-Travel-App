@@ -110,6 +110,12 @@ public partial class QRScanPage : ContentPage
     private async Task HandleQRCode(string qrValue)
     {
         System.Diagnostics.Debug.WriteLine($"[QR] Đọc được: '{qrValue}'");
+        // SỬA: bỏ InvokeOnMainThreadAsync bọc ngoài, await thẳng
+        if (NormalizeText(qrValue).StartsWith("VKPREMIUM_", StringComparison.OrdinalIgnoreCase))
+        {
+            await HandlePremiumQR(qrValue);
+            return;
+        }
         var poiName = TryExtractPoiName(qrValue);
 
         await MainThread.InvokeOnMainThreadAsync(() =>
@@ -287,5 +293,122 @@ public partial class QRScanPage : ContentPage
         {
             ResultPlayStopButton.Source = "play_icon.png";
         });
+    }
+    private async Task HandlePremiumQR(string token)
+    {
+        var parts = token.Split('_');
+        var expiry = parts.Length >= 3 ? parts[^1] : "";
+        var email = parts.Length >= 3
+            ? string.Join("_", parts.Skip(1).Take(parts.Length - 2))
+            : "";
+
+        // ── Kiểm tra email trong QR có khớp user đang đăng nhập không ──
+        var currentEmail = Preferences.Get("userEmail", "");
+        if (!email.Equals(currentEmail, StringComparison.OrdinalIgnoreCase))
+        {
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                StatusLabel.Text = "❌ QR không thuộc tài khoản này";
+                StatusLabel.TextColor = Colors.Red;
+                await DisplayAlert("Không hợp lệ",
+                    "Mã QR này không thuộc tài khoản đang đăng nhập.", "OK");
+            });
+            ResetScanner();
+            return;
+        }
+
+        // ── Kiểm tra còn hạn ──
+        bool isValid = DateTime.TryParse(expiry, out var expDate)
+                       && expDate >= DateTime.Today;
+
+        if (!isValid)
+        {
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                PremiumPopupTitle.Text = "❌ Thẻ Premium đã hết hạn";
+                PremiumPopupTitle.TextColor = Colors.Red;
+                PremiumEmailLabel.Text = email;
+                PremiumExpiryLabel.Text = expDate.ToString("dd/MM/yyyy");
+                PremiumStatusLabel.Text = "Hết hạn";
+                PremiumStatusLabel.TextColor = Colors.Red;
+                StatusLabel.Text = "❌ QR hết hạn";
+                StatusLabel.TextColor = Colors.Red;
+                PremiumPopupOverlay.IsVisible = true;
+            });
+            return;
+        }
+
+        // Còn hạn: load data TRƯỚC, show UI SAU
+        try { HapticFeedback.Perform(HapticFeedbackType.Click); } catch { }
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            StatusLabel.Text = "✅ Premium hợp lệ - Đang tải...";
+            StatusLabel.TextColor = Color.FromArgb("#4CAF50");
+        });
+
+        // Await data ngoài MainThread
+        var allPois = await _dbService.GetAllPoisAsync();
+
+        // Xong mới show popup
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            PremiumPoiList.ItemsSource = allPois;
+            PremiumListOverlay.IsVisible = true;
+        });
+    }
+
+    private PoiEntity _selectedPremiumPoi;
+
+    private void OnPremiumPoiTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not PoiEntity poi) return;
+        _selectedPremiumPoi = poi;
+
+        PremiumSpeakTitle.Text = poi.CurrentName;
+        PremiumSpeakDesc.Text = poi.CurrentDescription;
+        PremiumPlayBtn.Source = "play_icon.png";
+        StopSpeech();
+
+        PremiumSpeakOverlay.IsVisible = true;
+    }
+
+    private async void OnPremiumPlayClicked(object sender, EventArgs e)
+    {
+        if (_selectedPremiumPoi == null) return;
+
+        if (_isPlaying)
+        {
+            StopSpeech();
+            PremiumPlayBtn.Source = "play_icon.png";
+        }
+        else
+        {
+            PremiumPlayBtn.Source = "stop_icon.png";
+            _currentDescription = _selectedPremiumPoi.CurrentDescription;
+            await SpeakAsync(_currentDescription);
+            PremiumPlayBtn.Source = "play_icon.png";
+        }
+    }
+
+    private void OnPremiumSpeakCloseClicked(object sender, EventArgs e)
+    {
+        StopSpeech();
+        PremiumPlayBtn.Source = "play_icon.png";
+        PremiumSpeakOverlay.IsVisible = false;
+    }
+
+    private void OnPremiumListCloseClicked(object sender, EventArgs e)
+    {
+        StopSpeech();
+        PremiumSpeakOverlay.IsVisible = false;
+        PremiumListOverlay.IsVisible = false;
+        ResetScanner();
+    }
+
+    private void OnPremiumPopupCloseClicked(object sender, EventArgs e)
+    {
+        PremiumPopupOverlay.IsVisible = false;
+        ResetScanner();
     }
 }

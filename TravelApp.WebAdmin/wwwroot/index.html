@@ -732,7 +732,7 @@
                 </div>
                 <table>
                     <thead>
-                        <tr><th>User</th><th>Email</th><th>Status</th><th>Account Type</th><th>Actions</th></tr>
+                        <tr><th>User</th><th>Email</th><th>Status</th><th>Account Type</th><<th>Premium</th><th>Actions</th></tr>
                     </thead>
                     <tbody id="users-table"></tbody>
                 </table>
@@ -838,8 +838,12 @@
                 <label>Confirm password</label>
                 <input id="u-password2" placeholder="••••••••" type="password">
             </div>
+            <div class="form-group full" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 8px; padding: 10px; background: #FFF9E6; border-radius: 8px; border: 1px dashed #F5B041;">
+                <input type="checkbox" id="u-isPremium" style="width: 18px; height: 18px; accent-color: #F39C12; cursor: pointer;">
+                <label for="u-isPremium" style="font-size: 14px; color: #D35400; font-weight: bold; cursor: pointer; margin: 0;">Cấp quyền Premium</label>
+            </div>
             <div class="form-group full">
-                <label>Account Role (Phân quyền)</label>
+                <label>Account Role</label>
                 <select id="u-role">
                     <option value="Customer">Customer (Khách du lịch)</option>
                     <option value="Owner">Owner (Chủ quán)</option>
@@ -1129,10 +1133,11 @@
             const name = u.fullName || 'No Name';
             const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
             const userRole = u.role || u.Role || 'Customer';
+            const premium = u.IsPremium || u.isPremium;
+            const premiumBadge = premium ? `<span class="badge" style="background:#FFF9E6; color:#D35400; margin-left: 4px;">Premium</span>` : '';
             let roleBadge = `<span class="badge badge-gray">Customer</span>`;
             if (u.role === 'Admin') roleBadge = `<span class="badge badge-amber">Admin</span>`;
             if (u.role === 'Owner') roleBadge = `<span class="badge badge-blue">Owner</span>`;
-
             return `<tr>
       <td>
         <div style="display:flex;align-items:center;gap:10px;">
@@ -1142,7 +1147,8 @@
       </td>
       <td style="font-size:13px;color:var(--color-text-secondary)">${u.email || ''}</td>
       <td><span class="badge badge-green">Active</span></td>
-      <td>${roleBadge}</td>
+      <td>${roleBadge}  </td>
+      <td>${premiumBadge} </td>
       <td>
         <button class="btn btn-sm" onclick="openUserModal(${u.id})">Edit</button>
         <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
@@ -1417,9 +1423,12 @@
             document.getElementById('u-role').value = u.role || 'Customer';
             document.getElementById('u-password').value = '';
             document.getElementById('u-password2').value = '';
+            const premiumStatus = (u.isPremium === true || u.IsPremium === true);
+            document.getElementById('u-isPremium').checked = premiumStatus;
         } else {
             ['u-name', 'u-email', 'u-password', 'u-password2'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('u-role').value = 'Customer';
+            document.getElementById('u-isPremium').checked = false;
         }
         document.getElementById('user-modal').classList.add('open');
     }
@@ -1430,10 +1439,10 @@
         const pw = document.getElementById('u-password').value;
         const pw2 = document.getElementById('u-password2').value;
         const role = document.getElementById('u-role').value;
-
+        const isPremiumChecked = document.getElementById('u-isPremium').checked;
         if (!name || !email) { alert('Vui lòng nhập tên và email'); return; }
         if (!editUserId && pw !== pw2) { alert('Mật khẩu không khớp'); return; }
-        const userObj = { fullName: name, email: email, password: pw, role: role };
+        const userObj = { fullName: name, email: email, password: pw, role: role, IsPremium: isPremiumChecked};
         if (pw) {
             userObj.password = pw;
         }

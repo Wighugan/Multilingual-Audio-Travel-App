@@ -460,12 +460,6 @@
 </div>
 
 <script>
-    // 1. CẬP NHẬT DATABASE MẪU (THÊM ROLE VÀ ID)
-    const MOCK_USERS = [
-        { id: 1, email: 'admin@tourapp.vn', password: 'admin', name: 'Super Admin', role: 'Admin' },
-        { id: 2, email: 'chuquan@tourapp.vn', password: '123', name: 'Chủ quán Ốc Oanh', role: 'Owner' }
-    ];
-
     let pwVisible = false;
 
     function togglePw() {
@@ -490,13 +484,13 @@
         document.getElementById('password').classList.add('err');
     }
 
-    function doLogin() {
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
+    async function doLogin() {
+        const emailInput = document.getElementById('email').value.trim();
+        const passwordInput = document.getElementById('password').value;
         clearErr();
 
-        if (!email) { showErr('Please enter your email address.'); return; }
-        if (!password) { showErr('Please enter your password.'); return; }
+        if (!emailInput) { showErr('Please enter your email address.'); return; }
+        if (!passwordInput) { showErr('Please enter your password.'); return; }
 
         const btn = document.getElementById('login-btn');
         const spinner = document.getElementById('spinner');
@@ -505,22 +499,32 @@
         spinner.style.display = 'block';
         label.textContent = 'Signing in...';
 
-        // Giả lập thời gian load mạng (900ms)
-        setTimeout(() => {
-            // 2. TÌM USER TRONG DATABASE MẪU
-            const match = MOCK_USERS.find(a => a.email === email && a.password === password);
-            btn.disabled = false;
-            spinner.style.display = 'none';
-            label.textContent = 'Sign in';
+        try {
+            const response = await fetch('/api/users');
+            if (!response.ok) throw new Error("Không thể kết nối với Server API");
+
+            const users = await response.json();
+
+            const match = users.find(u =>
+                (u.email === emailInput || u.Email === emailInput) &&
+                (u.password === passwordInput || u.Password === passwordInput)
+            );
 
             if (match) {
-                // 3. LƯU THÔNG TIN PHÂN QUYỀN VÀO TRÌNH DUYỆT
-                localStorage.setItem('userId', match.id);
-                localStorage.setItem('userRole', match.role);
+                const userId = match.id || match.Id;
+                const userRole = match.role || match.Role || 'Customer';
+                const userEmail = match.email || match.Email;
+                const userName = match.fullName || match.FullName || 'User';
 
-                // Cập nhật giao diện màn hình thành công
-                document.getElementById('success-name').textContent = match.role === 'Admin' ? 'Signed in as Admin' : 'Signed in as Owner';
-                document.getElementById('success-email').textContent = match.email;
+                localStorage.setItem('userId', userId);
+                localStorage.setItem('userRole', userRole);
+
+                let roleDisplay = 'Customer';
+                if (userRole === 'Admin') roleDisplay = 'Admin';
+                if (userRole === 'Owner') roleDisplay = 'Owner';
+
+                document.getElementById('success-name').textContent = `Signed in as ${roleDisplay} (${userName})`;
+                document.getElementById('success-email').textContent = userEmail;
 
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('success-screen').style.display = 'block';
@@ -529,7 +533,13 @@
                 document.getElementById('password').value = '';
                 document.getElementById('password').focus();
             }
-        }, 900);
+        } catch (error) {
+            showErr("Lỗi Server: " + error.message);
+        } finally {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            label.textContent = 'Sign in';
+        }
     }
 
     function backToLogin() {

@@ -19,10 +19,11 @@ namespace TravelApp.WebAdmin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPois([FromQuery] int userId = 0, [FromQuery] string role = "")
         {
-            if (role == "Owner")
+            var query = _context.Pois.AsQueryable();
+
+            if (role == "Owner" && userId > 0)
             {
-                var myPois = await _context.Pois.Where(p => p.OwnerId == userId).ToListAsync();
-                return Ok(myPois);
+                query = query.Where(p => p.OwnerId == userId);
             }
 
             var allPois = await _context.Pois.ToListAsync();

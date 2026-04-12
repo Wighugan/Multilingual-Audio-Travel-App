@@ -896,13 +896,18 @@
             const response = await fetch(`/api/pois?userId=${currentUserId}&role=${currentRole}`);
             const rawData = await response.json();
 
-            // Phiên dịch cho HTML
-            POIS = rawData.map(p => {
-                let transObj = {};
-                if (p.translationsJson) {
-                    let parsed = JSON.parse(p.translationsJson); // Biến String thành Object
+            let dataToDisplay = rawData;
+            if (currentRole === "Owner") {
+                dataToDisplay = rawData.filter(p => (p.ownerId || p.OwnerId) == currentUserId);
+            }
 
-                    // Đổi Name (C#) thành name (HTML)
+            // Phiên dịch cho HTML
+            POIS = dataToDisplay.map(p => {
+                let transObj = {};
+                const jsonString = p.translationsJson || p.TranslationsJson;
+
+                if (jsonString) {
+                    let parsed = JSON.parse(jsonString);
                     for (let lang in parsed) {
                         transObj[lang] = {
                             name: parsed[lang].Name || parsed[lang].name,
@@ -920,7 +925,7 @@
                     priority: p.priority,
                     cooldown: p.cooldownMinutes, // Dịch cooldownMinutes -> cooldown
                     translations: transObj,       // Gắn cục đa ngôn ngữ đã dịch vào
-                    ownerId: p.ownerId
+                    ownerId: p.ownerId || p.OwnerId
                 };
             });
 
@@ -1247,7 +1252,7 @@
         const modal = document.getElementById('poi-modal');
         const fileInput = document.getElementById('poi-file-upload');
         const ownerSelect = document.getElementById('poi-owner');
-        const owners = USERS.filter(u => u.role === 'Owner');
+        const owners = USERS.filter(u => u.role === 'Owner' || u.Role === 'Owner');       
         ownerSelect.innerHTML = '<option value="">-- Thêm chủ quán --</option>' +
             owners.map(o => `<option value="${o.id}">${o.fullName} (${o.email})</option>`).join('');
         

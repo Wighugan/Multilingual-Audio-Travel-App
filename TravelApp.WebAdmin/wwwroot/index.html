@@ -595,7 +595,7 @@
             Accounts
             <span class="nav-badge" id="user-nav-count">4</span>
         </div>
-        <div class="nav-item" onclick="navigate('feedback')">
+        <div class="nav-item" id="nav-feedback" onclick="navigate('feedback')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z" /></svg>
             Feedback
             <span class="nav-badge" id="feedback-nav-count">3</span>
@@ -643,7 +643,7 @@
                         <tbody id="dash-poi-table"></tbody>
                     </table>
                 </div>
-                <div class="card">
+                <div class="card" id="dash-feedback-card">
                     <div class="card-header">
                         <span class="card-title">Recent feedback</span>
                         <button class="btn btn-sm" onclick="navigate('feedback')">View all</button>
@@ -870,8 +870,10 @@
         document.getElementById("nav-accounts").style.display = "none";
         document.getElementById("nav-languages").style.display = "none";
 
-        document.getElementById("poi-menu-text").textContent = "Quán của tôi";
+        if (document.getElementById("nav-feedback")) document.getElementById("nav-feedback").style.display = "none";
+        if (document.getElementById("dash-feedback-card")) document.getElementById("dash-feedback-card").style.display = "none";
 
+        document.getElementById("poi-menu-text").textContent = "Quán của tôi";
         document.getElementById("btn-add-poi").style.display = "none";
     }
 

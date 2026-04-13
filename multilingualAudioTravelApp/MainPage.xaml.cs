@@ -382,6 +382,8 @@ public partial class MainPage : ContentPage
         }
         await StartListeningGps();
         StartBackgroundGeofenceTimer();
+        StartBackgroundGeofenceTimer(); // timer được tạo lại mỗi lần vào trang
+
         // Refresh POI để lấy data mới nhất từ DB
         await RefreshPoiLayerAsync();
 
@@ -407,6 +409,15 @@ public partial class MainPage : ContentPage
     {
         base.OnDisappearing();
         StopListeningGps();
+        StopSpeech();           // dừng audio ngay khi rời trang
+        StopGeofenceTimer();    // dừng timer
+    }
+
+    private void StopGeofenceTimer()
+    {
+        if (_geofenceTimer == null) return;
+        _geofenceTimer.Stop();
+        _geofenceTimer = null;  // reset để OnAppearing có thể tạo lại
     }
 
     // Hàm bắt đầu lắng nghe
@@ -559,7 +570,7 @@ public partial class MainPage : ContentPage
     }
     private void StartBackgroundGeofenceTimer()
     {
-        if (_geofenceTimer != null) return; // Tránh tạo nhiều đồng hồ
+       // if (_geofenceTimer != null) return; // Tránh tạo nhiều đồng hồ
 
         _geofenceTimer = Application.Current.Dispatcher.CreateTimer();
         _geofenceTimer.Interval = TimeSpan.FromSeconds(15);

@@ -26,6 +26,21 @@ public class PoiEntity  //POI
     private Dictionary<string, PoiTranslation> _parsedTranslations;
     
     [Ignore]
+    // Thêm property này vào trong PoiEntity class
+    private static string ImageBaseUrl
+    {
+        get
+        {
+            const string devIp = "192.168.1.74";
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+                return DeviceInfo.DeviceType == DeviceType.Virtual
+                    ? "http://10.0.2.2:5068/images/"
+                    : $"http://{devIp}:5068/images/";
+            return "http://localhost:5068/images/";
+        }
+    }
+
+    [Ignore]
     public string FullImageUrl
     {
         get
@@ -38,14 +53,11 @@ public class PoiEntity  //POI
             if (!firstImage.Contains("."))
                 return firstImage;
 
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                             ? "http://10.0.2.2:5068/images/"
-                             : "http://localhost:5068/images/";
-
-            return $"{baseUrl}{firstImage}";
+            return $"{ImageBaseUrl}{firstImage}"; // ← thay baseUrl bằng ImageBaseUrl
         }
     }
-    [Ignore]
+
+    
     public List<string> ImageUrls
     {
         get
@@ -57,15 +69,11 @@ public class PoiEntity  //POI
                 return list;
             }
 
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                             ? "http://10.0.2.2:5068/images/"
-                             : "http://localhost:5068/images/";
-
             var fileNames = Image.Split(',');
             foreach (var fileName in fileNames)
             {
                 if (fileName.Contains("."))
-                    list.Add($"{baseUrl}{fileName}");
+                    list.Add($"{ImageBaseUrl}{fileName}"); // ← thay baseUrl bằng ImageBaseUrl
                 else
                     list.Add(fileName);
             }
@@ -156,9 +164,21 @@ public class DatabaseService
 {
     private SQLiteAsyncConnection _db;
     private readonly string _dbPath;
-    private string ApiBaseUrl => DeviceInfo.Platform == DevicePlatform.Android
-        ? "http://10.0.2.2:5068"
-        : "http://localhost:5068";
+    private string ApiBaseUrl
+    {
+        get
+        {
+            const string devIp = "192.168.1.74"; // IP máy bạn
+
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                return DeviceInfo.DeviceType == DeviceType.Virtual
+                    ? "http://10.0.2.2:5068"
+                    : $"http://{devIp}:5068";
+            }
+            return "http://localhost:5068";
+        }
+    }
 
     public DatabaseService()
     {
@@ -187,16 +207,14 @@ public class DatabaseService
         {
             using var client = new HttpClient();
 
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                             ? "http://10.0.2.2:5068"
-                             : "http://localhost:5068";
+            
 
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
             // Gọi lên Web API để xin danh sách quán ăn
-            var poisFromServer = await client.GetFromJsonAsync<List<PoiEntity>>($"{baseUrl}/api/pois");
+            var poisFromServer = await client.GetFromJsonAsync<List<PoiEntity>>($"{ApiBaseUrl}/api/pois");
 
             if (poisFromServer != null && poisFromServer.Count > 0)
             {
@@ -395,16 +413,15 @@ public class DatabaseService
         try
         {
             using var client = new HttpClient();
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5068" : "http://localhost:5068";
 
             // kéo danh sách về để check trùng email
-            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{baseUrl}/api/users");
+            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{ApiBaseUrl}/api/users");
             if (users != null && users.Any(u => u.Email == email))
                 return false; // Email đã tồn tại
 
             // đóng gói và gửi lệnh post tạo mới
             var newUser = new UserEntity { Email = email, Password = password, FullName = fullName };
-            var response = await client.PostAsJsonAsync($"{baseUrl}/api/users", newUser);
+            var response = await client.PostAsJsonAsync($"{ApiBaseUrl}/api/users", newUser);
 
             return response.IsSuccessStatusCode;
         }
@@ -421,10 +438,9 @@ public class DatabaseService
         try
         {
             using var client = new HttpClient();
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                ? "http://10.0.2.2:5068" : "http://localhost:5068";
+            
 
-            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{baseUrl}/api/users");
+            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{ApiBaseUrl}/api/users");
             var user = users?.FirstOrDefault(u => u.Email == email && u.Password == password);
 
             // ── Sau khi login thành công, đồng bộ Premium về Preferences ──
@@ -450,9 +466,8 @@ public class DatabaseService
         try
         {
             using var client = new HttpClient();
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5068" : "http://localhost:5068";
 
-            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{baseUrl}/api/users");
+            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{ApiBaseUrl}/api/users");
             var user = users?.FirstOrDefault(u => u.Email == currentEmail);
 
             if (user == null) return false;
@@ -462,7 +477,7 @@ public class DatabaseService
             user.Email = newEmail;
             if (!string.IsNullOrEmpty(newPassword)) user.Password = newPassword;
 
-            var response = await client.PutAsJsonAsync($"{baseUrl}/api/users/{user.Id}", user);
+            var response = await client.PutAsJsonAsync($"{ApiBaseUrl}/api/users/{user.Id}", user);
 
             if (response.IsSuccessStatusCode)
             {
@@ -582,7 +597,6 @@ public class DatabaseService
         try
         {
             using var client = new HttpClient();
-            string baseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5068" : "http://localhost:5068";
 
             var newFeedback = new FeedbackEntity
             {
@@ -592,7 +606,7 @@ public class DatabaseService
                 CreatedAt = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
             };
 
-            var response = await client.PostAsJsonAsync($"{baseUrl}/api/feedbacks", newFeedback);
+            var response = await client.PostAsJsonAsync($"{ApiBaseUrl}/api/feedbacks", newFeedback);
 
             if (response.IsSuccessStatusCode)
             {

@@ -176,6 +176,7 @@ public class DatabaseService
         await _db.CreateTableAsync<UserEntity>();
         await _db.CreateTableAsync<FavoriteEntity>();
         await _db.CreateTableAsync<FeedbackEntity>();
+        await _db.CreateTableAsync<LanguageEntity>();
         var count = await _db.Table<PoiEntity>().CountAsync();
         if (count == 0)
             await SeedDataAsync();
@@ -603,5 +604,14 @@ public class DatabaseService
         {
             System.Diagnostics.Debug.WriteLine($"Lỗi gửi Feedback: {ex.Message}");
         }
+    }
+
+    public class LanguageEntity
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Flag { get; set; } 
     }
 }

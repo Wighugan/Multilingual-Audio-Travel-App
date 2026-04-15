@@ -885,13 +885,7 @@
         setTimeout(() => toast.classList.remove("show"), 3000);
     }
 
-    const LANGS = [
-        { code: 'vi', name: 'Vietnamese', flag: '🇻🇳' },
-        { code: 'en', name: 'English', flag: '🇬🇧' },
-        { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
-        { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
-        { code: 'ko', name: 'Korean', flag: '🇰🇷' },
-    ];
+    let LANGS = [];
 
     async function loadDataFromServer() {
         try {
@@ -958,6 +952,8 @@
     loadUsersFromServer();
     loadFeedbacksFromServer();
     loadDataFromServer();
+    loadLanguagesFromServer();
+
     let POIS = [];
     let USERS = [];
     let FEEDBACKS = [];
@@ -1501,33 +1497,115 @@
         loadFeedbacksFromServer();
     }
 
-    function addLanguage() {
+    async function loadLanguagesFromServer() {
+        try {
+            const res = await fetch('/api/languages');
+            if (res.ok) {
+                LANGS = await res.json();
+                LANGS = LANGS.map(l => ({
+                    id: l.id || l.Id,
+                    code: (l.code || l.Code).toLowerCase(),
+                    name: l.name || l.Name,
+                    flag: l.flag || l.Flag || '🌐'
+                }));
+            } else {
+                throw new Error("API chưa sẵn sàng");
+            }
+        } catch (e) {
+            console.warn("Chưa có API Languages, đang dùng data dự phòng...");
+            LANGS = [
+                { code: 'vi', name: 'Vietnamese', flag: '🇻🇳' },
+                { code: 'en', name: 'English', flag: '🇬🇧' },
+                { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
+                { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
+                { code: 'ko', name: 'Korean', flag: '🇰🇷' }
+            ];
+        }
+        renderLangGrid();
+        buildLangTabs();
+        initDashboard();
+    }
+
+    async function addLanguage() {
         const name = document.getElementById('new-lang-name').value.trim();
         const code = document.getElementById('new-lang-code').value.trim().toLowerCase();
         const flag = document.getElementById('new-lang-flag').value.trim();
-        if (!name || !code) { alert('Name and code are required'); return; }
-        if (LANGS.find(l => l.code === code)) { alert('Language code already exists'); return; }
-        LANGS.push({ code, name, flag: flag || '🌐' });
-        document.getElementById('new-lang-name').value = '';
-        document.getElementById('new-lang-code').value = '';
-        document.getElementById('new-lang-flag').value = '';
-        renderLangGrid();
-        initDashboard();
+
+        if (!name || !code) { alert('Vui lòng nhập tên và mã ngôn ngữ'); return; }
+        if (LANGS.find(l => l.code === code)) { alert('Mã ngôn ngữ này đã tồn tại!'); return; }
+
+        const newLang = { Code: code, Name: name, Flag: flag || '🌐' };
+
+        try {
+            const response = await fetch('/api/languages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newLang)
+            });
+
+            if (response.ok) {
+                document.getElementById('new-lang-name').value = '';
+                document.getElementById('new-lang-code').value = '';
+                document.getElementById('new-lang-flag').value = '';
+                showToast("Đã thêm ngôn ngữ thành công!");
+                await loadLanguagesFromServer(); // Tải lại danh sách
+            } else {
+                // Nếu chưa có API, tạm thời push vào mảng local
+                LANGS.push({ code, name, flag: flag || '🌐' });
+                renderLangGrid();
+                buildLangTabs();
+                initDashboard();
+                showToast("(Dự phòng) Đã thêm tạm thời!");
+            }
+        } catch (e) {
+            alert("Lỗi kết nối Server API!");
+        }
     }
 
-    function deleteLang(code) {
-        if (!confirm(`Remove language "${code}"? This will not delete existing translations.`)) return;
-        const idx = LANGS.findIndex(l => l.code === code);
-        LANGS.splice(idx, 1);
-        renderLangGrid();
-        initDashboard();
+    async function deleteLang(code) {
+        if (!confirm(`Bạn có chắc muốn xóa ngôn ngữ "${code}"?`)) return;
+
+        const langToDelete = LANGS.find(l => l.code === code);
+
+        try {
+            // Nếu có ID (tức là lấy từ DB lên) thì gọi API xóa
+            if (langToDelete && langToDelete.id) {
+                await fetch('/api/languages/' + langToDelete.id, { method: 'DELETE' });
+                await loadLanguagesFromServer();
+                showToast("Đã xóa ngôn ngữ!");
+            } else {
+                // Xóa mảng local nếu đang xài data dự phòng
+                const idx = LANGS.findIndex(l => l.code === code);
+                LANGS.splice(idx, 1);
+                renderLangGrid();
+                buildLangTabs();
+                initDashboard();
+            }
+        } catch (e) {
+            alert("Lỗi khi xóa ngôn ngữ!");
+        }
     }
 
-    function editLang(code) {
+    async function editLang(code) {
         const l = LANGS.find(x => x.code === code);
-        const newName = prompt('Language name:', l.name);
-        if (newName) l.name = newName.trim();
-        renderLangGrid();
+        const newName = prompt('Nhập tên ngôn ngữ mới:', l.name);
+
+        if (newName && newName.trim() !== "") {
+            try {
+                if (l.id) {
+                    const updatedLang = { Id: l.id, Code: l.code, Name: newName.trim(), Flag: l.flag };
+                    await fetch('/api/languages/' + l.id, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedLang)
+                    });
+                    await loadLanguagesFromServer();
+                } else {
+                    l.name = newName.trim();
+                    renderLangGrid();
+                }
+            } catch (e) { alert("Lỗi khi cập nhật!"); }
+        }
     }
 
     function closeModal(id) {

@@ -1,4 +1,6 @@
-﻿namespace multilingualAudioTravelApp
+﻿using multilingualAudioTravelApp.Services;
+
+namespace multilingualAudioTravelApp
 {
     public partial class App : Application
     {
@@ -33,6 +35,34 @@
                 }
             }
         }
+        protected override async void OnSleep()
+        {
+            base.OnSleep();
 
+            int userId = Preferences.Get("userId", 0);
+            if (userId > 0)
+            {
+                var signalR = IPlatformApplication.Current?.Services.GetService<SignalRService>();
+                if (signalR != null)
+                {
+                    await signalR.DisconnectAsync(userId);
+                }
+            }
+        }
+
+        protected override async void OnResume()
+        {
+            base.OnResume();
+
+            int userId = Preferences.Get("userId", 0);
+            if (userId > 0)
+            {
+                var signalR = IPlatformApplication.Current?.Services.GetService<SignalRService>();
+                if (signalR != null)
+                {
+                    await signalR.ConnectAsync(userId);
+                }
+            }
+        }
     }
 }

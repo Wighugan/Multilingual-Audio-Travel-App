@@ -1,12 +1,31 @@
-﻿namespace multilingualAudioTravelApp;
+﻿using System.Xml;
+using multilingualAudioTravelApp.Services;
+
+namespace multilingualAudioTravelApp;
 
 public partial class ProfilePage : ContentPage
 {
+        private readonly SignalRService _signalR;
+        private readonly DatabaseService _dbService = new DatabaseService();
     public ProfilePage()
     {
         InitializeComponent();
         BindingContext = new ProfileViewModel();
-        _stars = new List<Label> { S1, S2, S3, S4, S5 }; 
+        _stars = new List<Label> { S1, S2, S3, S4, S5 };
+        _signalR = IPlatformApplication.Current?.Services.GetService<SignalRService>();
+
+        // 2. Bọc thêm lệnh if để đảm bảo an toàn tuyệt đối
+        if (_signalR != null)
+        {
+            // Đăng ký: "Khi có thông báo cập nhật, hãy chạy hàm RefreshData"
+            _signalR.OnProfileUpdated += async (userId) => {
+                int currentUserId = Preferences.Get("userId", 0);
+                if (userId == currentUserId)
+                {
+                    await RefreshData();
+                }
+            };
+        }
 
     }
     private async void OnPremiumBannerTapped(object sender, TappedEventArgs e)
@@ -81,15 +100,16 @@ public partial class ProfilePage : ContentPage
         if (!confirm) return;
 
         // Xóa Premium của email này khỏi Preferences
-        var email = Preferences.Get("userEmail", "");
-        Preferences.Remove($"IsPremium_{email}");
-        Preferences.Remove($"PremiumToken_{email}");
-        Preferences.Remove($"PremiumExpiry_{email}");
+        int userId = Preferences.Get("userId", 0);
+        var signalR = IPlatformApplication.Current?.Services.GetService<SignalRService>();
 
-        // Xóa thông tin đăng nhập
-        Preferences.Remove("isLoggedIn");
-        Preferences.Remove("userEmail");
-        Preferences.Remove("userName");
+        if (signalR != null && userId > 0)
+        {
+            // 1. Báo Offline và ngắt kết nối TRƯỚC
+            await signalR.DisconnectAsync(userId);
+        }
+
+        Preferences.Clear();
 
         Application.Current.MainPage = new NavigationPage(new LoginPage());
     }
@@ -97,8 +117,6 @@ public partial class ProfilePage : ContentPage
 
     private int _feedbackRating = 0;
     private List<Label> _stars;
-
-   
 
     // Mở popup feedback
     private async Task ShowFeedbackPopup()
@@ -152,5 +170,19 @@ public partial class ProfilePage : ContentPage
             "OK");
     }
 
+    private async Task RefreshData()
+    {
+        int userId = Preferences.Get("userId", 0);
+        var updatedUser = await _dbService.GetUserByIdAsync(userId); // Lấy theo ID
 
+        if (updatedUser != null)
+        {
+            // Cập nhật lại TOÀN BỘ thông tin mới vào bộ nhớ
+            Preferences.Set("userName", updatedUser.FullName);
+            Preferences.Set("userEmail", updatedUser.Email); // Cập nhật Email mới ở đây
+
+            // Reset lại ViewModel để hiển thị lên màn hình
+            BindingContext = new ProfileViewModel();
+        }
+    }
 }

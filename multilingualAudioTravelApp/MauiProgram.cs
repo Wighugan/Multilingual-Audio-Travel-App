@@ -1,6 +1,7 @@
-﻿using SkiaSharp.Views.Maui.Controls.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using multilingualAudioTravelApp.Services;
 using Plugin.LocalNotification;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using ZXing.Net.Maui.Controls;
 
@@ -25,7 +26,7 @@ namespace multilingualAudioTravelApp
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-
+            builder.Services.AddSingleton<SignalRService>();
             return builder.Build();
         }
     }

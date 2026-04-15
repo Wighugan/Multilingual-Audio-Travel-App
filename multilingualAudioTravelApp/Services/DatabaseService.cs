@@ -1,7 +1,9 @@
 ﻿using SQLite;
+using System.Buffers.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using static multilingualAudioTravelApp.Services.PoiEntity;
-using System.Net.Http.Json;
 
 
 namespace multilingualAudioTravelApp.Services;
@@ -164,6 +166,8 @@ public class DatabaseService
 {
     private SQLiteAsyncConnection _db;
     private readonly string _dbPath;
+    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly string baseUrl = "http://10.0.2.2:5068";
     private string ApiBaseUrl
     {
         get
@@ -619,7 +623,46 @@ public class DatabaseService
             System.Diagnostics.Debug.WriteLine($"Lỗi gửi Feedback: {ex.Message}");
         }
     }
+    public async Task<UserEntity> GetUserByEmailAsync(string email)
+    {
+        try
+        {
+            // Gọi lên Web API để lấy danh sách toàn bộ User
+            var response = await _httpClient.GetAsync($"{baseUrl}/api/users");
 
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+
+                // Giải mã JSON thành danh sách (Lưu ý: Nếu App của bạn dùng tên class là User thay vì UserEntity thì nhớ đổi lại nhé)
+                var users = System.Text.Json.JsonSerializer.Deserialize<List<UserEntity>>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                // Tìm và trả về đúng người dùng có email trùng khớp
+                return users?.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"LỖI GetUserByEmail: {ex.Message}");
+        }
+
+        return null;
+    }
+
+    public async Task<UserEntity> GetUserByIdAsync(int userId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"{baseUrl}/api/users/{userId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<UserEntity>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+        }
+        catch (Exception ex) { /* Log lỗi */ }
+        return null;
+    }
     public class LanguageEntity
     {
         [PrimaryKey, AutoIncrement]

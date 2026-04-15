@@ -29,7 +29,9 @@ namespace TravelApp.WebAdmin.Models
             public bool IsPremium { get; set; } = false;
             public string? PremiumToken { get; set; }
             public string? PremiumExpiry { get; set; }
-        
+            public bool IsOnline { get; set; } = false;
+            public DateTime? LastActive { get; set; }
+
     }
 
     public class FavoriteEntity

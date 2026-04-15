@@ -1,6 +1,8 @@
 ﻿<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
 <style>
     * {
         box-sizing: border-box;
@@ -551,6 +553,22 @@
             transform: translateY(0);
             opacity: 1;
         }
+    .status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    .status-online {
+        background-color: #1D9E75;
+        box-shadow: 0 0 6px rgba(29, 158, 117, 0.6); /* Hiệu ứng phát sáng nhẹ */
+    }
+
+    .status-offline {
+        background-color: #b0b0b0;
+    }
 </style>
 
 <div id="app">
@@ -732,7 +750,7 @@
                 </div>
                 <table>
                     <thead>
-                        <tr><th>User</th><th>Email</th><th>Status</th><th>Account Type</th><<th>Premium</th><th>Actions</th></tr>
+                        <tr><th>User</th><th>Email</th><th>Status</th><th>Account Type</th><th>Premium</th><th>Actions</th></tr>
                     </thead>
                     <tbody id="users-table"></tbody>
                 </table>
@@ -861,6 +879,29 @@
 <div id="toast">Lưu thành công!</div>
 
 <script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5068/apphub")
+        .build();
+
+    connection.on("ReceiveUserStatus", (userId, isOnline) => {
+        const user = USERS.find(u => u.id == userId || u.Id == userId);
+        if (user) {
+            user.isOnline = isOnline;
+            user.IsOnline = isOnline;
+            renderUsersTable();
+            showToast(isOnline ? `${user.fullName} vừa online!` : `${user.fullName} đã offline`);
+        }
+    });
+
+    connection.on("ReceiveProfileUpdate", async (userId) => {
+        await loadUsersFromServer();
+        showToast("Dữ liệu vừa được cập nhật từ thiết bị khác!");
+    });
+
+    connection.start().then(() => {
+        console.log("Đã kết nối SignalR thành công!");
+    }).catch(err => console.error("Lỗi kết nối SignalR:", err));
+
     const currentRole = localStorage.getItem("userRole"); 
     const currentUserId = localStorage.getItem("userId");
     if (!currentRole) {
@@ -1141,6 +1182,11 @@
             let roleBadge = `<span class="badge badge-gray">Customer</span>`;
             if (u.role === 'Admin') roleBadge = `<span class="badge badge-amber">Admin</span>`;
             if (u.role === 'Owner') roleBadge = `<span class="badge badge-blue">Owner</span>`;
+
+            const isOnline = u.IsOnline === true || u.isOnline === true;
+            const statusHtml = isOnline
+                ? `<span class="status-dot status-online"></span><span style="color:#1D9E75; font-size:12px; font-weight:500;">Online</span>`
+                : `<span class="status-dot status-offline"></span><span style="color:var(--color-text-secondary); font-size:12px;">Offline</span>`;
             return `<tr>
       <td>
         <div style="display:flex;align-items:center;gap:10px;">
@@ -1149,7 +1195,7 @@
         </div>
       </td>
       <td style="font-size:13px;color:var(--color-text-secondary)">${u.email || ''}</td>
-      <td><span class="badge badge-green">Active</span></td>
+      <td>${statusHtml}</td>
       <td>${roleBadge}  </td>
       <td>${premiumBadge} </td>
       <td>
@@ -1483,6 +1529,7 @@
         } catch (error) {
             alert("Lỗi kết nối với Web API: " + error.message);
         }
+        connection.invoke("NotifyProfileUpdated", userObj.id);
     }
 
     async function deleteUser(id) {

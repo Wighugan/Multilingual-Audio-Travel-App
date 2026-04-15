@@ -32,6 +32,13 @@ public partial class LoginPage : ContentPage
             Preferences.Set("isLoggedIn", true);
             Preferences.Set("userEmail", user.Email);
             Preferences.Set("userName", user.FullName);
+            Preferences.Set("userId", user.Id);
+
+            var signalR = Handler.MauiContext.Services.GetService<SignalRService>();
+            if (signalR != null)
+            {
+                await signalR.ConnectAsync(user.Id);
+            }
 
             Application.Current.MainPage = new AppShell();
         }

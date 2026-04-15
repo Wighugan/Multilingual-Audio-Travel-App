@@ -279,6 +279,108 @@
   <data name="AskFullInfo" xml:space="preserve">
     <value>Vui lòng điền đầy đủ thông tin.</value>
   </data>
+  <data name="MyQR" xml:space="preserve">
+    <value>QR của tôi</value>
+  </data>
+  <data name="MyQRDesc" xml:space="preserve">
+    <value>Hiện mã QR Premium cá nhân</value>
+  </data>
+  <data name="MyQRTitle" xml:space="preserve">
+    <value>Mã QR Premium của bạn</value>
+  </data>
+  <data name="MyQRSubtitle" xml:space="preserve">
+    <value>Quét mã này để nghe thuyết minh không giới hạn</value>
+  </data>
+  <data name="PremiumBannerTitle" xml:space="preserve">
+    <value>Nâng cấp Premium</value>
+  </data>
+  <data name="PremiumBannerSubtitle" xml:space="preserve">
+    <value>Tham gia trả phí để mở khóa toàn bộ tính năng và nhận sự hỗ trợ của chúng tôi</value>
+  </data>
+  <data name="Unsave" xml:space="preserve">
+    <value>Bỏ lưu</value>
+  </data>
+  <data name="PremiumBadge" xml:space="preserve">
+    <value>⭐ PREMIUM</value>
+  </data>
+  <data name="ExpiryLabel" xml:space="preserve">
+    <value>Ngày hết hạn</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="RenewPremium" xml:space="preserve">
+    <value>Gia hạn Premium</value>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Gói Premium</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>Tính năng</value>
+  </data>
+  <data name="Free" xml:space="preserve">
+    <value>Miễn phí</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Trả phí</value>
+  </data>
+  <data name="Feature1" xml:space="preserve">
+    <value>Nghe thuyết minh các địa điểm miễn phí</value>
+  </data>
+  <data name="Feature2" xml:space="preserve">
+    <value>QR cá nhân để truy cập nhanh</value>
+  </data>
+  <data name="Feature3" xml:space="preserve">
+    <value>Ưu tiên cập nhật nội dung mới</value>
+  </data>
+  <data name="Feature4" xml:space="preserve">
+    <value>Hỗ trợ đặc biệt dành cho thành viên VIP</value>
+  </data>
+  <data name="PlanYear" xml:space="preserve">
+    <value>Theo năm</value>
+  </data>
+  <data name="PlanMonth" xml:space="preserve">
+    <value>Theo tháng</value>
+  </data>
+  <data name="PlanWeek" xml:space="preserve">
+    <value>Theo tuần</value>
+  </data>
+  <data name="SubscribeButton" xml:space="preserve">
+    <value>Đăng Ký</value>
+  </data>
+  <data name="BtnPremiumActivated" xml:space="preserve">
+    <value>✅ Đã kích hoạt Premium</value>
+  </data>
+  <data name="StatusPremiumActive" xml:space="preserve">
+    <value>Tài khoản của bạn đang ở gói Premium</value>
+  </data>
+  <data name="MsgSelectPlanTitle" xml:space="preserve">
+    <value>Chưa chọn gói</value>
+  </data>
+  <data name="MsgSelectPlanBody" xml:space="preserve">
+    <value>Vui lòng chọn gói trước khi đăng ký.</value>
+  </data>
+  <data name="BtnProcessing" xml:space="preserve">
+    <value>⏳ Đang xử lý...</value>
+  </data>
+  <data name="MsgActivatedTitle" xml:space="preserve">
+    <value>Thành công</value>
+  </data>
+  <data name="MsgActivatedBody" xml:space="preserve">
+    <value>Bạn đã kích hoạt gói Premium!\nVào Profile → 'QR của tôi' để xem mã QR.</value>
+  </data>
+  <data name="StatusActivated" xml:space="preserve">
+    <value>🎉 Kích hoạt thành công!</value>
+  </data>
+  <data name="ScanQR" xml:space="preserve">
+    <value>Quét QR</value>
+  </data>
+  <data name="PremiumListTitle" xml:space="preserve">
+    <value>⭐ Danh sách quán Premium</value>
+  </data>
+  <data name="PremiumListSubtitle" xml:space="preserve">
+    <value>Bấm vào quán để nghe thuyết minh</value>
+  </data>
   <data name="CreateAccSuccess" xml:space="preserve">
     <value>Tạo tài khoản thành công! Vui lòng đăng nhập</value>
   </data>

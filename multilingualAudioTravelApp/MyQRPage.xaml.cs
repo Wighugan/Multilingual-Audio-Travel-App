@@ -17,6 +17,16 @@ namespace multilingualAudioTravelApp
         {
             base.OnAppearing();
 
+            // Set localized UI texts
+            MyQRTitleLabel.Text = Languages.AppStrings.MyQRTitle;
+            MyQRSubtitleLabel.Text = Languages.AppStrings.MyQRSubtitle;
+            PremiumBadgeLabel.Text = Languages.AppStrings.PremiumBadge;
+            MyQRExpiryLabel.Text = Languages.AppStrings.ExpiryLabel;
+            MyQRStatusLabel.Text = Languages.AppStrings.StatusLabel;
+            RenewButton.Text = Languages.AppStrings.RenewPremium;
+            // set page title
+            this.Title = Languages.AppStrings.MyQRTitle;
+
             var email = Preferences.Get("userEmail", "");
             var token = Preferences.Get($"PremiumToken_{email}", "");
             var expiry = Preferences.Get($"PremiumExpiry_{email}", "");

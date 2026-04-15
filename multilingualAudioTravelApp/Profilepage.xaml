@@ -64,10 +64,8 @@
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                         <Label Text="💎" FontSize="32" VerticalOptions="Center"/>
                         <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Nâng cấp Premium"
-                                   FontSize="15" FontAttributes="Bold" TextColor="Black"/>
-                            <Label Text="Tham gia trả phí để mở khóa toàn bộ tính năng và nhận sự hỗ trợ của chúng tôi"
-                                   FontSize="12" TextColor="Black"/>
+                            <Label x:Name="PremiumBannerTitleLabel" Text="" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
+                            <Label x:Name="PremiumBannerSubtitleLabel" Text="" FontSize="12" TextColor="Black"/>
                         </VerticalStackLayout>
                         <Label Grid.Column="2" Text="›"
                                FontSize="22" TextColor="#E65100"

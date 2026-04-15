@@ -46,8 +46,8 @@ public class ProfileViewModel
 
             new ProfileMenu { 
                 Key = "myqr", 
-                Title = "QR của tôi", 
-                Description = "Hiện mã QR Premium cá nhân" },
+                Title = multilingualAudioTravelApp.Languages.AppStrings.MyQR, 
+                Description = multilingualAudioTravelApp.Languages.AppStrings.MyQRDesc },
             new ProfileMenu
             {
                 Key = "feedback",

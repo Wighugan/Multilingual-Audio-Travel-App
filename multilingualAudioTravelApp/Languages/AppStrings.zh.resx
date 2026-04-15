@@ -62,6 +62,81 @@
 	<data name="AskFullInfo" xml:space="preserve">
     <value>请填写完整信息。</value>
   </data>
+ <data name="MyQR" xml:space="preserve">
+	<value>我的 QR</value>
+  </data>
+	<data name="MyQRDesc" xml:space="preserve">
+	<value>显示个人 Premium 二维码</value>
+  </data>
+  <data name="MyQRTitle" xml:space="preserve">
+	<value>您的 Premium 二维码</value>
+  </data>
+  <data name="MyQRSubtitle" xml:space="preserve">
+	<value>向工作人员出示此码以解锁无限旁白</value>
+  </data>
+  <data name="PremiumBannerTitle" xml:space="preserve">
+	<value>升级到 Premium</value>
+  </data>
+  <data name="PremiumBannerSubtitle" xml:space="preserve">
+	<value>加入付费计划以解锁全部功能并获得我们的支持</value>
+  </data>
+  <data name="PremiumBadge" xml:space="preserve">
+	<value>⭐ PREMIUM</value>
+  </data>
+  <data name="ExpiryLabel" xml:space="preserve">
+	<value>到期日</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+	<value>状态</value>
+  </data>
+  <data name="RenewPremium" xml:space="preserve">
+	<value>续订 Premium</value>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+	<value>Premium 方案</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+	<value>功能</value>
+  </data>
+  <data name="Free" xml:space="preserve">
+	<value>免费</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+	<value>付费</value>
+  </data>
+  <data name="Feature1" xml:space="preserve">
+	<value>收听免费地点旁白</value>
+  </data>
+  <data name="Feature2" xml:space="preserve">
+	<value>个人二维码快速访问</value>
+  </data>
+  <data name="Feature3" xml:space="preserve">
+	<value>优先获取新内容更新</value>
+  </data>
+  <data name="Feature4" xml:space="preserve">
+	<value>VIP 会员的特别支持</value>
+  </data>
+  <data name="PlanYear" xml:space="preserve">
+	<value>按年</value>
+  </data>
+  <data name="PlanMonth" xml:space="preserve">
+	<value>按月</value>
+  </data>
+  <data name="PlanWeek" xml:space="preserve">
+	<value>按周</value>
+  </data>
+  <data name="SubscribeButton" xml:space="preserve">
+	<value>订阅</value>
+  </data>
+  <data name="ScanQR" xml:space="preserve">
+	<value>扫描 QR</value>
+  </data>
+  <data name="PremiumListTitle" xml:space="preserve">
+	<value>⭐ Premium 场所列表</value>
+  </data>
+  <data name="PremiumListSubtitle" xml:space="preserve">
+	<value>点击查看旁白</value>
+  </data>
 	<data name="AskLogIn" xml:space="preserve">
     <value>已有账号？登录</value>
   </data>

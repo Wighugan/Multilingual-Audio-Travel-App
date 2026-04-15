@@ -83,7 +83,7 @@
                                     <TapGestureRecognizer Tapped="OnRemoveFavoriteTapped" CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>
                                 <Label
-                                    Text="Bỏ lưu"
+                                    Text="{x:Static lang:AppStrings.Unsave}"
                                     TextColor="#E53935"
                                     FontSize="12"
                                     FontAttributes="Bold"
@@ -145,7 +145,7 @@
                                          CornerRadius="30" Padding="15" Aspect="AspectFit"
                                          Clicked="OnFavPopupPlayClicked"
                                          BackgroundColor="#E0E0E0"/>
-                            <Label Text="{x:Static lang:AppStrings.Play}"
+                            <Label x:Name="FavPlayLabel" Text="{x:Static lang:AppStrings.Play}"
                                    FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
                         </VerticalStackLayout>
 
@@ -156,7 +156,7 @@
                                          CornerRadius="30" Padding="15" Aspect="AspectFit"
                                          Clicked="OnFavPopupMapClicked"
                                          BackgroundColor="#E8F5E9"/>
-                            <Label Text="{x:Static lang:AppStrings.Map}"
+                            <Label x:Name="FavMapLabel" Text="{x:Static lang:AppStrings.Map}"
                                    FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
                         </VerticalStackLayout>
 
@@ -167,7 +167,7 @@
                                          CornerRadius="30" Padding="15" Aspect="AspectFit"
                                          Clicked="OnFavPopupCloseClicked"
                                          BackgroundColor="#FFE0E0"/>
-                            <Label Text="{x:Static lang:AppStrings.Close}"
+                            <Label x:Name="FavCloseLabel" Text="{x:Static lang:AppStrings.Close}"
                                    FontSize="11" TextColor="Gray" HorizontalOptions="Center"/>
                         </VerticalStackLayout>
 

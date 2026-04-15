@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="multilingualAudioTravelApp.PremiumPage"
-             Title="Gói Premium">
+             x:Class="multilingualAudioTravelApp.PremiumPage">
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="20">
 
-            <Label Text="Đăng ký gói Premium" FontSize="28"
+            <Label x:Name="PremiumMainTitle" Text="" FontSize="28"
                    FontAttributes="Bold" HorizontalOptions="Center"/>
 
             <!-- Bảng so sánh tính năng -->
@@ -16,17 +15,17 @@
           ColumnDefinitions="*,80,80">
 
                     <!-- Header -->
-                    <Label Grid.Row="0" Grid.Column="0" Text="Tính năng"
+                    <Label Grid.Row="0" Grid.Column="0" x:Name="FeaturesLabel" Text=""
                FontSize="13" TextColor="Black" FontAttributes="Bold" Padding="16,12"/>
-                    <Label Grid.Row="0" Grid.Column="1" Text="Miễn phí"
+                    <Label Grid.Row="0" Grid.Column="1" x:Name="FreeLabel" Text=""
                FontSize="13" TextColor="Black" HorizontalOptions="Center" FontAttributes="Bold" VerticalOptions="Center"/>
-                    <Label Grid.Row="0" Grid.Column="2" Text="Trả phí"
+                    <Label Grid.Row="0" Grid.Column="2" x:Name="PaidLabel" Text=""
                FontSize="13" TextColor="Black" FontAttributes="Bold"
                HorizontalOptions="Center" VerticalOptions="Center"/>
 
                     <!-- Dòng 1 -->
                     <Label Grid.Row="1" Grid.Column="0"
-               Text="Nghe thuyết minh các địa điểm miễn phí"
+               x:Name="Feature1Label" Text=""
                FontSize="13" Padding="16,14" LineBreakMode="WordWrap"/>
                     <Label Grid.Row="1" Grid.Column="1" Text="✔" TextColor="#1D9E75"
                HorizontalOptions="Center" VerticalOptions="Center" FontSize="16"/>
@@ -35,21 +34,21 @@
 
                     <!-- Dòng 2 -->
                     <Label Grid.Row="2" Grid.Column="0"
-               Text="QR cá nhân để truy cập nhanh"
+               x:Name="Feature2Label" Text=""
                FontSize="13" Padding="16,14" LineBreakMode="WordWrap"/>
                     <Label Grid.Row="2" Grid.Column="2" Text="✔" TextColor="#1D9E75"
                HorizontalOptions="Center" VerticalOptions="Center" FontSize="16"/>
 
                     <!-- Dòng 3 -->
                     <Label Grid.Row="3" Grid.Column="0"
-               Text="Ưu tiên cập nhật nội dung mới"
+               x:Name="Feature3Label" Text=""
                FontSize="13" Padding="16,14" LineBreakMode="WordWrap"/>
                     <Label Grid.Row="3" Grid.Column="2" Text="✔" TextColor="#1D9E75"
                HorizontalOptions="Center" VerticalOptions="Center" FontSize="16"/>
 
                     <!-- Dòng 4 -->
                     <Label Grid.Row="4" Grid.Column="0"
-               Text="Hỗ trợ đặc biệt dành cho thành viên VIP"
+               x:Name="Feature4Label" Text=""
                FontSize="13" Padding="16,14" LineBreakMode="WordWrap"/>
                     <Label Grid.Row="4" Grid.Column="2" Text="✔" TextColor="#1D9E75"
                HorizontalOptions="Center" VerticalOptions="Center" FontSize="16"/>
@@ -72,7 +71,7 @@
                         <Ellipse x:Name="RadioNam" WidthRequest="22" HeightRequest="22"
                      Stroke="#CCCCCC" StrokeThickness="1.5"
                      Fill="White" VerticalOptions="Center"/>
-                        <Label Grid.Column="1" Text="Theo năm"
+                        <Label Grid.Column="1" x:Name="PlanYearLabel" Text=""
                    FontSize="15" VerticalOptions="Center" Margin="12,0,0,0"/>
                         <Label Grid.Column="2" Text="330.000 VND"
                    FontSize="15" TextColor="Black" VerticalOptions="Center"/>
@@ -92,7 +91,7 @@
                         <Ellipse x:Name="RadioThang" WidthRequest="22" HeightRequest="22"
                      Stroke="#CCCCCC" StrokeThickness="1.5"
                      Fill="White" VerticalOptions="Center"/>
-                        <Label Grid.Column="1" Text="Theo tháng"
+                        <Label Grid.Column="1" x:Name="PlanMonthLabel" Text=""
                    FontSize="15" VerticalOptions="Center" Margin="12,0,0,0"/>
                         <Label Grid.Column="2" Text="101.000 VND"
                    FontSize="15" TextColor="Black" VerticalOptions="Center"/>
@@ -112,7 +111,7 @@
                         <Ellipse x:Name="RadioTuan" WidthRequest="22" HeightRequest="22"
                      Stroke="#CCCCCC" StrokeThickness="1.5"
                      Fill="White" VerticalOptions="Center"/>
-                        <Label Grid.Column="1" Text="Theo tuần"
+                        <Label Grid.Column="1" x:Name="PlanWeekLabel" Text=""
                    FontSize="15" VerticalOptions="Center" Margin="12,0,0,0"/>
                         <Label Grid.Column="2" Text="51.000 VND"
                    FontSize="15" TextColor="Black" VerticalOptions="Center"/>
@@ -122,7 +121,7 @@
             </VerticalStackLayout>
 
             <Button x:Name="BuyButton"
-                    Text="Đăng Ký"
+                    Text=""
                     BackgroundColor="Blue"
                     TextColor="White"
                     FontAttributes="Bold"

@@ -507,7 +507,14 @@ public class DatabaseService
                 $"{ApiBaseUrl}/api/favorites?userEmail={encodedEmail}");
 
             if (favorites != null)
+            {
+                // Normalize image URL for each favorite (server may return file name only)
+                foreach (var f in favorites)
+                {
+                    f.PoiImage = NormalizeFavoriteImage(f.PoiImage);
+                }
                 return favorites;
+            }
         }
         catch (Exception ex)
         {
@@ -515,9 +522,40 @@ public class DatabaseService
         }
 
         await InitAsync();
-        return await _db.Table<FavoriteEntity>()
+        var local = await _db.Table<FavoriteEntity>()
             .Where(f => f.UserEmail == userEmail)
             .ToListAsync();
+        // Normalize local entries as well
+        foreach (var f in local)
+            f.PoiImage = NormalizeFavoriteImage(f.PoiImage);
+        return local;
+    }
+
+    private string NormalizeFavoriteImage(string image)
+    {
+        if (string.IsNullOrWhiteSpace(image)) return "placeholder.png";
+        // If looks like full URL, return as-is
+        if (image.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            image.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return image;
+
+        // If it contains a dot assume it's a filename and prefix images base url
+        if (image.Contains('.'))
+        {
+            // build image base similar to PoiEntity.ImageBaseUrl
+            const string devIp = "192.168.1.74";
+            string baseUrl;
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+                baseUrl = DeviceInfo.DeviceType == DeviceType.Virtual
+                    ? "http://10.0.2.2:5068/images/"
+                    : $"http://{devIp}:5068/images/";
+            else
+                baseUrl = "http://localhost:5068/images/";
+
+            return baseUrl + image;
+        }
+
+        return image; // fallback
     }
 
     // Kiểm tra đã bookmark chưa

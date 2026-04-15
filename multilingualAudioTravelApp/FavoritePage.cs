@@ -21,6 +21,10 @@ public partial class FavoritePage : ContentPage
     {
         base.OnAppearing();
         await LoadFavorites();
+        // Update localized labels in popup in case language changed while page was inactive
+        FavPlayLabel.Text = Languages.AppStrings.Play;
+        FavMapLabel.Text = Languages.AppStrings.Map;
+        FavCloseLabel.Text = Languages.AppStrings.Close;
     }
 
     protected override void OnDisappearing()

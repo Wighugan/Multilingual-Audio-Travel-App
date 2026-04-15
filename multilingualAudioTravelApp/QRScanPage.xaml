@@ -3,8 +3,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+    xmlns:loc="clr-namespace:multilingualAudioTravelApp.Languages"
     x:Class="multilingualAudioTravelApp.QRScanPage"
-    Title="Quét QR"
+    Title="{x:Static loc:AppStrings.ScanQR}"
     BackgroundColor="Black">
 
     <Grid>
@@ -92,7 +93,7 @@
                                 Aspect="AspectFit"
                                 Clicked="OnResultPlayClicked"
                                 BackgroundColor="#E0E0E0" />
-                            <Label Text="Nghe" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                            <Label Text="{x:Static loc:AppStrings.Play}" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
@@ -105,7 +106,7 @@
                                 Aspect="AspectFit"
                                 Clicked="OnResultCloseClicked"
                                 BackgroundColor="#FFE0E0" />
-                            <Label Text="Đóng" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                            <Label Text="{x:Static loc:AppStrings.Close}" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
@@ -133,19 +134,19 @@
                            HasShadow="False" BorderColor="#E0E0E0">
                         <VerticalStackLayout Spacing="8">
                             <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Email" FontSize="13" TextColor="Gray"/>
+                                <Label Text="{x:Static loc:AppStrings.Email}" FontSize="13" TextColor="Gray"/>
                                 <Label x:Name="PremiumEmailLabel"
                                        Grid.Column="1" FontSize="13" FontAttributes="Bold"/>
                             </Grid>
                             <BoxView HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
                             <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Hết hạn" FontSize="13" TextColor="Gray"/>
+                                <Label Text="{x:Static loc:AppStrings.ExpiryLabel}" FontSize="13" TextColor="Gray"/>
                                 <Label x:Name="PremiumExpiryLabel"
                                        Grid.Column="1" FontSize="13" FontAttributes="Bold"/>
                             </Grid>
                             <BoxView HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
                             <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Trạng thái" FontSize="13" TextColor="Gray"/>
+                                <Label Text="{x:Static loc:AppStrings.StatusLabel}" FontSize="13" TextColor="Gray"/>
                                 <Label x:Name="PremiumStatusLabel"
                                        Grid.Column="1" FontSize="13" FontAttributes="Bold"/>
                             </Grid>
@@ -177,9 +178,9 @@
 
                     <!-- Header -->
                     <VerticalStackLayout Grid.Row="0" Padding="20,16" Spacing="4">
-                        <Label Text="⭐ Danh sách quán Premium"
+                    <Label Text="{x:Static loc:AppStrings.PremiumListTitle}"
                                FontSize="17" FontAttributes="Bold"/>
-                        <Label Text="Bấm vào quán để nghe thuyết minh"
+                        <Label Text="{x:Static loc:AppStrings.PremiumListSubtitle}"
                                FontSize="12" TextColor="Gray"/>
                     </VerticalStackLayout>
                     <BoxView Grid.Row="0" VerticalOptions="End"
@@ -246,7 +247,7 @@
                                                      CornerRadius="28" Padding="14"
                                                      BackgroundColor="#E0E0E0"
                                                      Clicked="OnPremiumPlayClicked"/>
-                                        <Label Text="Nghe" FontSize="11"
+                                        <Label Text="{x:Static loc:AppStrings.Play}" FontSize="11"
                                                TextColor="Gray" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
@@ -255,7 +256,7 @@
                                                      CornerRadius="28" Padding="14"
                                                      BackgroundColor="#FFE0E0"
                                                      Clicked="OnPremiumSpeakCloseClicked"/>
-                                        <Label Text="Đóng" FontSize="11"
+                                        <Label Text="{x:Static loc:AppStrings.Close}" FontSize="11"
                                                TextColor="Gray" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                 </HorizontalStackLayout>

@@ -220,6 +220,81 @@
 	<data name="AskFullInfo" xml:space="preserve">
     <value>모든 정보를 입력해 주세요.</value>
   </data>
+ <data name="MyQR" xml:space="preserve">
+	<value>내 QR</value>
+  </data>
+	<data name="MyQRDesc" xml:space="preserve">
+	<value>개인 프리미엄 QR 코드를 표시합니다</value>
+  </data>
+  <data name="MyQRTitle" xml:space="preserve">
+	<value>프리미엄 QR</value>
+  </data>
+  <data name="MyQRSubtitle" xml:space="preserve">
+	<value>무제한 내레이션을 위해 이 코드를 직원에게 보여주세요</value>
+  </data>
+  <data name="PremiumBannerTitle" xml:space="preserve">
+	<value>프리미엄으로 업그레이드</value>
+  </data>
+  <data name="PremiumBannerSubtitle" xml:space="preserve">
+	<value>유료 요금제에 가입하여 모든 기능을 잠금 해제하고 지원을 받으세요</value>
+  </data>
+  <data name="PremiumBadge" xml:space="preserve">
+	<value>⭐ PREMIUM</value>
+  </data>
+  <data name="ExpiryLabel" xml:space="preserve">
+	<value>만료일</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+	<value>상태</value>
+  </data>
+  <data name="RenewPremium" xml:space="preserve">
+	<value>프리미엄 갱신</value>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+	<value>프리미엄 요금제</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+	<value>기능</value>
+  </data>
+  <data name="Free" xml:space="preserve">
+	<value>무료</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+	<value>유료</value>
+  </data>
+  <data name="Feature1" xml:space="preserve">
+	<value>무료 장소 내레이션 듣기</value>
+  </data>
+  <data name="Feature2" xml:space="preserve">
+	<value>빠른 접근을 위한 개인 QR</value>
+  </data>
+  <data name="Feature3" xml:space="preserve">
+	<value>새 콘텐츠 업데이트 우선 제공</value>
+  </data>
+  <data name="Feature4" xml:space="preserve">
+	<value>VIP 회원을 위한 특별 지원</value>
+  </data>
+  <data name="PlanYear" xml:space="preserve">
+	<value>연간</value>
+  </data>
+  <data name="PlanMonth" xml:space="preserve">
+	<value>매월</value>
+  </data>
+  <data name="PlanWeek" xml:space="preserve">
+	<value>매주</value>
+  </data>
+  <data name="SubscribeButton" xml:space="preserve">
+	<value>구독</value>
+  </data>
+  <data name="ScanQR" xml:space="preserve">
+	<value>QR 스캔</value>
+  </data>
+  <data name="PremiumListTitle" xml:space="preserve">
+	<value>⭐ 프리미엄 POI 목록</value>
+  </data>
+  <data name="PremiumListSubtitle" xml:space="preserve">
+	<value>나레이션을 들으려면 항목을 탭하세요</value>
+  </data>
 	<data name="CreateAccSuccess" xml:space="preserve">
     <value>계정 생성 성공! 로그인해 주세요</value>
   </data>

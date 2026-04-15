@@ -2,20 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+             xmlns:loc="clr-namespace:multilingualAudioTravelApp.Languages"
              x:Class="multilingualAudioTravelApp.MyQRPage">
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="20" VerticalOptions="Center">
 
             <!-- Tiêu đề -->
-            <Label Text="Mã QR Premium của bạn"
-                   FontSize="22" FontAttributes="Bold"
-                   HorizontalOptions="Center"/>
+            <Label x:Name="MyQRTitleLabel" Text="" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
 
-            <Label Text="Quét mã này để nghe thuyết minh không giới hạn"
-                   FontSize="13" TextColor="Gray"
-                   HorizontalOptions="Center"
-                   HorizontalTextAlignment="Center"/>
+            <Label x:Name="MyQRSubtitleLabel" Text="" FontSize="13" TextColor="Gray" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
 
             <!-- Khung chứa QR -->
             <Frame CornerRadius="20" Padding="24"
@@ -34,16 +30,14 @@
                         BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"/>
 
                     <!-- Badge Premium -->
-                    <Border BackgroundColor="#1D9E75"
+                        <Border BackgroundColor="#1D9E75"
                             StrokeThickness="0"
                             HorizontalOptions="Center"
                             Padding="16,6">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
-                        <Label Text="⭐ PREMIUM"
-                               TextColor="White"
-                               FontSize="13" FontAttributes="Bold"/>
+                        <Label x:Name="PremiumBadgeLabel" Text="" TextColor="White" FontSize="13" FontAttributes="Bold"/>
                     </Border>
 
                 </VerticalStackLayout>
@@ -55,7 +49,7 @@
                 <VerticalStackLayout Spacing="8">
 
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Email" FontSize="13" TextColor="Gray"/>
+                        <Label Text="{x:Static loc:AppStrings.Email}" FontSize="13" TextColor="Gray"/>
                         <Label x:Name="EmailLabel" Grid.Column="1"
                                FontSize="13" FontAttributes="Bold"/>
                     </Grid>
@@ -63,7 +57,7 @@
                     <BoxView HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
 
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Ngày hết hạn" FontSize="13" TextColor="Gray"/>
+                        <Label x:Name="MyQRExpiryLabel" Text="" FontSize="13" TextColor="Gray"/>
                         <Label x:Name="ExpiryLabel" Grid.Column="1"
                                FontSize="13" FontAttributes="Bold" TextColor="#1D9E75"/>
                     </Grid>
@@ -71,7 +65,7 @@
                     <BoxView HeightRequest="0.5" BackgroundColor="#E0E0E0"/>
 
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Trạng thái" FontSize="13" TextColor="Gray"/>
+                        <Label x:Name="MyQRStatusLabel" Text="" FontSize="13" TextColor="Gray"/>
                         <Label x:Name="StatusLabel" Grid.Column="1"
                                FontSize="13" FontAttributes="Bold"/>
                     </Grid>
@@ -81,7 +75,7 @@
 
             <!-- Nút gia hạn -->
             <Button x:Name="RenewButton"
-                    Text="Gia hạn Premium"
+                    Text=""
                     BackgroundColor="#FF6F00"
                     TextColor="White"
                     FontAttributes="Bold"

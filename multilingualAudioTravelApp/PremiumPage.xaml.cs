@@ -14,12 +14,26 @@ namespace multilingualAudioTravelApp
             InitializeComponent();
             var email = Preferences.Get("userEmail", string.Empty);
 
+            // Set localized UI texts
+            PremiumMainTitle.Text = Languages.AppStrings.PremiumTitle;
+            FeaturesLabel.Text = Languages.AppStrings.Features;
+            FreeLabel.Text = Languages.AppStrings.Free;
+            PaidLabel.Text = Languages.AppStrings.Paid;
+            Feature1Label.Text = Languages.AppStrings.Feature1;
+            Feature2Label.Text = Languages.AppStrings.Feature2;
+            Feature3Label.Text = Languages.AppStrings.Feature3;
+            Feature4Label.Text = Languages.AppStrings.Feature4;
+            PlanYearLabel.Text = Languages.AppStrings.PlanYear;
+            PlanMonthLabel.Text = Languages.AppStrings.PlanMonth;
+            PlanWeekLabel.Text = Languages.AppStrings.PlanWeek;
+            BuyButton.Text = Languages.AppStrings.SubscribeButton;
+
             if (Preferences.Get($"IsPremium_{email}", false))
             {
-                BuyButton.Text = "✅ Đã kích hoạt Premium";
+                BuyButton.Text = Languages.AppStrings.BtnPremiumActivated;
                 BuyButton.BackgroundColor = Colors.Gray;
                 BuyButton.IsEnabled = false;
-                StatusLabel.Text = "Tài khoản của bạn đang ở gói Premium";
+                StatusLabel.Text = Languages.AppStrings.StatusPremiumActive;
             }
         }
 
@@ -55,12 +69,12 @@ namespace multilingualAudioTravelApp
         {
             if (string.IsNullOrEmpty(_selectedPlan))
             {
-                await DisplayAlert("Chưa chọn gói", "Vui lòng chọn gói trước khi đăng ký.", "OK");
+                await DisplayAlert(Languages.AppStrings.MsgSelectPlanTitle, Languages.AppStrings.MsgSelectPlanBody, "OK");
                 return;
             }
 
             BuyButton.IsEnabled = false;
-            BuyButton.Text = "⏳ Đang xử lý...";
+            BuyButton.Text = Languages.AppStrings.BtnProcessing;
             await Task.Delay(1200);
 
             var email = Preferences.Get("userEmail", "user");
@@ -99,12 +113,12 @@ namespace multilingualAudioTravelApp
                 System.Diagnostics.Debug.WriteLine($"Lưu Premium lên server thất bại: {ex.Message}");
             }
 
-            BuyButton.Text = "✅ Đã kích hoạt Premium";
+            BuyButton.Text = Languages.AppStrings.BtnPremiumActivated;
             BuyButton.BackgroundColor = Colors.Gray;
-            StatusLabel.Text = "🎉 Kích hoạt thành công!";
+            StatusLabel.Text = Languages.AppStrings.StatusActivated;
 
-            await DisplayAlert("Thành công",
-                "Bạn đã kích hoạt gói Premium!\nVào Profile → 'QR của tôi' để xem mã QR.", "OK");
+            await DisplayAlert(Languages.AppStrings.MsgActivatedTitle,
+                Languages.AppStrings.MsgActivatedBody, "OK");
 
             await Navigation.PopAsync();
         }

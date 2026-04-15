@@ -8,6 +8,10 @@ public partial class ProfilePage : ContentPage
         BindingContext = new ProfileViewModel();
         _stars = new List<Label> { S1, S2, S3, S4, S5 }; 
 
+            // Update banner labels (localization may change while running)
+            PremiumBannerTitleLabel.Text = Languages.AppStrings.PremiumBannerTitle;
+            PremiumBannerSubtitleLabel.Text = Languages.AppStrings.PremiumBannerSubtitle;
+
     }
     private async void OnPremiumBannerTapped(object sender, TappedEventArgs e)
     {

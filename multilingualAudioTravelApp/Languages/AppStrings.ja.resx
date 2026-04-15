@@ -279,6 +279,81 @@
   <data name="AskFullInfo" xml:space="preserve">
     <value>すべての情報をご記入ください。</value>
   </data>
+  <data name="MyQR" xml:space="preserve">
+    <value>私のQR</value>
+  </data>
+  <data name="MyQRDesc" xml:space="preserve">
+    <value>個人用プレミアムQRコードを表示</value>
+  </data>
+  <data name="MyQRTitle" xml:space="preserve">
+    <value>あなたのプレミアムQR</value>
+  </data>
+  <data name="MyQRSubtitle" xml:space="preserve">
+    <value>スタッフに提示して無制限のナレーションを解除</value>
+  </data>
+  <data name="PremiumBannerTitle" xml:space="preserve">
+    <value>プレミアムにアップグレード</value>
+  </data>
+  <data name="PremiumBannerSubtitle" xml:space="preserve">
+    <value>有料プランに加入してすべての機能を解除し、サポートを受ける</value>
+  </data>
+  <data name="PremiumBadge" xml:space="preserve">
+    <value>⭐ PREMIUM</value>
+  </data>
+  <data name="ExpiryLabel" xml:space="preserve">
+    <value>有効期限</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>ステータス</value>
+  </data>
+  <data name="RenewPremium" xml:space="preserve">
+    <value>プレミアムを更新</value>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>プレミアムプラン</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>機能</value>
+  </data>
+  <data name="Free" xml:space="preserve">
+    <value>無料</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>有料</value>
+  </data>
+  <data name="Feature1" xml:space="preserve">
+    <value>無料の場所ナレーションを聞く</value>
+  </data>
+  <data name="Feature2" xml:space="preserve">
+    <value>クイックアクセス用の個人QR</value>
+  </data>
+  <data name="Feature3" xml:space="preserve">
+    <value>新しいコンテンツの優先更新</value>
+  </data>
+  <data name="Feature4" xml:space="preserve">
+    <value>VIPメンバー向けの特別サポート</value>
+  </data>
+  <data name="PlanYear" xml:space="preserve">
+    <value>年間</value>
+  </data>
+  <data name="PlanMonth" xml:space="preserve">
+    <value>月間</value>
+  </data>
+  <data name="PlanWeek" xml:space="preserve">
+    <value>週間</value>
+  </data>
+  <data name="SubscribeButton" xml:space="preserve">
+    <value>申し込む</value>
+  </data>
+  <data name="ScanQR" xml:space="preserve">
+    <value>QRをスキャン</value>
+  </data>
+  <data name="PremiumListTitle" xml:space="preserve">
+    <value>⭐ プレミアムPOI一覧</value>
+  </data>
+  <data name="PremiumListSubtitle" xml:space="preserve">
+    <value>タップしてナレーションを再生</value>
+  </data>
   <data name="CreateAccSuccess" xml:space="preserve">
     <value>アカウントが正常に作成されました！ログインしてください。</value>
   </data>

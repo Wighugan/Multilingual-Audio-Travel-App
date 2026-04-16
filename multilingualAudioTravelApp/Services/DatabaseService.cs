@@ -172,7 +172,7 @@ public class DatabaseService
     {
         get
         {
-            const string devIp = "192.168.1.74"; // IP máy bạn
+            const string devIp = "192.168.1.135"; // IP máy bạn
 
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
@@ -211,8 +211,6 @@ public class DatabaseService
         try
         {
             using var client = new HttpClient();
-
-            
 
             var options = new JsonSerializerOptions
             {

@@ -11,50 +11,51 @@ namespace multilingualAudioTravelApp
 
             MainPage = new AppShell();
         }
-        protected override async void OnStart()
+        protected override void OnStart()
         {
             base.OnStart();
-            await SilentLoginOrRegisterAsync();
+            Task.Run(async () =>
+            {
+                await SilentLoginOrRegisterAsync();
+            });
         }
         private async Task SilentLoginOrRegisterAsync()
         {
-            // 1. Kiểm tra xem máy này đã có Device ID chưa, chưa có thì tạo mới
-            string deviceId = Preferences.Get("DeviceId", null);
+            try { 
+            string deviceId = Preferences.Get("DeviceId", "");
             if (string.IsNullOrEmpty(deviceId))
             {
-                deviceId = Guid.NewGuid().ToString("N"); // Tạo 1 chuỗi mã độc nhất
+                deviceId = Guid.NewGuid().ToString("N").Substring(0, 12); // Tạo mã 12 ký tự
                 Preferences.Set("DeviceId", deviceId);
             }
 
-            // 2. Chế tạo Email và Password giả từ Device ID
-            string dummyEmail = $"device_{deviceId}@tour.app";
-            string dummyPassword = deviceId; // Dùng luôn ID làm mật khẩu cho chắc chắn
+            int savedUserId = Preferences.Get("userId", 0);
 
-            // 3. Thử Đăng nhập ngầm
-            var user = await _dbService.LoginAsync(dummyEmail, dummyPassword);
-
-            if (user == null)
+            if (savedUserId == 0)
             {
-                // 4. Nếu đăng nhập thất bại (Máy mới tải app lần đầu) -> Tự động Đăng ký ngầm
-                string guestName = $"Khách_{deviceId.Substring(0, 5)}"; // Tên hiển thị: Khách_a1b2c
+                string dummyEmail = $"device_{deviceId}@tour.app";
+                string guestName = $"Khách_{deviceId.Substring(0, 4)}";
 
-                // Lưu ý: Đảm bảo bạn có hàm RegisterAsync trong DatabaseService
-                user = await _dbService.RegisterAsync(guestName, dummyEmail, dummyPassword, "Customer");
+                var newUser = await _dbService.RegisterAsync(guestName, dummyEmail, "123456", "Customer");
+
+                if (newUser != null)
+                {
+                    Preferences.Set("userId", newUser.Id);
+                    Preferences.Set("userName", newUser.FullName);
+                    Preferences.Set("userEmail", newUser.Email);
+                    savedUserId = newUser.Id;
+                }
             }
 
-            // 5. Lưu thông tin và Bật SignalR báo Online
-            if (user != null)
+            if (savedUserId > 0)
             {
-                Preferences.Set("isLoggedIn", true);
-                Preferences.Set("userId", user.Id);
-                Preferences.Set("userEmail", user.Email);
-                Preferences.Set("userName", user.FullName);
-
                 var signalR = IPlatformApplication.Current?.Services.GetService<SignalRService>();
-                if (signalR != null)
-                {
-                    await signalR.ConnectAsync(user.Id);
-                }
+                if (signalR != null) await signalR.ConnectAsync(savedUserId);
+            }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"LỖI KHI ĐĂNG NHẬP NGẦM HOẶC KẾT NỐI SIGNALR: {ex.Message}");
             }
         }
         protected override void OnAppLinkRequestReceived(Uri uri)

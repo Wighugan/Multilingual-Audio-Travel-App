@@ -737,22 +737,55 @@
 
         <!-- ACCOUNTS PAGE -->
         <div class="page" id="page-accounts">
-            <div class="page-header">
-                <h1>User accounts</h1>
-                <p>View and manage registered user accounts</p>
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1>Quản lý Tài khoản</h1>
+                    <p>Phân loại khách và đối tác quản trị</p>
+                </div>
+                <button class="btn btn-primary" id="btn-create-admin" onclick="openUserModal()">+ Thêm Đối tác / Admin</button>
             </div>
-            <div class="card">
+
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <button id="tab-btn-customers" class="btn btn-primary" onclick="switchAccountTab('customers')">Khách</button>
+                <button id="tab-btn-admins" class="btn btn-outline" onclick="switchAccountTab('admins')" style="background:white; color:black; border:1px solid #ccc;">Quản trị & Chủ quán</button>
+            </div>
+
+            <div class="card" id="tab-content-customers">
                 <div class="card-header">
-                    <div class="search-bar" style="margin:0;flex:1;margin-right:1rem;">
-                        <input type="text" id="user-search" placeholder="Search by name or email..." oninput="renderUsersTable()">
+                    <div class="search-bar" style="margin:0; width:100%;">
+                        <input type="text" id="customer-search" placeholder="Tìm theo ID thiết bị..." oninput="renderUsersTable()">
                     </div>
-                    <button class="btn btn-primary" onclick="openUserModal()">+ Create account</button>
                 </div>
                 <table>
                     <thead>
-                        <tr><th>User</th><th>Email</th><th>Status</th><th>Account Type</th><th>Premium</th><th>Actions</th></tr>
+                        <tr>
+                            <th>Du khách</th>
+                            <th>Mã thiết bị</th>
+                            <th>Trạng thái</th>
+                            <th>Gói Premium</th>
+                        </tr>
                     </thead>
-                    <tbody id="users-table"></tbody>
+                    <tbody id="customers-table"></tbody>
+                </table>
+            </div>
+
+            <div class="card" id="tab-content-admins" style="display: none;">
+                <div class="card-header">
+                    <div class="search-bar" style="margin:0; width:100%;">
+                        <input type="text" id="admin-search" placeholder="Tìm tên hoặc email..." oninput="renderUsersTable()">
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Người dùng</th>
+                            <th>Email</th>
+                            <th>Trạng thái</th>
+                            <th>Vai trò</th>
+                            <th style="text-align:right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admins-table"></tbody>
                 </table>
             </div>
         </div>
@@ -863,7 +896,6 @@
             <div class="form-group full">
                 <label>Account Role</label>
                 <select id="u-role">
-                    <option value="Customer">Customer (Khách du lịch)</option>
                     <option value="Owner">Owner (Chủ quán)</option>
                     <option value="Admin">Admin (Quản trị viên)</option>
                 </select>
@@ -1160,7 +1192,7 @@
         }).join('');
     }
 
-    function renderUsersTable() {
+    /*function renderUsersTable() {
         const q = (document.getElementById('user-search').value || '').toLowerCase();
         const tbody = document.getElementById('users-table');
 
@@ -1198,11 +1230,101 @@
       <td>${statusHtml}</td>
       <td>${roleBadge}  </td>
       <td>${premiumBadge} </td>
-      <td>
-        <button class="btn btn-sm" onclick="openUserModal(${u.id})">Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
-      </td>
     </tr>`;
+        }).join('');
+    }*/
+
+    function renderUsersTable() {
+        if (!USERS || USERS.length === 0) return;
+
+        // 1. Tách danh sách (Dùng toLowerCase() để tránh lỗi viết hoa/thường trong Database)
+        const qCustomer = (document.getElementById('customer-search').value || '').toLowerCase();
+        const qAdmin = (document.getElementById('admin-search').value || '').toLowerCase();
+
+        const customersTable = document.getElementById('customers-table');
+        const adminsTable = document.getElementById('admins-table');
+
+        // 1. LỌC DANH SÁCH KHÁCH VÃNG LAI
+        const customerList = USERS.filter(u => {
+            const roleMatch = u.role && u.role.toLowerCase() === 'customer';
+
+            // Xử lý Device ID để tìm kiếm cho chuẩn xác
+            let deviceId = u.email || "";
+            if (deviceId.startsWith("device_")) {
+                deviceId = deviceId.replace("device_", "").split("@")[0];
+            }
+
+            const searchMatch = deviceId.toLowerCase().includes(qCustomer) || (u.fullName || '').toLowerCase().includes(qCustomer);
+            return roleMatch && searchMatch;
+        });
+
+        // 2. LỌC DANH SÁCH ADMIN & OWNER
+        const adminList = USERS.filter(u => {
+            const roleMatch = u.role && (u.role.toLowerCase() === 'admin' || u.role.toLowerCase() === 'owner');
+            const searchMatch = (u.email || '').toLowerCase().includes(qAdmin) || (u.fullName || '').toLowerCase().includes(qAdmin);
+            return roleMatch && searchMatch;
+        });
+
+        // 3. VẼ BẢNG KHÁCH VÃNG LAI
+        customersTable.innerHTML = customerList.map(u => {
+            const initials = u.fullName ? u.fullName.substring(0, 2).toUpperCase() : 'KH';
+
+            // Đồng bộ với CSS gốc của bạn
+            const isOnline = u.isOnline || u.IsOnline;
+            const statusHtml = isOnline
+                ? `<span class="status-dot status-online"></span><span style="color:#1D9E75; font-size:12px; font-weight:500;">Online</span>`
+                : `<span class="status-dot status-offline"></span><span style="color:var(--color-text-secondary); font-size:12px;">Offline</span>`;
+
+            const premiumBadge = (u.isPremium || u.IsPremium)
+                ? '<span class="badge" style="background:#FFF9E6; color:#D35400;">💎 Premium</span>'
+                : '<span class="badge badge-gray">Free</span>';
+
+            let deviceId = u.email || "Không rõ";
+            if (deviceId.startsWith("device_")) {
+                deviceId = deviceId.replace("device_", "").split("@")[0];
+            }
+
+            return `<tr>
+            <td>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="avatar">${initials}</div>
+                    <span style="font-weight:500">${u.fullName}</span>
+                </div>
+            </td>
+            <td style="color:gray; font-size:14px; font-family: monospace;">${deviceId}</td>
+            <td>${statusHtml}</td>
+            <td>${premiumBadge}</td>
+        </tr>`;
+        }).join('');
+
+        // 4. VẼ BẢNG QUẢN TRỊ & OWNER
+        adminsTable.innerHTML = adminList.map(u => {
+            const initials = u.fullName ? u.fullName.substring(0, 2).toUpperCase() : 'AD';
+
+            const isOnline = u.isOnline || u.IsOnline;
+            const statusHtml = isOnline
+                ? `<span class="status-dot status-online"></span><span style="color:#1D9E75; font-size:12px; font-weight:500;">Online</span>`
+                : `<span class="status-dot status-offline"></span><span style="color:var(--color-text-secondary); font-size:12px;">Offline</span>`;
+
+            const roleBadge = (u.role && u.role.toLowerCase() === 'admin')
+                ? `<span class="badge badge-amber">Admin</span>`
+                : `<span class="badge badge-blue">Owner</span>`;
+
+            return `<tr>
+            <td>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="avatar">${initials}</div>
+                    <span style="font-weight:500">${u.fullName}</span>
+                </div>
+            </td>
+            <td style="font-size:13px; color:gray;">${u.email}</td>
+            <td>${statusHtml}</td>
+            <td>${roleBadge}</td>
+            <td style="text-align:right">
+                <button class="btn btn-sm btn-outline" onclick="openUserModal(${u.id || u.Id})">Sửa</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id || u.Id})">Xóa</button>
+            </td>
+        </tr>`;
         }).join('');
     }
 
@@ -1658,7 +1780,37 @@
     function closeModal(id) {
         document.getElementById(id).classList.remove('open');
     }
+    function switchAccountTab(tabName) {
+        const tabCustomers = document.getElementById('tab-content-customers');
+        const tabAdmins = document.getElementById('tab-content-admins');
+        const btnCustomers = document.getElementById('tab-btn-customers');
+        const btnAdmins = document.getElementById('tab-btn-admins');
+        const btnCreate = document.getElementById('btn-create-admin');
 
+        if (tabName === 'customers') {
+            tabCustomers.style.display = 'block';
+            tabAdmins.style.display = 'none';
+            btnCreate.style.display = 'none'; // Ẩn nút Create ở tab khách
+
+            btnCustomers.className = 'btn btn-primary';
+            btnAdmins.className = 'btn btn-outline';
+            btnAdmins.style = 'background:white; color:black; border:1px solid #ccc;';
+        } else {
+            tabCustomers.style.display = 'none';
+            tabAdmins.style.display = 'block';
+            btnCreate.style.display = 'block'; // Hiện nút Create ở tab quản trị
+
+            btnAdmins.className = 'btn btn-primary';
+            btnAdmins.style = '';
+            btnCustomers.className = 'btn btn-outline';
+            btnCustomers.style = 'background:white; color:black; border:1px solid #ccc;';
+        }
+    }
+
+    // Ẩn nút Create ngay khi vừa load trang (vì mặc định ở Tab Khách)
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('btn-create-admin').style.display = 'none';
+    });
     document.querySelectorAll('.modal-overlay').forEach(m => {
         m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
     });

@@ -46,9 +46,9 @@ public partial class ProfilePage : ContentPage
 
         switch (menu.Key)
         {
-            case "edit":
-                await Shell.Current.GoToAsync(nameof(EditProfilePage));
-            break;
+            //case "edit":
+            //    await Shell.Current.GoToAsync(nameof(EditProfilePage));
+            //break;
 
             case "language":
                 string action = await DisplayActionSheet(
@@ -74,9 +74,9 @@ public partial class ProfilePage : ContentPage
                 Application.Current.MainPage = new AppShell();
             break;
 
-            case "favorite":
-                await Shell.Current.GoToAsync("//FavoritePage");
-                break;
+            //case "favorite":
+            //    await Shell.Current.GoToAsync("//FavoritePage");
+            //    break;
 
             case "feedback":
                 await ShowFeedbackPopup();

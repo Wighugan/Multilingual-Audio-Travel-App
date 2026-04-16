@@ -55,7 +55,7 @@ public partial class RegisterPage : ContentPage
             return;
         }
 
-        var success = await _dbService.RegisterAsync(email, password, fullName);
+        /*var success = await _dbService.RegisterAsync(email, password, fullName);
 
         if (success)
         {
@@ -67,7 +67,7 @@ public partial class RegisterPage : ContentPage
         else
         {
             ShowError(multilingualAudioTravelApp.Languages.AppStrings.ErrorSameEmail);
-        }
+        }*/
     }
 
     private void OnGoToLoginClicked(object sender, EventArgs e)

@@ -22,7 +22,7 @@
         </Tab>
 
 
-        <Tab Title="{x:Static lang:AppStrings.Favorite}" Icon="favorite.png">
+        <Tab Title="{x:Static lang:AppStrings.Favorite}" Icon="favorite.png" IsVisible="False">
             <ShellContent ContentTemplate="{DataTemplate local:FavoritePage}" Route="FavoritePage" />
         </Tab>
 

@@ -413,27 +413,55 @@ public class DatabaseService
     }
 
     // Đăng ký tài khoản mới
-    public async Task<bool> RegisterAsync(string email, string password, string fullName)
+    /* public async Task<bool> RegisterAsync(string fullName, string email, string password, string role)
+     {
+         try
+         {
+             using var client = new HttpClient();
+
+             var users = await client.GetFromJsonAsync<List<UserEntity>>($"{ApiBaseUrl}/api/users");
+             if (users != null && users.Any(u => u.Email == email))
+                 return false; // Email đã tồn tại
+
+             var newUser = new UserEntity { Email = email, Password = password, FullName = fullName };
+             var response = await client.PostAsJsonAsync($"{ApiBaseUrl}/api/users", newUser);
+
+             return response.IsSuccessStatusCode;
+         }
+         catch (Exception ex)
+         {
+             System.Diagnostics.Debug.WriteLine($"Lỗi Đăng ký: {ex.Message}");
+             return false;
+         }
+     }*/
+    public async Task<UserEntity> RegisterAsync(string fullName, string email, string password, string role)
     {
         try
         {
-            using var client = new HttpClient();
+            var newUser = new UserEntity
+            {
+                FullName = fullName,
+                Email = email,
+                Password = password,
+                Role = role
+            };
+            var response = await _httpClient.PostAsJsonAsync($"{baseUrl}/api/users", newUser);
 
-            // kéo danh sách về để check trùng email
-            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{ApiBaseUrl}/api/users");
-            if (users != null && users.Any(u => u.Email == email))
-                return false; // Email đã tồn tại
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<UserEntity>(
+                    json,
+                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                );
+            }
 
-            // đóng gói và gửi lệnh post tạo mới
-            var newUser = new UserEntity { Email = email, Password = password, FullName = fullName };
-            var response = await client.PostAsJsonAsync($"{ApiBaseUrl}/api/users", newUser);
-
-            return response.IsSuccessStatusCode;
+            return null;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Lỗi Đăng ký: {ex.Message}");
-            return false;
+            System.Diagnostics.Debug.WriteLine($"Lỗi Đăng ký ngầm: {ex.Message}");
+            return null;
         }
     }
 

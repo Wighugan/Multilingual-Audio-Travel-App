@@ -25,24 +25,24 @@ public class ProfileViewModel
 
         ProfileMenus = new ObservableCollection<ProfileMenu>
         {
-            new ProfileMenu
-            {
-                Key = "edit",
-                Title = multilingualAudioTravelApp.Languages.AppStrings.EditInfo,
-                Description = multilingualAudioTravelApp.Languages.AppStrings.DesEditInfo
-            },
+            //new ProfileMenu
+            //{
+            //    Key = "edit",
+            //    Title = multilingualAudioTravelApp.Languages.AppStrings.EditInfo,
+            //    Description = multilingualAudioTravelApp.Languages.AppStrings.DesEditInfo
+            //},
             new ProfileMenu
             {
                 Key = "language",
                 Title = multilingualAudioTravelApp.Languages.AppStrings.Language,
                 Description = multilingualAudioTravelApp.Languages.AppStrings.DesLanguage
             },
-            new ProfileMenu
-            {
-                Key = "favorite",
-                Title = multilingualAudioTravelApp.Languages.AppStrings.FvCafe,
-                Description = multilingualAudioTravelApp.Languages.AppStrings.DesFvCafe
-            },
+            //new ProfileMenu
+            //{
+            //    Key = "favorite",
+            //    Title = multilingualAudioTravelApp.Languages.AppStrings.FvCafe,
+            //    Description = multilingualAudioTravelApp.Languages.AppStrings.DesFvCafe
+            //},
 
             new ProfileMenu { 
                 Key = "myqr", 

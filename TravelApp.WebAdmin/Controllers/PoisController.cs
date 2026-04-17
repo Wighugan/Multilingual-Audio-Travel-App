@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using TravelApp.WebAdmin.Data;
 using TravelApp.WebAdmin.Models;
 
@@ -141,6 +142,46 @@ namespace TravelApp.WebAdmin.Controllers
             }
 
             return Ok(new { fileNames = uploadedFileNames });
+        }
+        [HttpPost("{id}/analytics")]
+        public async Task<IActionResult> UpdateAnalytics(int id, [FromQuery] string type)
+        {
+            var poi = await _context.Pois.FindAsync(id);
+            if (poi == null) return NotFound();
+
+            if (type == "listen") poi.ListenCount++;
+            else if (type == "visit") poi.VisitCount++;
+            else return BadRequest("type phải là 'listen' hoặc 'visit'");
+
+            await _context.SaveChangesAsync();
+            return Ok(new { poi.Id, poi.ListenCount, poi.VisitCount });
+        }
+
+        // API lấy bảng xếp hạng
+        [HttpGet("ranking")]
+        public async Task<IActionResult> GetRanking()
+        {
+            var pois = await _context.Pois.ToListAsync();
+            var result = pois.Select(p => new
+            {
+                p.Id,
+                p.ListenCount,
+                p.VisitCount,
+                // Lấy tên tiếng Việt từ TranslationsJson
+                Name = TryGetViName(p.TranslationsJson)
+            });
+            return Ok(result);
+        }
+
+        private static string TryGetViName(string json)
+        {
+            try
+            {
+                var dict = System.Text.Json.JsonSerializer
+                    .Deserialize<Dictionary<string, JsonElement>>(json ?? "{}");
+                return dict?["vi"].GetProperty("Name").GetString() ?? "—";
+            }
+            catch { return "—"; }
         }
     }
 }

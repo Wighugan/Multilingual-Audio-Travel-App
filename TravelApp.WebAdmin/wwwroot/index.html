@@ -653,25 +653,46 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">Recent POIs</span>
-                        <button class="btn btn-sm" onclick="navigate('poi')">View all</button>
+                        <span class="card-title">Top địa điểm được nghe nhiều nhất</span>
                     </div>
                     <table>
-                        <thead><tr><th>Name</th><th>Coords</th><th>Priority</th></tr></thead>
-                        <tbody id="dash-poi-table"></tbody>
+                        <thead><tr><th>Tên địa điểm</th><th style="text-align:right">Lượt nghe</th></tr></thead>
+                        <tbody id="dash-top-listen"></tbody>
                     </table>
                 </div>
-                <div class="card" id="dash-feedback-card">
+
+                <div class="card">
                     <div class="card-header">
-                        <span class="card-title">Recent feedback</span>
-                        <button class="btn btn-sm" onclick="navigate('feedback')">View all</button>
+                        <span class="card-title">Quán đông khách đến nhất</span>
                     </div>
                     <table>
-                        <thead><tr><th>User</th><th>Rating</th><th>Date</th></tr></thead>
-                        <tbody id="dash-feedback-table"></tbody>
+                        <thead><tr><th>Tên địa điểm</th><th style="text-align:right">Lượt ghé thăm</th></tr></thead>
+                        <tbody id="dash-top-visit"></tbody>
                     </table>
+                </div>
+            
+
+            <div class="card" style="margin-top: 1.25rem;">
+                <div class="card-header">
+                    <span class="card-title">Bản đồ hoạt động (Heatmap Realtime)</span>
+                </div>
+                <div id="heatmap-container" style="height: 450px; background: #e9e9e9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: gray;">
+                    Bản đồ sẽ được nhúng vào đây
                 </div>
             </div>
+
+
+            <div class="card" id="dash-feedback-card">
+                <div class="card-header">
+                    <span class="card-title">Recent feedback</span>
+                    <button class="btn btn-sm" onclick="navigate('feedback')">View all</button>
+                </div>
+                <table>
+                    <thead><tr><th>User</th><th>Rating</th><th>Date</th></tr></thead>
+                    <tbody id="dash-feedback-table"></tbody>
+                </table>
+            </div>
+        </div>
         </div>
 
         <!-- POI PAGE -->
@@ -994,12 +1015,15 @@
                     priority: p.priority,
                     cooldown: p.cooldownMinutes, // Dịch cooldownMinutes -> cooldown
                     translations: transObj,       // Gắn cục đa ngôn ngữ đã dịch vào
-                    ownerId: p.ownerId || p.OwnerId
+                    ownerId: p.ownerId || p.OwnerId,
+                    listenCount: p.listenCount || p.ListenCount || 0,
+                    visitCount: p.visitCount || p.VisitCount || 0
                 };
             });
 
             renderPoiTable(); // Vẽ lại bảng POI
-            initDashboard();  // Cập nhật lại các con số thống kê ở trên cùng
+            // initDashboard();  // Cập nhật lại các con số thống kê ở trên cùng
+            renderDashboard();
         } catch (error) {
             console.error("Lỗi khi tải dữ liệu:", error);
         }
@@ -1125,14 +1149,29 @@
 
     function renderDashboard() {
         initDashboard();
-        const pt = document.getElementById('dash-poi-table');
-        pt.innerHTML = POIS.slice(0, 5).map(p => `
-    <tr>
-      <td>${p.translations?.vi?.name || '(Chưa có tên)'}</td>
-      <td style="font-size:11px;color:var(--color-text-secondary)">${p.lat ? p.lat.toFixed(4) : 0}, ${p.lng ? p.lng.toFixed(4) : 0}</td>
-      <td><span class="badge badge-green">${p.priority || 5}</span></td>
-    </tr>
-  `).join('');
+
+        // 1. Sắp xếp danh sách POI giảm dần theo lượt NGHE (Listen)
+        const topListen = [...POIS].sort((a, b) => b.listenCount - a.listenCount).slice(0, 5);
+
+        document.getElementById('dash-top-listen').innerHTML = topListen.map(p => `
+        <tr>
+            <td style="font-weight: 500;">${p.translations?.vi?.name || '(Chưa có tên)'}</td>
+            <td style="text-align:right"><span class="badge badge-blue">${p.listenCount} lượt</span></td>
+        </tr>
+    `).join('');
+
+        // 2. Sắp xếp danh sách POI giảm dần theo lượt GHÉ THĂM (Visit)
+        const topVisit = [...POIS].sort((a, b) => b.visitCount - a.visitCount).slice(0, 5);
+
+        document.getElementById('dash-top-visit').innerHTML = topVisit.map(p => `
+        <tr>
+            <td style="font-weight: 500;">${p.translations?.vi?.name || '(Chưa có tên)'}</td>
+            <td style="text-align:right"><span class="badge badge-amber">${p.visitCount} lượt</span></td>
+        </tr>
+    `).join('');
+
+        // (Code render bảng Feedback cũ giữ nguyên ở dưới nếu bạn vẫn giữ thẻ table của nó)
+    }
 
         const ft = document.getElementById('dash-feedback-table');
         ft.innerHTML = FEEDBACKS.slice(0, 5).map(f => {
@@ -1151,7 +1190,7 @@
       <td style="font-size:11px;color:var(--color-text-secondary)">${dateStr}</td>
     </tr>`;
         }).join('');
-    }
+    
 
     function renderPoiTable() {
         const q = (document.getElementById('poi-search').value || '').toLowerCase();

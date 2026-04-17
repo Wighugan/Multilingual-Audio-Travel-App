@@ -25,6 +25,8 @@ public class PoiEntity  //POI
     public int Priority { get; set; }
     public int CooldownMinutes { get; set; } = 5;
     public string TranslationsJson { get; set; }
+    public int ListenCount { get; set; } = 0;
+    public int VisitCount { get; set; } = 0;
     private Dictionary<string, PoiTranslation> _parsedTranslations;
     
     [Ignore]
@@ -734,5 +736,25 @@ public class DatabaseService
         public string Code { get; set; }
         public string Name { get; set; }
         public string Flag { get; set; } 
+    }
+
+    // Thêm method này vào DatabaseService.cs
+    public async Task TrackAnalyticsAsync(int poiId, string type)
+    {
+        // type = "listen" hoặc "visit"
+        try
+        {
+            using var client = new HttpClient();
+            await client.PostAsync(
+                $"{ApiBaseUrl}/api/pois/{poiId}/analytics?type={type}",
+                null);
+            System.Diagnostics.Debug.WriteLine(
+                $"[Analytics] {type} +1 cho POI {poiId}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[Analytics] Lỗi: {ex.Message}");
+        }
     }
 }

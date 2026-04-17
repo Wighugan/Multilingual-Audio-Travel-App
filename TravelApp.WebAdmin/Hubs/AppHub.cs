@@ -32,5 +32,13 @@ namespace TravelApp.WebAdmin.Hubs
         {
             await base.OnDisconnectedAsync(exception);
         }
+        public async Task UpdateUserLocation(
+            string identifier, double lat, double lng)
+        {
+            await Clients.All.SendAsync(
+                "ReceiveUserLocation", identifier, lat, lng);
+        }
+
+
     }
 }

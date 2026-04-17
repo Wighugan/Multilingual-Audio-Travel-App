@@ -29,6 +29,7 @@ public partial class MainPage : ContentPage
     private List<PoiData> _poiList = new List<PoiData>();
     private PoiData _selectedPoi;
     private readonly DatabaseService _dbService = new DatabaseService();
+    private SignalRService _signalR;
 
     private string _currentText;
     private string[] _sentences;
@@ -97,6 +98,7 @@ public partial class MainPage : ContentPage
     }
     public class PoiData
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }   // thêm dòng này
@@ -115,6 +117,7 @@ public partial class MainPage : ContentPage
 
         _poiList = entities.Select(e => new PoiData
         {
+            Id = e.Id,
             Name = e.CurrentName,
             Description = e.CurrentDescription,
             Image = e.Image,
@@ -347,6 +350,8 @@ public partial class MainPage : ContentPage
         else
         {
             PlayStopButton.Source = "stop_icon.png";
+            // GỌI HÀM BÁO CÁO LƯỢT NGHE (LISTEN) LÊN SERVER
+            _ = _dbService.TrackAnalyticsAsync(_selectedPoi.Id, "listen");
 
             await SpeakDescription(_selectedPoi.Description);
         }
@@ -376,6 +381,19 @@ public partial class MainPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _signalR = IPlatformApplication.Current.Services
+                   .GetService<SignalRService>();
+        if (_signalR != null)
+        {        
+            {
+                // Nếu là User -> Lấy ID từ Preferences và truyền vào hàm ConnectAsync
+                int userId = Preferences.Get("userId", 0);
+                if (userId > 0)
+                {
+                    await _signalR.ConnectAsync(userId);
+                }
+            }
+        }
         if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
         {
             await LocalNotificationCenter.Current.RequestNotificationPermission();
@@ -459,6 +477,12 @@ public partial class MainPage : ContentPage
             UpdateUserLocationOnMap(e.Location);
             CheckGeofence(e.Location);
 
+            string identifier = Preferences.Get("userEmail",
+                           $"guest_{DeviceInfo.Current.Name}");
+            _ = _signalR?.SendLocationAsync(
+                    identifier,
+                    e.Location.Latitude,
+                    e.Location.Longitude);
         });
     }
     private void UpdateUserLocationOnMap(Location location)
@@ -558,6 +582,7 @@ public partial class MainPage : ContentPage
                 Schedule = new NotificationRequestSchedule { NotifyTime = DateTime.Now }
             };
             LocalNotificationCenter.Current.Show(notification);
+            _ = _dbService.TrackAnalyticsAsync(poi.Id, "visit");
             // Auto play khi đi vào vùng POI
             MainThread.BeginInvokeOnMainThread(async () =>
             {

@@ -61,5 +61,20 @@ namespace multilingualAudioTravelApp.Services
                 await _hubConnection.StopAsync();
             }
         }
+        public async Task SendLocationAsync(
+        string identifier, double lat, double lng)
+        {
+            if (_hubConnection?.State != HubConnectionState.Connected) return;
+            try
+            {
+                await _hubConnection.InvokeAsync(
+                    "UpdateUserLocation", identifier, lat, lng);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SignalR] Lỗi gửi vị trí: {ex.Message}");
+            }
+        }
+
     }
 }

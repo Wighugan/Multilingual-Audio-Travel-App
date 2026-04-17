@@ -14,6 +14,9 @@ namespace TravelApp.WebAdmin.Models
         public int CooldownMinutes { get; set; } = 5;
         public string TranslationsJson { get; set; }
         public int? OwnerId { get; set; }
+
+        public int ListenCount { get; set; } = 0;
+        public int VisitCount { get; set; } = 0;
     }
 
     public class UserEntity

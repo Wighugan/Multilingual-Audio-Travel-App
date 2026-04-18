@@ -2,6 +2,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
     * {
@@ -11,7 +13,7 @@
     }
 
     body {
-        font-family:'Inter', sans-serif;
+        font-family: 'Inter', sans-serif;
         background: var(--color-background-tertiary);
     }
 
@@ -553,6 +555,7 @@
             transform: translateY(0);
             opacity: 1;
         }
+
     .status-dot {
         display: inline-block;
         width: 8px;
@@ -708,29 +711,36 @@
                         <tbody id="dash-top-visit"></tbody>
                     </table>
                 </div>
-            
 
-            <div class="card" style="margin-top: 1.25rem;">
-                <div class="card-header">
-                    <span class="card-title">Bản đồ hoạt động (Heatmap Realtime)</span>
+
+                <div class="card" style="margin-top: 1.25rem;">
+                    <div class="card-header">
+                        <span class="card-title">Bản đồ hoạt động (Heatmap Realtime)</span>
+                    </div>
+                    <div id="heatmap-container" style="height: 450px; background: #e9e9e9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: gray;">
+                        Bản đồ sẽ được nhúng vào đây
+                    </div>
                 </div>
-                <div id="heatmap-container" style="height: 450px; background: #e9e9e9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: gray;">
-                    Bản đồ sẽ được nhúng vào đây
+                <div class="card" style="margin-top: 1.25rem;">
+                    <div class="card-header">
+                        <span class="card-title">Lưu lượng khách các ngày trong tuần</span>
+                    </div>
+                    <div style="height: 300px; width: 100%;">
+                        <canvas id="weeklyChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card" id="dash-feedback-card">
+                    <div class="card-header">
+                        <span class="card-title">Recent feedback</span>
+                        <button class="btn btn-sm" onclick="navigate('feedback')">View all</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>User</th><th>Rating</th><th>Date</th></tr></thead>
+                        <tbody id="dash-feedback-table"></tbody>
+                    </table>
                 </div>
             </div>
-
-
-            <div class="card" id="dash-feedback-card">
-                <div class="card-header">
-                    <span class="card-title">Recent feedback</span>
-                    <button class="btn btn-sm" onclick="navigate('feedback')">View all</button>
-                </div>
-                <table>
-                    <thead><tr><th>User</th><th>Rating</th><th>Date</th></tr></thead>
-                    <tbody id="dash-feedback-table"></tbody>
-                </table>
-            </div>
-        </div>
         </div>
 
         <!-- POI PAGE -->
@@ -1096,72 +1106,64 @@
     let editPoiId = null;
     let editUserId = null;
     let currentEditUser = null;
-    /*const POIS = [
-      { id:1, image:'vinhkhanh.jpg', lat:10.761923, lng:106.701964, radius:100, priority:10, cooldown:5, translations:{
-        vi:{name:'Khu phố ẩm thực Vĩnh Khánh',desc:'Phố ẩm thực nổi tiếng quận 4 với rất nhiều món ngon hấp dẫn.'},
-        en:{name:'Vinh Khanh Food Street',desc:'Famous food street in District 4 with many delicious dishes.'},
-        ja:{name:'ヴィンカン美食街',desc:'地区4の有名なグルメ通り。'},
-        zh:{name:'永庆美食街',desc:'第4区著名的美食街，美食众多。'},
-        ko:{name:'빈카인 푸드 스트리트',desc:'4구역의 유명한 음식 거리.'},
-      }},
-      { id:2, image:'ocoanh.jpg', lat:10.761410, lng:106.702820, radius:80, priority:8, cooldown:5, translations:{
-        vi:{name:'Quán Ốc Oanh',desc:'Quán ốc lâu đời và nổi tiếng nhất khu Vĩnh Khánh.'},
-        en:{name:'Oanh Snail Restaurant',desc:'The oldest and most famous snail restaurant in Vinh Khanh.'},
-        ja:{name:'オアン貝料理店',desc:'ヴィンカン地区で最も歴史があり有名な料理店。'},
-        zh:{name:'阿恩螺蛳店',desc:'永庆地区最古老也最著名的螺蛳店。'},
-        ko:{name:'오안 달팽이 식당',desc:'빈카인 지역에서 가장 오래되고 유명한 달팽이 식당.'},
-      }},
-      { id:3, image:'ocphat.jpg', lat:10.761921, lng:106.702151, radius:70, priority:6, cooldown:5, translations:{
-        vi:{name:'Quán Ốc Phát',desc:'Ốc Phát Vĩnh Khánh vẫn luôn là điểm đến quen thuộc.'},
-        en:{name:'Phat Snail Restaurant',desc:'A familiar destination for seafood lovers.'},
-        ja:{name:'ファット貝料理店',desc:'シーフード好きに馴染みのある場所。'},
-        zh:{name:'Phat螺蛳店',desc:'海鲜爱好者熟悉的去处。'},
-        ko:{name:'팟 달팽이 식당',desc:'해산물 애호가들에게 친숙한 장소.'},
-      }},
-      { id:4, image:'bunca.jpg', lat:10.761455, lng:106.702660, radius:70, priority:6, cooldown:5, translations:{
-        vi:{name:'Quán bún cá Châu Đốc',desc:'Nước lèo thanh mát, đậm đà hương vị.'},
-        en:{name:'Chau Doc Fish Noodle Soup',desc:'Refreshing, flavorful broth served with noodles.'},
-        ja:{name:'チャウドック魚麺',desc:'さっぱりとした風味豊かなスープ。'},
-        zh:{name:'朱笃鱼汤粉',desc:'清凉浓郁的汤汁。'},
-        ko:{name:'쩌우독 생선 국수',desc:'시원하고 진한 풍미의 국물.'},
-      }},
-      { id:5, image:'ocloan.jpg', lat:10.761170, lng:106.702710, radius:70, priority:6, cooldown:5, translations:{
-        vi:{name:'Quán Ốc Loan',desc:'Không gian thoáng mát, nổi tiếng với nước chấm cực kỳ ngon.'},
-        en:{name:'Loan Snail Restaurant',desc:'Airy space, famous for its delicious dipping sauce.'},
-        ja:{name:'ロアン貝料理店',desc:'風通しの良い空間とおいしいソース。'},
-        zh:{name:'Loan螺蛳店',desc:'空间通风，以美味蘸酱著称。'},
-        ko:{name:'로안 달팽이 식당',desc:'쾌적한 공간과 맛있는 소스로 유명.'},
-      }},
-      { id:6, image:'sushiko.jpg', lat:10.760827, lng:106.704798, radius:70, priority:6, cooldown:5, translations:{
-        vi:{name:'Nhà hàng Sushi KO',desc:'Nhiều món độc đáo, trải nghiệm ẩm thực phong phú.'},
-        en:{name:'Sushi KO Restaurant',desc:'A variety of unique dishes and rich culinary experience.'},
-        ja:{name:'寿司KOレストラン',desc:'多彩なユニークな料理が揃っています。'},
-        zh:{name:'Sushi KO 寿司店',desc:'提供多种特色菜肴。'},
-        ko:{name:'스시 KO 레스토랑',desc:'다양하고 독특한 요리.'},
-      }},
-      { id:7, image:'chili.jpg', lat:10.760774, lng:106.704575, radius:70, priority:6, cooldown:5, translations:{
-        vi:{name:'Nhà hàng nướng Chilli',desc:'Giá cả hợp lý và thực đơn đồ nướng đa dạng.'},
-        en:{name:'Chilli BBQ Restaurant',desc:'Affordable prices with a diverse all-you-can-grill menu.'},
-        ja:{name:'チリBBQレストラン',desc:'手頃な価格で多彩な食べ放題グリル。'},
-        zh:{name:'Chilli烧烤餐厅',desc:'价格合理，烧烤菜单丰富。'},
-        ko:{name:'칠리 BBQ 레스토랑',desc:'합리적인 가격의 무한 바비큐.'},
-      }},
-      { id:8, image:'otxiemquan.jpg', lat:10.760801, lng:106.704631, radius:70, priority:6, cooldown:5, translations:{
-        vi:{name:'Ớt Xiêm Quán',desc:'Món ăn ngon, giá cả hợp lý, menu đa dạng.'},
-        en:{name:'Ot Xiem Restaurant',desc:'Delicious food at very affordable prices.'},
-        ja:{name:'オットシエムレストラン',desc:'手頃な価格で美味しい料理。'},
-        zh:{name:'Ot Xiem 餐厅',desc:'美味且价格合理。'},
-        ko:{name:'엇시엠 식당',desc:'합리적인 가격의 맛있는 음식.'},
-      }},
-      { id:9, image:'vinhkhanh.jpg', lat:10.762100, lng:106.702000, radius:60, priority:5, cooldown:5, translations:{
-        vi:{name:'Cafe Vĩnh Khánh',desc:'Quán cà phê nhỏ xinh, không gian yên tĩnh.'},
-        en:{name:'Vinh Khanh Cafe',desc:'A cozy little cafe with a peaceful atmosphere.'},
-        ja:{name:'ヴィンカンカフェ',desc:'静かな雰囲気のかわいいカフェ。'},
-        zh:{name:'永庆咖啡店',desc:'小而美的咖啡店，环境安静。'},
-        ko:{name:'빈카인 카페',desc:'아늑하고 조용한 분위기의 카페.'},
-      }},
-    ];
-    */
+    let weeklyChartInstance = null; // Biến lưu trữ biểu đồ để tránh vẽ đè
+
+    function renderWeeklyChart() {
+        const ctx = document.getElementById('weeklyChart');
+        if (!ctx) return;
+
+        // Nếu biểu đồ đã tồn tại (do load lại trang), xóa cái cũ đi để vẽ lại
+        if (weeklyChartInstance) {
+            weeklyChartInstance.destroy();
+        }
+
+        // DỮ LIỆU MẪU: Lượng khách từ Thứ 2 đến Chủ nhật
+        // (Sau này bạn có thể gọi fetch() từ Web API để lấy mảng 7 số này)
+        const weeklyData = [120, 150, 180, 130, 210, 350, 420];
+
+        // Tự động tìm ngày đông khách nhất
+        const maxVisitors = Math.max(...weeklyData);
+
+        // Tạo mảng màu: Ngày đông nhất màu Cam (#F39C12), ngày thường màu Xanh (#1D9E75)
+        const barColors = weeklyData.map(val => val === maxVisitors ? '#F39C12' : '#1D9E75');
+
+        weeklyChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'],
+                datasets: [{
+                    label: 'Lượt khách ghé thăm',
+                    data: weeklyData,
+                    backgroundColor: barColors,
+                    borderRadius: 6, // Bo góc cột cho hiện đại
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }, // Ẩn chú thích thừa
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return context.raw + ' lượt khách';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [5, 5] } // Kẻ vạch ngang nét đứt cho đẹp
+                    },
+                    x: {
+                        grid: { display: false } // Ẩn vạch dọc cho thanh thoát
+                    }
+                }
+            }
+        });
+    }
 
     function navigate(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1214,8 +1216,7 @@
             <td style="text-align:right"><span class="badge badge-amber">${p.visitCount} lượt</span></td>
         </tr>
     `).join('');
-
-        // (Code render bảng Feedback cũ giữ nguyên ở dưới nếu bạn vẫn giữ thẻ table của nó)
+        renderWeeklyChart();
     }
 
     const ft = document.getElementById('dash-feedback-table');

@@ -17,6 +17,7 @@ namespace TravelApp.WebAdmin.Models
 
         public int ListenCount { get; set; } = 0;
         public int VisitCount { get; set; } = 0;
+        public string WeeklyVisitsJson { get; set; } = "{}";
     }
 
     public class UserEntity

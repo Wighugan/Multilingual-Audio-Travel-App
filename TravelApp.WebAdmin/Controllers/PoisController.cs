@@ -143,19 +143,7 @@ namespace TravelApp.WebAdmin.Controllers
 
             return Ok(new { fileNames = uploadedFileNames });
         }
-        [HttpPost("{id}/analytics")]
-        public async Task<IActionResult> UpdateAnalytics(int id, [FromQuery] string type)
-        {
-            var poi = await _context.Pois.FindAsync(id);
-            if (poi == null) return NotFound();
-
-            if (type == "listen") poi.ListenCount++;
-            else if (type == "visit") poi.VisitCount++;
-            else return BadRequest("type phải là 'listen' hoặc 'visit'");
-
-            await _context.SaveChangesAsync();
-            return Ok(new { poi.Id, poi.ListenCount, poi.VisitCount });
-        }
+        
 
         // API lấy bảng xếp hạng
         [HttpGet("ranking")]
@@ -182,6 +170,83 @@ namespace TravelApp.WebAdmin.Controllers
                 return dict?["vi"].GetProperty("Name").GetString() ?? "—";
             }
             catch { return "—"; }
+        }
+        [HttpPost("{id}/analytics")]
+        public async Task<IActionResult> UpdateAnalytics(int id, [FromQuery] string type)
+        {
+            var poi = await _context.Pois.FindAsync(id);
+            if (poi == null) return NotFound();
+
+            if (type == "listen")
+            {
+                poi.ListenCount++;
+            }
+            else if (type == "visit")
+            {
+                poi.VisitCount++;
+
+                // --- XỬ LÝ LƯU JSON NGÀY TRONG TUẦN ---
+                var today = DateTime.Now.DayOfWeek.ToString(); // Trả ra "Monday", "Tuesday"...
+
+                // Đọc dữ liệu cũ
+                var dict = string.IsNullOrEmpty(poi.WeeklyVisitsJson)
+                    ? new Dictionary<string, int>()
+                    : System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(poi.WeeklyVisitsJson);
+
+                // Cộng thêm 1 cho ngày hôm nay
+                if (dict.ContainsKey(today)) dict[today]++;
+                else dict[today] = 1;
+
+                // Lưu ngược lại thành chuỗi JSON
+                poi.WeeklyVisitsJson = System.Text.Json.JsonSerializer.Serialize(dict);
+            }
+            else return BadRequest("type phải là 'listen' hoặc 'visit'");
+
+            await _context.SaveChangesAsync();
+            return Ok(new { poi.Id, poi.ListenCount, poi.VisitCount });
+        }
+        [HttpGet("weekly-chart")]
+        public async Task<IActionResult> GetWeeklyChart()
+        {
+            var pois = await _context.Pois.ToListAsync();
+
+            // Tạo sẵn một bộ đếm tổng cho 7 ngày
+            var resultDict = new Dictionary<string, int>
+    {
+        { "Monday", 0 }, { "Tuesday", 0 }, { "Wednesday", 0 },
+        { "Thursday", 0 }, { "Friday", 0 }, { "Saturday", 0 }, { "Sunday", 0 }
+    };
+
+            // Lướt qua từng POI, giải mã JSON và cộng dồn vào bộ đếm tổng
+            foreach (var poi in pois)
+            {
+                if (!string.IsNullOrEmpty(poi.WeeklyVisitsJson) && poi.WeeklyVisitsJson != "{}")
+                {
+                    try
+                    {
+                        var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(poi.WeeklyVisitsJson);
+                        foreach (var kvp in dict)
+                        {
+                            if (resultDict.ContainsKey(kvp.Key))
+                                resultDict[kvp.Key] += kvp.Value;
+                        }
+                    }
+                    catch { /* Bỏ qua nếu JSON bị lỗi */ }
+                }
+            }
+
+            // Đẩy ra mảng 7 con số đúng thứ tự từ Thứ 2 -> Chủ Nhật để vẽ Chart
+            var result = new int[] {
+        resultDict["Monday"],
+        resultDict["Tuesday"],
+        resultDict["Wednesday"],
+        resultDict["Thursday"],
+        resultDict["Friday"],
+        resultDict["Saturday"],
+        resultDict["Sunday"]
+    };
+
+            return Ok(result);
         }
     }
 }

@@ -30,6 +30,8 @@ public partial class MainPage : ContentPage
     private PoiData _selectedPoi;
     private readonly DatabaseService _dbService = new DatabaseService();
     private SignalRService _signalR;
+    private static Dictionary<int, DateTime> _globalCooldowns = new Dictionary<int, DateTime>();
+    private static DateTime _lastGlobalAutoPlayTime = DateTime.MinValue; //Lưu lại thời điểm kết thúc câu nói gần nhất
 
     private string _currentText;
     private string[] _sentences;
@@ -372,6 +374,8 @@ public partial class MainPage : ContentPage
         _currentSentenceIndex = 0;
         _isPaused = false;
         _isPlaying = false;
+        // THÊM DÒNG NÀY: Bắt đầu tính giờ 30 giây im lặng kể từ lúc đọc xong
+        _lastGlobalAutoPlayTime = DateTime.Now;
         MainThread.BeginInvokeOnMainThread(() =>
         {
             // Trả icon về lại nút Play khi đã đọc xong hoặc bị dừng
@@ -400,7 +404,6 @@ public partial class MainPage : ContentPage
         }
         await StartListeningGps();
         StartBackgroundGeofenceTimer();
-        StartBackgroundGeofenceTimer(); // timer được tạo lại mỗi lần vào trang
 
         // Refresh POI để lấy data mới nhất từ DB
         await RefreshPoiLayerAsync();
@@ -553,17 +556,24 @@ public partial class MainPage : ContentPage
     }
     private void CheckGeofence(Location userLocation)
     {
+        // 1. NẾU ĐANG PHÁT AUDIO THÌ KHÔNG KÍCH HOẠT QUÁN MỚI ĐỂ TRÁNH ĐÈ NHAU
+        if (_isPlaying) return;
+
+        if ((DateTime.Now - _lastGlobalAutoPlayTime).TotalSeconds < 10) return; //im lang khoang 30s
         var candidates = _poiList
             .Select(p => new
             {
                 Poi = p,
                 Distance = Location.CalculateDistance(
                     userLocation.Latitude, userLocation.Longitude,
-                    p.Latitude, p.Longitude, DistanceUnits.Kilometers) * 1000
+                    p.Latitude, p.Longitude, DistanceUnits.Kilometers) * 1000,
+                // Lấy thời gian nghe lần cuối từ bộ nhớ bất tử
+                LastPlayed = _globalCooldowns.ContainsKey(p.Id) ? _globalCooldowns[p.Id] : DateTime.MinValue
             })
-            .Where(x => x.Distance <= x.Poi.Radius && (DateTime.Now - x.Poi.LastPlayedTime) > x.Poi.CooldownDuration) //đọc lại sau 5 phút
+            // Lọc ra các quán ở gần VÀ đã qua thời gian Cooldown
+            .Where(x => x.Distance <= x.Poi.Radius && (DateTime.Now - x.LastPlayed) > x.Poi.CooldownDuration)
             .OrderByDescending(x => x.Poi.Priority)
-            .ThenBy(x => x.Distance)               
+            .ThenBy(x => x.Distance)
             .ToList();
 
         var bestMatch = candidates.FirstOrDefault();
@@ -572,18 +582,20 @@ public partial class MainPage : ContentPage
         {
             var poi = bestMatch.Poi;
 
-            poi.LastPlayedTime = DateTime.Now;
+            // 2. LƯU THỜI GIAN VÀO BỘ NHỚ BẤT TỬ CHỨ KHÔNG LƯU VÀO POI NỮA
+            _globalCooldowns[poi.Id] = DateTime.Now;
+
             var notification = new NotificationRequest
             {
-                // Dùng HashCode của tên quán làm ID thông báo
                 NotificationId = Math.Abs(poi.Name.GetHashCode()),
                 Title = "📍 Hướng dẫn viên Vĩnh Khánh",
                 Description = $"Bạn đã đến {poi.Name}. Nhấn vào để xem hình ảnh và menu nhé!",
                 Schedule = new NotificationRequestSchedule { NotifyTime = DateTime.Now }
             };
             LocalNotificationCenter.Current.Show(notification);
+
             _ = _dbService.TrackAnalyticsAsync(poi.Id, "visit");
-            // Auto play khi đi vào vùng POI
+
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 try { HapticFeedback.Perform(HapticFeedbackType.LongPress); } catch { }
@@ -595,7 +607,7 @@ public partial class MainPage : ContentPage
     }
     private void StartBackgroundGeofenceTimer()
     {
-       // if (_geofenceTimer != null) return; // Tránh tạo nhiều đồng hồ
+        if (_geofenceTimer != null) return; // Tránh tạo nhiều đồng hồ
 
         _geofenceTimer = Application.Current.Dispatcher.CreateTimer();
         _geofenceTimer.Interval = TimeSpan.FromSeconds(15);

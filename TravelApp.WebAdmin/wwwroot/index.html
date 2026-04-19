@@ -721,6 +721,8 @@
                         Bản đồ sẽ được nhúng vào đây
                     </div>
                 </div>
+
+
                 <div class="card" style="margin-top: 1.25rem;">
                     <div class="card-header">
                         <span class="card-title">Lưu lượng khách các ngày trong tuần</span>
@@ -729,6 +731,8 @@
                         <canvas id="weeklyChart"></canvas>
                     </div>
                 </div>
+
+
 
                 <div class="card" id="dash-feedback-card">
                     <div class="card-header">
@@ -1108,24 +1112,28 @@
     let currentEditUser = null;
     let weeklyChartInstance = null; // Biến lưu trữ biểu đồ để tránh vẽ đè
 
-    function renderWeeklyChart() {
+    async function renderWeeklyChart() {
         const ctx = document.getElementById('weeklyChart');
         if (!ctx) return;
 
-        // Nếu biểu đồ đã tồn tại (do load lại trang), xóa cái cũ đi để vẽ lại
         if (weeklyChartInstance) {
             weeklyChartInstance.destroy();
         }
 
-        // DỮ LIỆU MẪU: Lượng khách từ Thứ 2 đến Chủ nhật
-        // (Sau này bạn có thể gọi fetch() từ Web API để lấy mảng 7 số này)
-        const weeklyData = [120, 150, 180, 130, 210, 350, 420];
+        // 1. TẠO MẢNG MẶC ĐỊNH LÀ 0 VÀ GỌI API LẤY DỮ LIỆU THẬT
+        let weeklyData = [0, 0, 0, 0, 0, 0, 0];
+        try {
+            const res = await fetch('/api/pois/weekly-chart');
+            if (res.ok) {
+                weeklyData = await res.json(); // Nhận mảng 7 con số từ Server C#
+            }
+        } catch (e) {
+            console.error("Lỗi lấy dữ liệu biểu đồ", e);
+        }
 
-        // Tự động tìm ngày đông khách nhất
         const maxVisitors = Math.max(...weeklyData);
-
-        // Tạo mảng màu: Ngày đông nhất màu Cam (#F39C12), ngày thường màu Xanh (#1D9E75)
-        const barColors = weeklyData.map(val => val === maxVisitors ? '#F39C12' : '#1D9E75');
+        // Nếu tất cả bằng 0 thì không đổi màu cam, ngược lại thì highlight ngày đông nhất
+        const barColors = weeklyData.map(val => val === maxVisitors && val > 0 ? '#F39C12' : '#1D9E75');
 
         weeklyChartInstance = new Chart(ctx, {
             type: 'bar',
@@ -1133,9 +1141,9 @@
                 labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'],
                 datasets: [{
                     label: 'Lượt khách ghé thăm',
-                    data: weeklyData,
+                    data: weeklyData, // <--- Nhét dữ liệu thật vào đây
                     backgroundColor: barColors,
-                    borderRadius: 6, // Bo góc cột cho hiện đại
+                    borderRadius: 6,
                     borderSkipped: false
                 }]
             },
@@ -1143,7 +1151,7 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false }, // Ẩn chú thích thừa
+                    legend: { display: false },
                     tooltip: {
                         callbacks: {
                             label: function (context) {
@@ -1155,10 +1163,11 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: { borderDash: [5, 5] } // Kẻ vạch ngang nét đứt cho đẹp
+                        ticks: { stepSize: 1 }, // Ép trục Y chỉ hiện số nguyên (vì không có nửa người)
+                        grid: { borderDash: [5, 5] }
                     },
                     x: {
-                        grid: { display: false } // Ẩn vạch dọc cho thanh thoát
+                        grid: { display: false }
                     }
                 }
             }

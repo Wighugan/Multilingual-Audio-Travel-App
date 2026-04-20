@@ -1,307 +1,366 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="metadata">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" />
-							</xsd:sequence>
-							<xsd:attribute name="name" use="required" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="assembly">
-						<xsd:complexType>
-							<xsd:attribute name="alias" type="xsd:string" />
-							<xsd:attribute name="name" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>2.0</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="BtnLogout" xml:space="preserve">
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BtnLogout" xml:space="preserve">
     <value>로그아웃</value>
   </data>
-	<data name="CfNewPw" xml:space="preserve">
+  <data name="CfNewPw" xml:space="preserve">
     <value>새 비밀번호 확인</value>
   </data>
-	<data name="Darkmode" xml:space="preserve">
+  <data name="Darkmode" xml:space="preserve">
     <value>다크 모드</value>
   </data>
-	<data name="DesEditInfo" xml:space="preserve">
+  <data name="DesEditInfo" xml:space="preserve">
     <value>이름 및 이메일 업데이트</value>
   </data>
-	<data name="DesFeedback" xml:space="preserve">
+  <data name="DesFeedback" xml:space="preserve">
     <value>앱 개선을 위한 피드백 보내기</value>
   </data>
-	<data name="DesFvCafe" xml:space="preserve">
+  <data name="DesFvCafe" xml:space="preserve">
     <value>저장된 식당 목록</value>
   </data>
-	<data name="DesLanguage" xml:space="preserve">
+  <data name="DesLanguage" xml:space="preserve">
     <value>표시 언어 및 음성 안내 언어 변경</value>
   </data>
-	<data name="EditInfo" xml:space="preserve">
+  <data name="EditInfo" xml:space="preserve">
     <value>정보 수정</value>
   </data>
-	<data name="Email" xml:space="preserve">
+  <data name="Email" xml:space="preserve">
     <value>이메일</value>
   </data>
-	<data name="EmailEntry" xml:space="preserve">
+  <data name="EmailEntry" xml:space="preserve">
     <value>이메일 주소를 입력하세요</value>
   </data>
-	<data name="Favorite" xml:space="preserve">
+  <data name="Favorite" xml:space="preserve">
     <value>즐겨찾기</value>
   </data>
-	<data name="Feedback" xml:space="preserve">
+  <data name="Feedback" xml:space="preserve">
     <value>평가 및 피드백</value>
   </data>
-	<data name="FvCafe" xml:space="preserve">
+  <data name="FvCafe" xml:space="preserve">
     <value>즐겨찾는 식당</value>
   </data>
-	<data name="Hello" xml:space="preserve">
+  <data name="Hello" xml:space="preserve">
     <value>안녕하세요</value>
   </data>
-	<data name="Language" xml:space="preserve">
+  <data name="Language" xml:space="preserve">
     <value>언어</value>
   </data>
-	<data name="Map" xml:space="preserve">
+  <data name="Map" xml:space="preserve">
     <value>지도</value>
   </data>
-	<data name="Name" xml:space="preserve">
+  <data name="Name" xml:space="preserve">
     <value>성명</value>
   </data>
-	<data name="NameEntry" xml:space="preserve">
+  <data name="NameEntry" xml:space="preserve">
     <value>성명을 입력하세요</value>
   </data>
-	<data name="NewPw" xml:space="preserve">
+  <data name="NewPw" xml:space="preserve">
     <value>새 비밀번호 (변경하지 않으려면 비워두세요)</value>
   </data>
-	<data name="NewPwEntry" xml:space="preserve">
+  <data name="NewPwEntry" xml:space="preserve">
     <value>새 비밀번호 입력</value>
   </data>
-	<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>프로필</value>
   </data>
-	<data name="SaveChange" xml:space="preserve">
+  <data name="SaveChange" xml:space="preserve">
     <value>변경 사항 저장</value>
   </data>
-	<data name="Setting" xml:space="preserve">
+  <data name="Setting" xml:space="preserve">
     <value>설정</value>
   </data>
-	<data name="TitleExplore" xml:space="preserve">
+  <data name="TitleExplore" xml:space="preserve">
     <value>탐색</value>
   </data>
-	<data name="ErrorEmail" xml:space="preserve">
+  <data name="ErrorEmail" xml:space="preserve">
     <value>성명과 이메일은 비워둘 수 없습니다.</value>
   </data>
-	<data name="ErrorPass" xml:space="preserve">
+  <data name="ErrorPass" xml:space="preserve">
     <value>비밀번호는 최소 6자 이상이어야 합니다.</value>
   </data>
-	<data name="ErrorRepass" xml:space="preserve">
+  <data name="ErrorRepass" xml:space="preserve">
     <value>비밀번호 확인이 일치하지 않습니다.</value>
   </data>
-	<data name="ok" xml:space="preserve">
+  <data name="ok" xml:space="preserve">
     <value>확인</value>
   </data>
-	<data name="Success" xml:space="preserve">
+  <data name="Success" xml:space="preserve">
     <value>성공</value>
   </data>
-	<data name="UpdateSuccess" xml:space="preserve">
+  <data name="UpdateSuccess" xml:space="preserve">
     <value>정보가 성공적으로 업데이트되었습니다.</value>
   </data>
-	<data name="ErrorSameEmail" xml:space="preserve">
+  <data name="ErrorSameEmail" xml:space="preserve">
     <value>이 이메일은 이미 다른 계정에서 사용 중입니다.</value>
   </data>
-	<data name="SelectLanguage" xml:space="preserve">
+  <data name="SelectLanguage" xml:space="preserve">
     <value>언어 선택</value>
   </data>
-	<data name="Cancel" xml:space="preserve">
+  <data name="Cancel" xml:space="preserve">
     <value>취소</value>
   </data>
-	<data name="UpdateLanguage" xml:space="preserve">
+  <data name="UpdateLanguage" xml:space="preserve">
     <value>언어가 업데이트되었습니다!</value>
   </data>
-	<data name="LogOut" xml:space="preserve">
+  <data name="LogOut" xml:space="preserve">
     <value>로그아웃</value>
   </data>
-	<data name="AskLogOut" xml:space="preserve">
+  <data name="AskLogOut" xml:space="preserve">
     <value>정말 로그아웃하시겠습니까?</value>
   </data>
-	<data name="Search" xml:space="preserve">
+  <data name="Search" xml:space="preserve">
     <value>식당 검색</value>
   </data>
-	<data name="Close" xml:space="preserve">
+  <data name="Close" xml:space="preserve">
     <value>닫기</value>
   </data>
-	<data name="Play" xml:space="preserve">
+  <data name="Play" xml:space="preserve">
     <value>재생</value>
   </data>
-	<data name="CannotFind" xml:space="preserve">
+  <data name="CannotFind" xml:space="preserve">
     <value>식당을 찾을 수 없습니다</value>
   </data>
-	<data name="NotSaveRes" xml:space="preserve">
+  <data name="NotSaveRes" xml:space="preserve">
     <value>저장된 식당이 없습니다</value>
   </data>
-	<data name="PressHeart" xml:space="preserve">
+  <data name="PressHeart" xml:space="preserve">
     <value>식당에서 🤍를 눌러 여기에 저장하세요</value>
   </data>
-	<data name="LogIn" xml:space="preserve">
+  <data name="LogIn" xml:space="preserve">
     <value>로그인</value>
   </data>
-	<data name="Pass" xml:space="preserve">
+  <data name="Pass" xml:space="preserve">
     <value>비밀번호</value>
   </data>
-	<data name="Home" xml:space="preserve">
+  <data name="Home" xml:space="preserve">
     <value>홈</value>
   </data>
-	<data name="AskRegis" xml:space="preserve">
+  <data name="AskRegis" xml:space="preserve">
     <value>계정이 없으신가요? 회원가입</value>
   </data>
-	<data name="AskTypeEmail" xml:space="preserve">
+  <data name="AskTypeEmail" xml:space="preserve">
     <value>이메일과 비밀번호를 입력해 주세요.</value>
   </data>
-	<data name="ErrorWrongEmailOrPass" xml:space="preserve">
+  <data name="ErrorWrongEmailOrPass" xml:space="preserve">
     <value>이메일 또는 비밀번호가 올바르지 않습니다.</value>
   </data>
-	<data name="Register" xml:space="preserve">
+  <data name="Register" xml:space="preserve">
     <value>회원가입</value>
   </data>
-	<data name="CfPass" xml:space="preserve">
+  <data name="CfPass" xml:space="preserve">
     <value>비밀번호 확인</value>
   </data>
-	<data name="CfNewPwEntry" xml:space="preserve">
+  <data name="CfNewPwEntry" xml:space="preserve">
     <value>새 비밀번호 재입력</value>
   </data>
-	<data name="AskLogIn" xml:space="preserve">
+  <data name="AskLogIn" xml:space="preserve">
     <value>이미 계정이 있으신가요? 로그인</value>
   </data>
-	<data name="CreateAcc" xml:space="preserve">
+  <data name="CreateAcc" xml:space="preserve">
     <value>계정 만들기</value>
   </data>
-	<data name="AskFullInfo" xml:space="preserve">
+  <data name="AskFullInfo" xml:space="preserve">
     <value>모든 정보를 입력해 주세요.</value>
   </data>
- <data name="MyQR" xml:space="preserve">
-	<value>내 QR</value>
+  <data name="MyQR" xml:space="preserve">
+    <value>프리미엄 기간 보기</value>
   </data>
-	<data name="MyQRDesc" xml:space="preserve">
-	<value>개인 프리미엄 QR 코드를 표시합니다</value>
+  <data name="MyQRDesc" xml:space="preserve">
+    <value>프리미엄 플랜의 유효 기간을 확인하세요.</value>
   </data>
   <data name="MyQRTitle" xml:space="preserve">
-	<value>프리미엄 QR</value>
+    <value>프리미엄 QR</value>
   </data>
   <data name="MyQRSubtitle" xml:space="preserve">
-	<value>무제한 내레이션을 위해 이 코드를 직원에게 보여주세요</value>
+    <value>무제한 내레이션을 위해 이 코드를 직원에게 보여주세요</value>
   </data>
   <data name="PremiumBannerTitle" xml:space="preserve">
-	<value>프리미엄으로 업그레이드</value>
+    <value>프리미엄으로 업그레이드</value>
   </data>
   <data name="PremiumBannerSubtitle" xml:space="preserve">
-	<value>유료 요금제에 가입하여 모든 기능을 잠금 해제하고 지원을 받으세요</value>
+    <value>유료 요금제에 가입하여 모든 기능을 잠금 해제하고 지원을 받으세요</value>
   </data>
   <data name="PremiumBadge" xml:space="preserve">
-	<value>⭐ PREMIUM</value>
+    <value>⭐ PREMIUM</value>
   </data>
   <data name="ExpiryLabel" xml:space="preserve">
-	<value>만료일</value>
+    <value>만료일</value>
   </data>
   <data name="StatusLabel" xml:space="preserve">
-	<value>상태</value>
+    <value>상태</value>
   </data>
   <data name="RenewPremium" xml:space="preserve">
-	<value>프리미엄 갱신</value>
+    <value>프리미엄 갱신</value>
   </data>
   <data name="PremiumTitle" xml:space="preserve">
-	<value>프리미엄 요금제</value>
+    <value>프리미엄 요금제</value>
   </data>
   <data name="Features" xml:space="preserve">
-	<value>기능</value>
+    <value>기능</value>
   </data>
   <data name="Free" xml:space="preserve">
-	<value>무료</value>
+    <value>무료</value>
   </data>
   <data name="Paid" xml:space="preserve">
-	<value>유료</value>
+    <value>유료</value>
   </data>
   <data name="Feature1" xml:space="preserve">
-	<value>무료 장소 내레이션 듣기</value>
+    <value>무료 장소 내레이션 듣기</value>
   </data>
   <data name="Feature2" xml:space="preserve">
-	<value>빠른 접근을 위한 개인 QR</value>
+    <value>빠른 접근을 위한 개인 QR</value>
   </data>
   <data name="Feature3" xml:space="preserve">
-	<value>새 콘텐츠 업데이트 우선 제공</value>
+    <value>새 콘텐츠 업데이트 우선 제공</value>
   </data>
   <data name="Feature4" xml:space="preserve">
-	<value>VIP 회원을 위한 특별 지원</value>
+    <value>VIP 회원을 위한 특별 지원</value>
   </data>
   <data name="PlanYear" xml:space="preserve">
-	<value>연간</value>
+    <value>연간</value>
   </data>
   <data name="PlanMonth" xml:space="preserve">
-	<value>매월</value>
+    <value>매월</value>
   </data>
   <data name="PlanWeek" xml:space="preserve">
-	<value>매주</value>
+    <value>매주</value>
   </data>
   <data name="SubscribeButton" xml:space="preserve">
-	<value>구독</value>
+    <value>구독</value>
   </data>
   <data name="ScanQR" xml:space="preserve">
-	<value>QR 스캔</value>
+    <value>QR 스캔</value>
   </data>
   <data name="PremiumListTitle" xml:space="preserve">
-	<value>⭐ 프리미엄 POI 목록</value>
+    <value>⭐ 프리미엄 POI 목록</value>
   </data>
   <data name="PremiumListSubtitle" xml:space="preserve">
-	<value>나레이션을 들으려면 항목을 탭하세요</value>
+    <value>나레이션을 들으려면 항목을 탭하세요</value>
   </data>
-	<data name="CreateAccSuccess" xml:space="preserve">
+  <data name="CreateAccSuccess" xml:space="preserve">
     <value>계정 생성 성공! 로그인해 주세요</value>
   </data>
-	<data name="ErrorInvalidEmail" xml:space="preserve">
+  <data name="ErrorInvalidEmail" xml:space="preserve">
     <value>잘못된 이메일 형식입니다!</value>
   </data>
-	<data name="ErrorName" xml:space="preserve">
+  <data name="ErrorName" xml:space="preserve">
     <value>잘못된 이름입니다!</value>
   </data>
 </root>

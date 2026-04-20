@@ -68,234 +68,6 @@ namespace multilingualAudioTravelApp.Languages {
                 return ResourceManager.GetString("AskFullInfo", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to QR của tôi.
-        /// </summary>
-        public static string MyQR {
-            get {
-                return ResourceManager.GetString("MyQR", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Hiện mã QR Premium cá nhân.
-        /// </summary>
-        public static string MyQRDesc {
-            get {
-                return ResourceManager.GetString("MyQRDesc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Mã QR Premium của bạn.
-        /// </summary>
-        public static string MyQRTitle {
-            get {
-                return ResourceManager.GetString("MyQRTitle", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Quét mã này để nghe thuyết minh không giới hạn.
-        /// </summary>
-        public static string MyQRSubtitle {
-            get {
-                return ResourceManager.GetString("MyQRSubtitle", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to ⭐ PREMIUM.
-        /// </summary>
-        public static string PremiumBadge {
-            get {
-                return ResourceManager.GetString("PremiumBadge", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Ngày hết hạn.
-        /// </summary>
-        public static string ExpiryLabel {
-            get {
-                return ResourceManager.GetString("ExpiryLabel", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Trạng thái.
-        /// </summary>
-        public static string StatusLabel {
-            get {
-                return ResourceManager.GetString("StatusLabel", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Gia hạn Premium.
-        /// </summary>
-        public static string RenewPremium {
-            get {
-                return ResourceManager.GetString("RenewPremium", resourceCulture);
-            }
-        }
-
-        public static string PremiumBannerTitle {
-            get {
-                return ResourceManager.GetString("PremiumBannerTitle", resourceCulture);
-            }
-        }
-
-        public static string PremiumBannerSubtitle {
-            get {
-                return ResourceManager.GetString("PremiumBannerSubtitle", resourceCulture);
-            }
-        }
-
-        public static string PremiumTitle {
-            get {
-                return ResourceManager.GetString("PremiumTitle", resourceCulture);
-            }
-        }
-
-        public static string Features {
-            get {
-                return ResourceManager.GetString("Features", resourceCulture);
-            }
-        }
-
-        public static string Free {
-            get {
-                return ResourceManager.GetString("Free", resourceCulture);
-            }
-        }
-
-        public static string Paid {
-            get {
-                return ResourceManager.GetString("Paid", resourceCulture);
-            }
-        }
-
-        public static string Feature1 {
-            get {
-                return ResourceManager.GetString("Feature1", resourceCulture);
-            }
-        }
-
-        public static string Feature2 {
-            get {
-                return ResourceManager.GetString("Feature2", resourceCulture);
-            }
-        }
-
-        public static string Feature3 {
-            get {
-                return ResourceManager.GetString("Feature3", resourceCulture);
-            }
-        }
-
-        public static string Feature4 {
-            get {
-                return ResourceManager.GetString("Feature4", resourceCulture);
-            }
-        }
-
-        public static string PlanYear {
-            get {
-                return ResourceManager.GetString("PlanYear", resourceCulture);
-            }
-        }
-
-        public static string PlanMonth {
-            get {
-                return ResourceManager.GetString("PlanMonth", resourceCulture);
-            }
-        }
-
-        public static string PlanWeek {
-            get {
-                return ResourceManager.GetString("PlanWeek", resourceCulture);
-            }
-        }
-
-        public static string SubscribeButton {
-            get {
-                return ResourceManager.GetString("SubscribeButton", resourceCulture);
-            }
-        }
-
-        public static string ScanQR {
-            get {
-                return ResourceManager.GetString("ScanQR", resourceCulture);
-            }
-        }
-
-        public static string PremiumListTitle {
-            get {
-                return ResourceManager.GetString("PremiumListTitle", resourceCulture);
-            }
-        }
-
-        public static string PremiumListSubtitle {
-            get {
-                return ResourceManager.GetString("PremiumListSubtitle", resourceCulture);
-            }
-        }
-
-        public static string BtnPremiumActivated {
-            get {
-                return ResourceManager.GetString("BtnPremiumActivated", resourceCulture);
-            }
-        }
-
-        public static string StatusPremiumActive {
-            get {
-                return ResourceManager.GetString("StatusPremiumActive", resourceCulture);
-            }
-        }
-
-        public static string MsgSelectPlanTitle {
-            get {
-                return ResourceManager.GetString("MsgSelectPlanTitle", resourceCulture);
-            }
-        }
-
-        public static string MsgSelectPlanBody {
-            get {
-                return ResourceManager.GetString("MsgSelectPlanBody", resourceCulture);
-            }
-        }
-
-        public static string BtnProcessing {
-            get {
-                return ResourceManager.GetString("BtnProcessing", resourceCulture);
-            }
-        }
-
-        public static string MsgActivatedTitle {
-            get {
-                return ResourceManager.GetString("MsgActivatedTitle", resourceCulture);
-            }
-        }
-
-        public static string MsgActivatedBody {
-            get {
-                return ResourceManager.GetString("MsgActivatedBody", resourceCulture);
-            }
-        }
-
-        public static string StatusActivated {
-            get {
-                return ResourceManager.GetString("StatusActivated", resourceCulture);
-            }
-        }
-
-        public static string Unsave {
-            get {
-                return ResourceManager.GetString("Unsave", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to Đã có tài khoản? Đăng nhập.
@@ -339,6 +111,24 @@ namespace multilingualAudioTravelApp.Languages {
         public static string BtnLogout {
             get {
                 return ResourceManager.GetString("BtnLogout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✅ Đã kích hoạt Premium.
+        /// </summary>
+        public static string BtnPremiumActivated {
+            get {
+                return ResourceManager.GetString("BtnPremiumActivated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ⏳ Đang xử lý....
+        /// </summary>
+        public static string BtnProcessing {
+            get {
+                return ResourceManager.GetString("BtnProcessing", resourceCulture);
             }
         }
         
@@ -550,6 +340,15 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ngày hết hạn.
+        /// </summary>
+        public static string ExpiryLabel {
+            get {
+                return ResourceManager.GetString("ExpiryLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yêu thích.
         /// </summary>
         public static string Favorite {
@@ -559,11 +358,65 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nghe thuyết minh các địa điểm miễn phí.
+        /// </summary>
+        public static string Feature1 {
+            get {
+                return ResourceManager.GetString("Feature1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to QR cá nhân để truy cập nhanh.
+        /// </summary>
+        public static string Feature2 {
+            get {
+                return ResourceManager.GetString("Feature2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ưu tiên cập nhật nội dung mới.
+        /// </summary>
+        public static string Feature3 {
+            get {
+                return ResourceManager.GetString("Feature3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hỗ trợ đặc biệt dành cho thành viên VIP.
+        /// </summary>
+        public static string Feature4 {
+            get {
+                return ResourceManager.GetString("Feature4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tính năng.
+        /// </summary>
+        public static string Features {
+            get {
+                return ResourceManager.GetString("Features", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Đánh giá và góp ý.
         /// </summary>
         public static string Feedback {
             get {
                 return ResourceManager.GetString("Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Miễn phí.
+        /// </summary>
+        public static string Free {
+            get {
+                return ResourceManager.GetString("Free", resourceCulture);
             }
         }
         
@@ -631,6 +484,78 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bạn đã kích hoạt gói Premium!\nVào Profile → &apos;QR của tôi&apos; để xem mã QR..
+        /// </summary>
+        public static string MsgActivatedBody {
+            get {
+                return ResourceManager.GetString("MsgActivatedBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thành công.
+        /// </summary>
+        public static string MsgActivatedTitle {
+            get {
+                return ResourceManager.GetString("MsgActivatedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vui lòng chọn gói trước khi đăng ký..
+        /// </summary>
+        public static string MsgSelectPlanBody {
+            get {
+                return ResourceManager.GetString("MsgSelectPlanBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chưa chọn gói.
+        /// </summary>
+        public static string MsgSelectPlanTitle {
+            get {
+                return ResourceManager.GetString("MsgSelectPlanTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Premium.
+        /// </summary>
+        public static string MyQR {
+            get {
+                return ResourceManager.GetString("MyQR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xem thời hạn sử dụng gói Premium của bạn kéo dài bao lâu..
+        /// </summary>
+        public static string MyQRDesc {
+            get {
+                return ResourceManager.GetString("MyQRDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quét mã này để nghe thuyết minh không giới hạn.
+        /// </summary>
+        public static string MyQRSubtitle {
+            get {
+                return ResourceManager.GetString("MyQRSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mã QR Premium của bạn.
+        /// </summary>
+        public static string MyQRTitle {
+            get {
+                return ResourceManager.GetString("MyQRTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Họ và tên.
         /// </summary>
         public static string Name {
@@ -685,6 +610,15 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trả phí.
+        /// </summary>
+        public static string Paid {
+            get {
+                return ResourceManager.GetString("Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mật khẩu.
         /// </summary>
         public static string Pass {
@@ -694,11 +628,92 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Theo tháng.
+        /// </summary>
+        public static string PlanMonth {
+            get {
+                return ResourceManager.GetString("PlanMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Theo tuần.
+        /// </summary>
+        public static string PlanWeek {
+            get {
+                return ResourceManager.GetString("PlanWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Theo năm.
+        /// </summary>
+        public static string PlanYear {
+            get {
+                return ResourceManager.GetString("PlanYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nghe.
         /// </summary>
         public static string Play {
             get {
                 return ResourceManager.GetString("Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ⭐ PREMIUM.
+        /// </summary>
+        public static string PremiumBadge {
+            get {
+                return ResourceManager.GetString("PremiumBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tham gia trả phí để mở khóa toàn bộ tính năng và nhận sự hỗ trợ của chúng tôi.
+        /// </summary>
+        public static string PremiumBannerSubtitle {
+            get {
+                return ResourceManager.GetString("PremiumBannerSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nâng cấp Premium.
+        /// </summary>
+        public static string PremiumBannerTitle {
+            get {
+                return ResourceManager.GetString("PremiumBannerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bấm vào quán để nghe thuyết minh.
+        /// </summary>
+        public static string PremiumListSubtitle {
+            get {
+                return ResourceManager.GetString("PremiumListSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ⭐ Danh sách quán Premium.
+        /// </summary>
+        public static string PremiumListTitle {
+            get {
+                return ResourceManager.GetString("PremiumListTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gói Premium.
+        /// </summary>
+        public static string PremiumTitle {
+            get {
+                return ResourceManager.GetString("PremiumTitle", resourceCulture);
             }
         }
         
@@ -730,11 +745,29 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gia hạn Premium.
+        /// </summary>
+        public static string RenewPremium {
+            get {
+                return ResourceManager.GetString("RenewPremium", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lưu thay đổi.
         /// </summary>
         public static string SaveChange {
             get {
                 return ResourceManager.GetString("SaveChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quét QR.
+        /// </summary>
+        public static string ScanQR {
+            get {
+                return ResourceManager.GetString("ScanQR", resourceCulture);
             }
         }
         
@@ -766,6 +799,42 @@ namespace multilingualAudioTravelApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 🎉 Kích hoạt thành công!.
+        /// </summary>
+        public static string StatusActivated {
+            get {
+                return ResourceManager.GetString("StatusActivated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trạng thái.
+        /// </summary>
+        public static string StatusLabel {
+            get {
+                return ResourceManager.GetString("StatusLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tài khoản của bạn đang ở gói Premium.
+        /// </summary>
+        public static string StatusPremiumActive {
+            get {
+                return ResourceManager.GetString("StatusPremiumActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đăng Ký.
+        /// </summary>
+        public static string SubscribeButton {
+            get {
+                return ResourceManager.GetString("SubscribeButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thành công.
         /// </summary>
         public static string Success {
@@ -780,6 +849,15 @@ namespace multilingualAudioTravelApp.Languages {
         public static string TitleExplore {
             get {
                 return ResourceManager.GetString("TitleExplore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bỏ lưu.
+        /// </summary>
+        public static string Unsave {
+            get {
+                return ResourceManager.GetString("Unsave", resourceCulture);
             }
         }
         

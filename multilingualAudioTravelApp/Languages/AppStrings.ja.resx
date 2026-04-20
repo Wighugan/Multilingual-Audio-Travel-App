@@ -280,10 +280,10 @@
     <value>すべての情報をご記入ください。</value>
   </data>
   <data name="MyQR" xml:space="preserve">
-    <value>私のQR</value>
+    <value>プレミアム期間を参照</value>
   </data>
   <data name="MyQRDesc" xml:space="preserve">
-    <value>個人用プレミアムQRコードを表示</value>
+    <value>プレミアムプランの有効期間を確認してください。</value>
   </data>
   <data name="MyQRTitle" xml:space="preserve">
     <value>あなたのプレミアムQR</value>

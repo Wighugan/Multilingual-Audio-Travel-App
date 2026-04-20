@@ -18,9 +18,9 @@ namespace multilingualAudioTravelApp
             base.OnAppearing();
 
             // Set localized UI texts
-            MyQRTitleLabel.Text = Languages.AppStrings.MyQRTitle;
-            MyQRSubtitleLabel.Text = Languages.AppStrings.MyQRSubtitle;
-            PremiumBadgeLabel.Text = Languages.AppStrings.PremiumBadge;
+            //MyQRTitleLabel.Text = Languages.AppStrings.MyQRTitle;
+            //MyQRSubtitleLabel.Text = Languages.AppStrings.MyQRSubtitle;
+            //PremiumBadgeLabel.Text = Languages.AppStrings.PremiumBadge;
             MyQRExpiryLabel.Text = Languages.AppStrings.ExpiryLabel;
             MyQRStatusLabel.Text = Languages.AppStrings.StatusLabel;
             RenewButton.Text = Languages.AppStrings.RenewPremium;
@@ -41,7 +41,7 @@ namespace multilingualAudioTravelApp
             }
 
             // Hiện mã QR
-            QRImage.Value = token;
+            //QRImage.Value = token;
             EmailLabel.Text = email;
 
             // Kiểm tra còn hạn không

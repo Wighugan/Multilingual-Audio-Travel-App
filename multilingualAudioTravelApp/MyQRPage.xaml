@@ -7,43 +7,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="20" VerticalOptions="Center">
-
-            <!-- Tiêu đề -->
-            <Label x:Name="MyQRTitleLabel" Text="" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
-
-            <Label x:Name="MyQRSubtitleLabel" Text="" FontSize="13" TextColor="Gray" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-
-            <!-- Khung chứa QR -->
-            <Frame CornerRadius="20" Padding="24"
-                   HasShadow="False" BorderColor="#E0E0E0"
-                   HorizontalOptions="Center">
-                <VerticalStackLayout Spacing="16">
-
-                    <!-- Ảnh QR sinh từ token -->
-                    <zxing:BarcodeGeneratorView
-                        x:Name="QRImage"
-                        Format="QrCode"
-                        WidthRequest="220"
-                        HeightRequest="220"
-                        HorizontalOptions="Center"
-                        ForegroundColor="{AppThemeBinding Light=Black, Dark=White}"
-                        BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"/>
-
-                    <!-- Badge Premium -->
-                        <Border BackgroundColor="#1D9E75"
-                            StrokeThickness="0"
-                            HorizontalOptions="Center"
-                            Padding="16,6">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Label x:Name="PremiumBadgeLabel" Text="" TextColor="White" FontSize="13" FontAttributes="Bold"/>
-                    </Border>
-
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- Thông tin gói -->
+         <!-- Thông tin gói -->
             <Frame CornerRadius="16" Padding="16"
                    HasShadow="False" BorderColor="#E0E0E0">
                 <VerticalStackLayout Spacing="8">

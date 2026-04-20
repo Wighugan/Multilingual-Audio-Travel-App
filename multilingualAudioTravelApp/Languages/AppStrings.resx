@@ -280,10 +280,10 @@
     <value>Vui lòng điền đầy đủ thông tin.</value>
   </data>
   <data name="MyQR" xml:space="preserve">
-    <value>QR của tôi</value>
+    <value>Premium</value>
   </data>
   <data name="MyQRDesc" xml:space="preserve">
-    <value>Hiện mã QR Premium cá nhân</value>
+    <value>Xem thời hạn sử dụng gói Premium của bạn kéo dài bao lâu.</value>
   </data>
   <data name="MyQRTitle" xml:space="preserve">
     <value>Mã QR Premium của bạn</value>

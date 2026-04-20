@@ -280,10 +280,11 @@
     <value>Please fill in all the information.</value>
   </data>
   <data name="MyQR" xml:space="preserve">
-    <value>My QR</value>
+    <value>Premium</value>
   </data>
   <data name="MyQRDesc" xml:space="preserve">
-    <value>Show your personal Premium QR code</value>
+    <value>Check how long your Premium plan is valid for.
+</value>
   </data>
   <data name="MyQRTitle" xml:space="preserve">
     <value>Your Premium QR</value>

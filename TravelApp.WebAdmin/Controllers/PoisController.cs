@@ -185,8 +185,8 @@ namespace TravelApp.WebAdmin.Controllers
             {
                 poi.VisitCount++;
 
-                // --- XỬ LÝ LƯU JSON NGÀY TRONG TUẦN ---
-                var today = DateTime.Now.DayOfWeek.ToString(); // Trả ra "Monday", "Tuesday"...
+                // DÙNG NGÀY THÁNG NĂM CHÍNH XÁC (VD: "2026-04-20") THAY VÌ TÊN THỨ
+                var today = DateTime.Now.ToString("yyyy-MM-dd");
 
                 // Đọc dữ liệu cũ
                 var dict = string.IsNullOrEmpty(poi.WeeklyVisitsJson)
@@ -205,19 +205,25 @@ namespace TravelApp.WebAdmin.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { poi.Id, poi.ListenCount, poi.VisitCount });
         }
+
+
         [HttpGet("weekly-chart")]
         public async Task<IActionResult> GetWeeklyChart()
         {
             var pois = await _context.Pois.ToListAsync();
 
-            // Tạo sẵn một bộ đếm tổng cho 7 ngày
             var resultDict = new Dictionary<string, int>
-    {
-        { "Monday", 0 }, { "Tuesday", 0 }, { "Wednesday", 0 },
-        { "Thursday", 0 }, { "Friday", 0 }, { "Saturday", 0 }, { "Sunday", 0 }
-    };
+        {
+            { "Monday", 0 }, { "Tuesday", 0 }, { "Wednesday", 0 },
+            { "Thursday", 0 }, { "Friday", 0 }, { "Saturday", 0 }, { "Sunday", 0 }
+        };
 
-            // Lướt qua từng POI, giải mã JSON và cộng dồn vào bộ đếm tổng
+            // Tính ra ngày bắt đầu (Thứ 2) và kết thúc (Chủ Nhật) của tuần hiện tại
+            DateTime today = DateTime.Today;
+            int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+            DateTime startOfWeek = today.AddDays(-1 * diff).Date;
+            DateTime endOfWeek = startOfWeek.AddDays(6).Date;
+
             foreach (var poi in pois)
             {
                 if (!string.IsNullOrEmpty(poi.WeeklyVisitsJson) && poi.WeeklyVisitsJson != "{}")
@@ -227,24 +233,28 @@ namespace TravelApp.WebAdmin.Controllers
                         var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(poi.WeeklyVisitsJson);
                         foreach (var kvp in dict)
                         {
-                            if (resultDict.ContainsKey(kvp.Key))
-                                resultDict[kvp.Key] += kvp.Value;
+                            // Giải mã ngày và kiểm tra xem có nằm trong tuần hiện tại không
+                            if (DateTime.TryParse(kvp.Key, out DateTime visitDate))
+                            {
+                                if (visitDate >= startOfWeek && visitDate <= endOfWeek)
+                                {
+                                    string dayName = visitDate.DayOfWeek.ToString(); // Biến ngày thành "Monday", "Tuesday"...
+                                    if (resultDict.ContainsKey(dayName))
+                                    {
+                                        resultDict[dayName] += kvp.Value;
+                                    }
+                                }
+                            }
                         }
                     }
                     catch { /* Bỏ qua nếu JSON bị lỗi */ }
                 }
             }
 
-            // Đẩy ra mảng 7 con số đúng thứ tự từ Thứ 2 -> Chủ Nhật để vẽ Chart
             var result = new int[] {
-        resultDict["Monday"],
-        resultDict["Tuesday"],
-        resultDict["Wednesday"],
-        resultDict["Thursday"],
-        resultDict["Friday"],
-        resultDict["Saturday"],
-        resultDict["Sunday"]
-    };
+            resultDict["Monday"], resultDict["Tuesday"], resultDict["Wednesday"],
+            resultDict["Thursday"], resultDict["Friday"], resultDict["Saturday"], resultDict["Sunday"]
+        };
 
             return Ok(result);
         }

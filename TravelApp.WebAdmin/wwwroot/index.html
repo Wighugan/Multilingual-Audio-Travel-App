@@ -4,7 +4,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 <style>
     * {
         box-sizing: border-box;
@@ -696,29 +698,27 @@
                     <div class="card-header">
                         <span class="card-title">Top địa điểm được nghe nhiều nhất</span>
                     </div>
-                    <table>
-                        <thead><tr><th>Tên địa điểm</th><th style="text-align:right">Lượt nghe</th></tr></thead>
-                        <tbody id="dash-top-listen"></tbody>
-                    </table>
+                    <div style="height: 250px; width: 100%;">
+                        <canvas id="topListenChart"></canvas>
+                    </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title">Quán đông khách đến nhất</span>
                     </div>
-                    <table>
-                        <thead><tr><th>Tên địa điểm</th><th style="text-align:right">Lượt ghé thăm</th></tr></thead>
-                        <tbody id="dash-top-visit"></tbody>
-                    </table>
+                    <div style="height: 250px; width: 100%;">
+                        <canvas id="topVisitChart"></canvas>
+                    </div>
                 </div>
+
 
 
                 <div class="card" style="margin-top: 1.25rem;">
                     <div class="card-header">
-                        <span class="card-title">Bản đồ hoạt động (Heatmap Realtime)</span>
+                        <span class="card-title">Bản đồ hoạt động (Heatmap Người Dùng)</span>
                     </div>
-                    <div id="heatmap-container" style="height: 450px; background: #e9e9e9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: gray;">
-                        Bản đồ sẽ được nhúng vào đây
+                    <div id="heatmap-container" style="height: 450px; background: #e9e9e9; border-radius: 12px; z-index: 1;">
                     </div>
                 </div>
 
@@ -1008,6 +1008,59 @@
         console.log("Đã kết nối SignalR thành công!");
     }).catch(err => console.error("Lỗi kết nối SignalR:", err));
 
+
+    // ==========================================
+    // CẤU HÌNH BẢN ĐỒ HEATMAP (LEAFLET)
+    // ==========================================
+    let map;
+    let heatLayer;
+    let heatData = []; // Mảng chứa các tọa độ [lat, lng, cường độ]
+
+    function initHeatmap() {
+        // 1. Khởi tạo bản đồ, đặt tâm ở Vĩnh Khánh (Quận 4)
+        map = L.map('heatmap-container').setView([10.7615, 106.7025], 16);
+
+        // 2. Thêm lớp bản đồ nền (Dùng OpenStreetMap miễn phí)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // 3. Khởi tạo lớp Heatmap với các thông số màu sắc
+        heatLayer = L.heatLayer(heatData, {
+            radius: 25,     // Độ to của đốm nhiệt
+            blur: 15,       // Độ mờ viền
+            maxZoom: 17,
+            gradient: { 0.4: 'blue', 0.6: 'cyan', 0.7: 'lime', 0.8: 'yellow', 1.0: 'red' }
+        }).addTo(map);
+    }
+
+    // Chạy hàm khởi tạo bản đồ ngay khi web load xong
+    document.addEventListener("DOMContentLoaded", () => {
+        initHeatmap();
+    });
+
+    // 4. LẮNG NGHE TỌA ĐỘ REALTIME TỪ APP (SIGNALR)
+    connection.on("ReceiveUserLocation", (identifier, lat, lng) => {
+        console.log(`Nhận tọa độ từ [${identifier}]: ${lat}, ${lng}`);
+
+        // Thêm tọa độ mới vào mảng (Số 1 ở cuối là cường độ nhiệt)
+        heatData.push([lat, lng, 1]);
+
+        // Nếu mảng dài quá (ví dụ > 500 điểm), xóa bớt điểm cũ nhất để web không bị lag
+        if (heatData.length > 500) {
+            heatData.shift();
+        }
+
+        // Cập nhật lại bản đồ
+        heatLayer.setLatLngs(heatData);
+    });
+
+
+
+
+
+
     const currentRole = localStorage.getItem("userRole");
     const currentUserId = localStorage.getItem("userId");
     if (!currentRole) {
@@ -1110,7 +1163,9 @@
     let editPoiId = null;
     let editUserId = null;
     let currentEditUser = null;
-    let weeklyChartInstance = null; // Biến lưu trữ biểu đồ để tránh vẽ đè
+    let weeklyChartInstance = null;
+    let topListenChartInstance = null; // Thêm dòng này
+    let topVisitChartInstance = null;  // Thêm dòng này
 
     async function renderWeeklyChart() {
         const ctx = document.getElementById('weeklyChart');
@@ -1206,25 +1261,72 @@
     function renderDashboard() {
         initDashboard();
 
-        // 1. Sắp xếp danh sách POI giảm dần theo lượt NGHE (Listen)
+        // 1. Lấy Top 5 Nghe
         const topListen = [...POIS].sort((a, b) => b.listenCount - a.listenCount).slice(0, 5);
+        const listenLabels = topListen.map(p => p.translations?.vi?.name || '(Chưa có tên)');
+        const listenData = topListen.map(p => p.listenCount);
 
-        document.getElementById('dash-top-listen').innerHTML = topListen.map(p => `
-        <tr>
-            <td style="font-weight: 500;">${p.translations?.vi?.name || '(Chưa có tên)'}</td>
-            <td style="text-align:right"><span class="badge badge-blue">${p.listenCount} lượt</span></td>
-        </tr>
-    `).join('');
-
-        // 2. Sắp xếp danh sách POI giảm dần theo lượt GHÉ THĂM (Visit)
+        // 2. Lấy Top 5 Visit
         const topVisit = [...POIS].sort((a, b) => b.visitCount - a.visitCount).slice(0, 5);
+        const visitLabels = topVisit.map(p => p.translations?.vi?.name || '(Chưa có tên)');
+        const visitData = topVisit.map(p => p.visitCount);
 
-        document.getElementById('dash-top-visit').innerHTML = topVisit.map(p => `
-        <tr>
-            <td style="font-weight: 500;">${p.translations?.vi?.name || '(Chưa có tên)'}</td>
-            <td style="text-align:right"><span class="badge badge-amber">${p.visitCount} lượt</span></td>
-        </tr>
-    `).join('');
+        // 3. VẼ BIỂU ĐỒ TOP NGHE
+        const ctxListen = document.getElementById('topListenChart');
+        if (ctxListen) {
+            if (topListenChartInstance) topListenChartInstance.destroy();
+            topListenChartInstance = new Chart(ctxListen, {
+                type: 'bar',
+                data: {
+                    labels: listenLabels,
+                    datasets: [{
+                        label: 'Lượt nghe',
+                        data: listenData,
+                        backgroundColor: '#3498DB', // Màu xanh dương
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // ĐÂY LÀ LỆNH BIẾN CỘT ĐỨNG THÀNH CỘT NGANG
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, ticks: { stepSize: 1 } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // 4. VẼ BIỂU ĐỒ TOP GHÉ THĂM
+        const ctxVisit = document.getElementById('topVisitChart');
+        if (ctxVisit) {
+            if (topVisitChartInstance) topVisitChartInstance.destroy();
+            topVisitChartInstance = new Chart(ctxVisit, {
+                type: 'bar',
+                data: {
+                    labels: visitLabels,
+                    datasets: [{
+                        label: 'Lượt ghé thăm',
+                        data: visitData,
+                        backgroundColor: '#E67E22', // Màu cam
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // ĐÂY LÀ LỆNH BIẾN CỘT ĐỨNG THÀNH CỘT NGANG
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, ticks: { stepSize: 1 } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
         renderWeeklyChart();
     }
 

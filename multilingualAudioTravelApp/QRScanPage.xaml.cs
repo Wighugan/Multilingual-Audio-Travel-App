@@ -12,7 +12,7 @@ public partial class QRScanPage : ContentPage
     private string _currentDescription = string.Empty;
     private CancellationTokenSource? _speechCts;
     private bool _isPlaying = false;
-    private readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("http://10.0.2.2:5068/") };
+    private readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("http://192.168.171.159:5068/") };
     public QRScanPage()
     {
         InitializeComponent();
@@ -82,7 +82,7 @@ public partial class QRScanPage : ContentPage
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             // Tắt bộ quét để tránh quét tiếp trong khi đang hiện thông báo
-            BarcodeReader.IsDetecting = false;
+           // BarcodeReader.IsDetecting = false;
 
             // Gọi hàm xử lý (đã lược bỏ GPS theo yêu cầu trước của bạn)
             await HandleQRCode(result.Value);
@@ -111,7 +111,7 @@ public partial class QRScanPage : ContentPage
     private async Task HandleQRCode(string qrToken)
     {
         System.Diagnostics.Debug.WriteLine($"[QR] Đọc được Token: '{qrToken}'");
-
+        qrToken = qrToken.Trim(); // THÊM DÒNG NÀY VÀO TRƯỚC KHI GỌI API
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
             StatusLabel.Text = $"🔍 Đang kiểm tra mã trên máy chủ...";
@@ -178,12 +178,18 @@ public partial class QRScanPage : ContentPage
         }
     }
 
-    private void ResetScanner()
+    private async void ResetScanner()
     {
-        _isProcessing = false;
-        BarcodeReader.IsDetecting = true;
         StatusLabel.Text = "Hướng camera vào mã QR";
         StatusLabel.TextColor = Colors.White;
+
+        // XÓA HOẶC COMMENT DÒNG BẬT CAMERA NÀY:
+        // BarcodeReader.IsDetecting = true;
+
+        // Đợi 1.5 giây rồi mới "mở khóa" cho phép quét lần 2
+        // Giúp người dùng có thời gian di chuyển điện thoại ra khỏi mã QR cũ
+        await Task.Delay(1500);
+        _isProcessing = false;
     }
 
     private async Task SpeakAsync(string text)

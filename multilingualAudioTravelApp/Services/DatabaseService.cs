@@ -27,6 +27,7 @@ public class PoiEntity  //POI
     public string TranslationsJson { get; set; }
     public int ListenCount { get; set; } = 0;
     public int VisitCount { get; set; } = 0;
+    public string QrCodeToken { get; set; }
     private Dictionary<string, PoiTranslation> _parsedTranslations;
     
     [Ignore]
@@ -35,7 +36,8 @@ public class PoiEntity  //POI
     {
         get
         {
-            const string devIp = "192.168.1.74";
+            // const string devIp = "192.168.1.74";
+            const string devIp = "192.168.171.159";
             if (DeviceInfo.Platform == DevicePlatform.Android)
                 return DeviceInfo.DeviceType == DeviceType.Virtual
                     ? "http://10.0.2.2:5068/images/"
@@ -169,12 +171,12 @@ public class DatabaseService
     private SQLiteAsyncConnection _db;
     private readonly string _dbPath;
     private readonly HttpClient _httpClient = new HttpClient();
-    private readonly string baseUrl = "http://10.0.2.2:5068";
-    private string ApiBaseUrl
+    private readonly string baseUrl = "http://192.168.171.159:5068";
+    private string ApiBaseUrl  
     {
         get
         {
-            const string devIp = "192.168.1.135"; // IP máy bạn
+            const string devIp = "192.168.171.159"; // IP máy bạn
 
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
@@ -571,7 +573,7 @@ public class DatabaseService
         if (image.Contains('.'))
         {
             // build image base similar to PoiEntity.ImageBaseUrl
-            const string devIp = "192.168.1.74";
+            const string devIp = "192.168.171.159";
             string baseUrl;
             if (DeviceInfo.Platform == DevicePlatform.Android)
                 baseUrl = DeviceInfo.DeviceType == DeviceType.Virtual

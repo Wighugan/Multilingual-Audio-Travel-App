@@ -34,6 +34,10 @@ namespace TravelApp.WebAdmin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPoi([FromBody] PoiEntity newPoi)
         {
+            if (string.IsNullOrEmpty(newPoi.QrCodeToken))
+            {
+                newPoi.QrCodeToken = Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
+            }
             _context.Pois.Add(newPoi);
             await _context.SaveChangesAsync();
             return Ok(newPoi);
@@ -143,7 +147,7 @@ namespace TravelApp.WebAdmin.Controllers
 
             return Ok(new { fileNames = uploadedFileNames });
         }
-        
+
 
         // API lấy bảng xếp hạng
         [HttpGet("ranking")]
@@ -257,6 +261,35 @@ namespace TravelApp.WebAdmin.Controllers
         };
 
             return Ok(result);
+        }
+
+        // API: GET /api/pois/verify/{token}
+        [HttpGet("verify/{token}")]
+        public async Task<IActionResult> VerifyQrToken(string token)
+        {
+            // Tra cứu Token trong bảng POIs
+            var poi = await _context.Pois.FirstOrDefaultAsync(p => p.QrCodeToken == token);
+
+            if (poi == null)
+            {
+                // Trả về lỗi
+                return NotFound(new { message = "Mã QR không tồn tại trong hệ thống." });
+            }
+            return Ok(poi);
+        }
+
+
+        [HttpPost("{id}/generate-qr")]
+        public async Task<IActionResult> GenerateQrForExistingPoi(int id)
+        {
+            var poi = await _context.Pois.FindAsync(id);
+            if (poi == null) return NotFound();
+
+            // Tạo Token cho quán cũ
+            poi.QrCodeToken = Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
+            await _context.SaveChangesAsync();
+
+            return Ok(new { token = poi.QrCodeToken });
         }
     }
 }

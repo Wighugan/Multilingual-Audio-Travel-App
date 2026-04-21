@@ -764,6 +764,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Mã QR</th>
                             <th>Image</th>
                             <th>Coordinates</th>
                             <th>Radius</th>
@@ -1056,11 +1057,6 @@
         heatLayer.setLatLngs(heatData);
     });
 
-
-
-
-
-
     const currentRole = localStorage.getItem("userRole");
     const currentUserId = localStorage.getItem("userId");
     if (!currentRole) {
@@ -1123,7 +1119,8 @@
                     translations: transObj,       // Gắn cục đa ngôn ngữ đã dịch vào
                     ownerId: p.ownerId || p.OwnerId,
                     listenCount: p.listenCount || p.ListenCount || 0,
-                    visitCount: p.visitCount || p.VisitCount || 0
+                    visitCount: p.visitCount || p.VisitCount || 0,
+                    qrCodeToken: p.qrCodeToken || p.QrCodeToken
                 };
             });
 
@@ -1371,6 +1368,16 @@
             const ownerName = ownerObj ? ownerObj.fullName : (p.ownerId ? 'Unknown' : 'Admin');
             return `<tr>
       <td style="font-weight:500">${displayName}</td>
+      <td style="text-align: center;">
+        ${p.qrCodeToken
+                    ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${p.qrCodeToken}" 
+                    style="border-radius: 8px; cursor: pointer; border: 1px solid #ccc; background: white; padding: 2px;"
+                    onclick="window.open('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${p.qrCodeToken}')"
+                    title="Bấm để phóng to / Tải về in ấn" />
+               <div style="font-size: 10px; font-weight: bold; color: #1D9E75; margin-top: 4px;">${p.qrCodeToken}</div>`
+                    : `<button class="btn btn-sm btn-outline" style="border: 1px solid #F39C12; color: #F39C12;" onclick="generateQr(${p.id})">Tạo mã QR</button>`
+        }
+      </td>
       <td style="font-size:12px;color:var(--color-text-secondary)">${p.image}</td>
       <td style="font-size:12px">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</td>
       <td>${p.radius}m</td>
@@ -2000,6 +2007,21 @@
             btnAdmins.style = '';
             btnCustomers.className = 'btn btn-outline';
             btnCustomers.style = 'background:white; color:black; border:1px solid #ccc;';
+        }
+    }
+
+    async function generateQr(poiId) {
+        if (!confirm("Tạo mã QR Token bảo mật cho quán này?")) return;
+        try {
+            const res = await fetch(`/api/pois/${poiId}/generate-qr`, { method: 'POST' });
+            if (res.ok) {
+                showToast("Đã khởi tạo mã QR thành công!");
+                loadDataFromServer(); // Load lại bảng để hiện ảnh QR
+            } else {
+                alert("Lỗi khi tạo mã QR trên Server.");
+            }
+        } catch (e) {
+            alert("Lỗi kết nối mạng: " + e.message);
         }
     }
 

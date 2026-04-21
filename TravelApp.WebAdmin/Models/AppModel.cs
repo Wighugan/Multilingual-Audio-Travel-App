@@ -18,6 +18,7 @@ namespace TravelApp.WebAdmin.Models
         public int ListenCount { get; set; } = 0;
         public int VisitCount { get; set; } = 0;
         public string WeeklyVisitsJson { get; set; } = "{}";
+        public string? QrCodeToken { get; set; }
     }
 
     public class UserEntity
@@ -29,7 +30,6 @@ namespace TravelApp.WebAdmin.Models
             public string Password { get; set; }
             public string FullName { get; set; }
             public string Role { get; set; }
-            // ← thêm vào đây
             public bool IsPremium { get; set; } = false;
             public string? PremiumToken { get; set; }
             public string? PremiumExpiry { get; set; }

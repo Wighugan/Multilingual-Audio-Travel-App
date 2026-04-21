@@ -1,5 +1,6 @@
 using Microsoft.Maui.Controls;
 using multilingualAudioTravelApp.Services;
+using System.Net.Http.Json;
 using ZXing.Net.Maui;
 
 namespace multilingualAudioTravelApp;
@@ -11,7 +12,7 @@ public partial class QRScanPage : ContentPage
     private string _currentDescription = string.Empty;
     private CancellationTokenSource? _speechCts;
     private bool _isPlaying = false;
-
+    private readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("http://10.0.2.2:5068/") };
     public QRScanPage()
     {
         InitializeComponent();
@@ -107,84 +108,74 @@ public partial class QRScanPage : ContentPage
         }
     }
 
-    private async Task HandleQRCode(string qrValue)
+    private async Task HandleQRCode(string qrToken)
     {
-        System.Diagnostics.Debug.WriteLine($"[QR] Đọc được: '{qrValue}'");
-        // SỬA: bỏ InvokeOnMainThreadAsync bọc ngoài, await thẳng
-        if (NormalizeText(qrValue).StartsWith("VKPREMIUM_", StringComparison.OrdinalIgnoreCase))
-        {
-            await HandlePremiumQR(qrValue);
-            return;
-        }
-        var poiName = TryExtractPoiName(qrValue);
+        System.Diagnostics.Debug.WriteLine($"[QR] Đọc được Token: '{qrToken}'");
 
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
-            StatusLabel.Text = $"✅ Đọc được: {NormalizeText(qrValue)}";
-            StatusLabel.TextColor = Color.FromArgb("#4CAF50");
-        });
-
-        if (string.IsNullOrWhiteSpace(poiName))
-        {
-            await MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                StatusLabel.Text = "❌ QR không hợp lệ";
-                StatusLabel.TextColor = Colors.Red;
-                await DisplayAlert("Không hợp lệ",
-                    $"QR không thuộc hệ thống Vĩnh Khánh.\n\nĐọc được:\n'{qrValue}'", "OK");
-            });
-            ResetScanner();
-            return;
-        }
-
-        await MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            StatusLabel.Text = $"🔍 Tìm: {poiName}...";
+            StatusLabel.Text = $"🔍 Đang kiểm tra mã trên máy chủ...";
             StatusLabel.TextColor = Colors.White;
         });
 
-        var allPois = await _dbService.GetAllPoisAsync();
-
-        // Debug in ra DB để kiểm tra
-        System.Diagnostics.Debug.WriteLine($"[QR] Tổng số quán trong DB: {allPois.Count}");
-        foreach (var p in allPois)
-            System.Diagnostics.Debug.WriteLine($"[DB] '{p.CurrentName}'");
-
-        var poi = allPois.FirstOrDefault(p =>
-            NormalizeText(p.CurrentName).Equals(poiName,
-            StringComparison.OrdinalIgnoreCase));
-
-        if (poi == null)
+        try
         {
+            // Gọi API xác thực mã (GET /api/pois/verify/{token})
+            var response = await _httpClient.GetAsync($"api/pois/verify/{qrToken}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                // Token không tồn tại -> Thông báo lỗi
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    StatusLabel.Text = "❌ Mã QR không tồn tại";
+                    StatusLabel.TextColor = Colors.Red;
+                    await DisplayAlert("Lỗi", "Mã QR này không tồn tại trong hệ thống.", "OK");
+                });
+                ResetScanner();
+                return;
+            }
+
+            // Token hợp lệ -> Lấy toàn bộ thông tin POI
+            var poi = await response.Content.ReadFromJsonAsync<PoiEntity>();
+
+            try { HapticFeedback.Perform(HapticFeedbackType.Click); } catch { }
+
+            _currentDescription = poi.CurrentDescription ?? string.Empty;
+
+            // Hiển thị Popup chi tiết Quán
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                StatusLabel.Text = $"✅ {poi.CurrentName}";
+                StatusLabel.TextColor = Color.FromArgb("#4CAF50");
+
+                ResultPopupTitle.Text = "🍜 " + poi.CurrentName;
+                ResultPopupDescription.Text = _currentDescription;
+                ResultPopupOverlay.IsVisible = true;
+
+                // Đổi icon nút play thành stop
+                ResultPlayStopButton.Source = "stop_icon.png";
+            });
+
+            // Lưu tọa độ để khi đóng popup, bản đồ sẽ nhảy tới vị trí quán
+            Preferences.Set("MapTargetLat", poi.Latitude);
+            Preferences.Set("MapTargetLon", poi.Longitude);
+            Preferences.Set("MapTargetName", poi.CurrentName);
+
+            //Đẩy Text vào TTS và Phát Audio
+            await SpeakAsync(_currentDescription);
+        }
+        catch (Exception ex)
+        {
+            // Xử lý trường hợp điện thoại mất mạng hoặc Server sập
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                StatusLabel.Text = "❌ Không tìm thấy quán";
+                StatusLabel.Text = "❌ Lỗi kết nối mạng";
                 StatusLabel.TextColor = Colors.Red;
-                await DisplayAlert("Không tìm thấy",
-                    $"Không có quán:\n'{poiName}'\n\nTên phải khớp với DB.", "OK");
+                await DisplayAlert("Lỗi Kết Nối", $"Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng.\n({ex.Message})", "OK");
             });
             ResetScanner();
-            return;
         }
-
-        // Tìm thấy
-        System.Diagnostics.Debug.WriteLine($"[QR] Tìm thấy: '{poi.CurrentName}'");
-        try { HapticFeedback.Perform(HapticFeedbackType.Click); } catch { }
-
-        _currentDescription = poi.CurrentDescription ?? string.Empty;
-        await MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            StatusLabel.Text = $"🍜 {poi.CurrentName}";
-            StatusLabel.TextColor = Color.FromArgb("#FFC107");
-            ResultPopupTitle.Text = "🍜 " + poi.CurrentName;
-            ResultPopupDescription.Text = _currentDescription;
-            ResultPopupOverlay.IsVisible = true;
-        });
-
-        // Lưu để MainPage zoom nếu cần
-        Preferences.Set("MapTargetLat", poi.Latitude);
-        Preferences.Set("MapTargetLon", poi.Longitude);
-        Preferences.Set("MapTargetName", poi.CurrentName);
     }
 
     private void ResetScanner()

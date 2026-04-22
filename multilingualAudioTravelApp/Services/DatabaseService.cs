@@ -29,22 +29,9 @@ public class PoiEntity  //POI
     public int VisitCount { get; set; } = 0;
     public string QrCodeToken { get; set; }
     private Dictionary<string, PoiTranslation> _parsedTranslations;
-    
+
     [Ignore]
-    // Thêm property này vào trong PoiEntity class
-    private static string ImageBaseUrl
-    {
-        get
-        {
-            // const string devIp = "192.168.1.74";
-            const string devIp = "192.168.171.159";
-            if (DeviceInfo.Platform == DevicePlatform.Android)
-                return DeviceInfo.DeviceType == DeviceType.Virtual
-                    ? "http://10.0.2.2:5068/images/"
-                    : $"http://{devIp}:5068/images/";
-            return "http://localhost:5068/images/";
-        }
-    }
+    private static string ImageBaseUrl => $"{DatabaseService.GlobalApiUrl}/images/";
 
     [Ignore]
     public string FullImageUrl
@@ -171,12 +158,11 @@ public class DatabaseService
     private SQLiteAsyncConnection _db;
     private readonly string _dbPath;
     private readonly HttpClient _httpClient = new HttpClient();
-    private readonly string baseUrl = "http://192.168.171.159:5068";
-    private string ApiBaseUrl  
+    public static string GlobalApiUrl
     {
         get
         {
-            const string devIp = "192.168.171.159"; // IP máy bạn
+            const string devIp = "192.168.171.159"; // TỪ NAY ĐỔI IP WIFI THÌ CHỈ CẦN VÀO ĐÚNG DÒNG NÀY ĐỂ SỬA
 
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
@@ -221,7 +207,7 @@ public class DatabaseService
                 PropertyNameCaseInsensitive = true
             };
             // Gọi lên Web API để xin danh sách quán ăn
-            var poisFromServer = await client.GetFromJsonAsync<List<PoiEntity>>($"{ApiBaseUrl}/api/pois");
+            var poisFromServer = await client.GetFromJsonAsync<List<PoiEntity>>($"{GlobalApiUrl}/api/pois");
 
             if (poisFromServer != null && poisFromServer.Count > 0)
             {
@@ -447,7 +433,7 @@ public class DatabaseService
                 Password = password,
                 Role = role
             };
-            var response = await _httpClient.PostAsJsonAsync($"{baseUrl}/api/users", newUser);
+            var response = await _httpClient.PostAsJsonAsync($"{GlobalApiUrl}/api/users", newUser);
 
             if (response.IsSuccessStatusCode)
             {
@@ -475,7 +461,7 @@ public class DatabaseService
             using var client = new HttpClient();
             
 
-            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{ApiBaseUrl}/api/users");
+            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{GlobalApiUrl}/api/users");
             var user = users?.FirstOrDefault(u => u.Email == email && u.Password == password);
 
             // ── Sau khi login thành công, đồng bộ Premium về Preferences ──
@@ -502,7 +488,7 @@ public class DatabaseService
         {
             using var client = new HttpClient();
 
-            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{ApiBaseUrl}/api/users");
+            var users = await client.GetFromJsonAsync<List<UserEntity>>($"{GlobalApiUrl}/api/users");
             var user = users?.FirstOrDefault(u => u.Email == currentEmail);
 
             if (user == null) return false;
@@ -512,7 +498,7 @@ public class DatabaseService
             user.Email = newEmail;
             if (!string.IsNullOrEmpty(newPassword)) user.Password = newPassword;
 
-            var response = await client.PutAsJsonAsync($"{ApiBaseUrl}/api/users/{user.Id}", user);
+            var response = await client.PutAsJsonAsync($"{GlobalApiUrl}/api/users/{user.Id}", user);
 
             if (response.IsSuccessStatusCode)
             {
@@ -534,7 +520,7 @@ public class DatabaseService
             using var client = new HttpClient();
             var encodedEmail = Uri.EscapeDataString(userEmail ?? string.Empty);
             var favorites = await client.GetFromJsonAsync<List<FavoriteEntity>>(
-                $"{ApiBaseUrl}/api/favorites?userEmail={encodedEmail}");
+                $"{GlobalApiUrl}/api/favorites?userEmail={encodedEmail}");
 
             if (favorites != null)
             {
@@ -572,17 +558,7 @@ public class DatabaseService
         // If it contains a dot assume it's a filename and prefix images base url
         if (image.Contains('.'))
         {
-            // build image base similar to PoiEntity.ImageBaseUrl
-            const string devIp = "192.168.171.159";
-            string baseUrl;
-            if (DeviceInfo.Platform == DevicePlatform.Android)
-                baseUrl = DeviceInfo.DeviceType == DeviceType.Virtual
-                    ? "http://10.0.2.2:5068/images/"
-                    : $"http://{devIp}:5068/images/";
-            else
-                baseUrl = "http://localhost:5068/images/";
-
-            return baseUrl + image;
+            return $"{DatabaseService.GlobalApiUrl}/images/{image}";
         }
 
         return image; // fallback
@@ -618,7 +594,7 @@ public class DatabaseService
         {
             using var client = new HttpClient();
             var response = await client.PostAsJsonAsync(
-                $"{ApiBaseUrl}/api/favorites", favorite);
+                $"{GlobalApiUrl}/api/favorites", favorite);
 
             if (response.IsSuccessStatusCode)
             {
@@ -647,7 +623,7 @@ public class DatabaseService
             var encodedEmail = Uri.EscapeDataString(userEmail ?? string.Empty);
             var encodedPoiName = Uri.EscapeDataString(poiName ?? string.Empty);
             var response = await client.DeleteAsync(
-                $"{ApiBaseUrl}/api/favorites/by-user?userEmail={encodedEmail}&poiName={encodedPoiName}");
+                $"{GlobalApiUrl}/api/favorites/by-user?userEmail={encodedEmail}&poiName={encodedPoiName}");
             if (response.IsSuccessStatusCode)
                 return;
         }
@@ -679,7 +655,7 @@ public class DatabaseService
                 CreatedAt = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
             };
 
-            var response = await client.PostAsJsonAsync($"{ApiBaseUrl}/api/feedbacks", newFeedback);
+            var response = await client.PostAsJsonAsync($"{GlobalApiUrl}/api/feedbacks", newFeedback);
 
             if (response.IsSuccessStatusCode)
             {
@@ -696,7 +672,7 @@ public class DatabaseService
         try
         {
             // Gọi lên Web API để lấy danh sách toàn bộ User
-            var response = await _httpClient.GetAsync($"{baseUrl}/api/users");
+            var response = await _httpClient.GetAsync($"{GlobalApiUrl}/api/users");
 
             if (response.IsSuccessStatusCode)
             {
@@ -721,7 +697,7 @@ public class DatabaseService
     {
         try
         {
-            var response = await _httpClient.GetAsync($"{baseUrl}/api/users/{userId}");
+            var response = await _httpClient.GetAsync($"{GlobalApiUrl}/api/users/{userId}");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -748,7 +724,7 @@ public class DatabaseService
         {
             using var client = new HttpClient();
             await client.PostAsync(
-                $"{ApiBaseUrl}/api/pois/{poiId}/analytics?type={type}",
+                $"{GlobalApiUrl}/api/pois/{poiId}/analytics?type={type}",
                 null);
             System.Diagnostics.Debug.WriteLine(
                 $"[Analytics] {type} +1 cho POI {poiId}");

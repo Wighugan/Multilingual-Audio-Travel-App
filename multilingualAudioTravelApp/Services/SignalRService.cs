@@ -5,11 +5,12 @@ namespace multilingualAudioTravelApp.Services
     public class SignalRService
     {
         private HubConnection _hubConnection;
-        private readonly string _hubUrl = "http://192.168.171.159:5068/apphub"; // Máy ảo Android
+        private readonly string _hubUrl;
         public event Action<int> OnProfileUpdated;
 
         public SignalRService()
         {
+            _hubUrl = $"{DatabaseService.GlobalApiUrl}/apphub";
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(_hubUrl)
                 .WithAutomaticReconnect() // Tự động kết nối lại nếu rớt mạng

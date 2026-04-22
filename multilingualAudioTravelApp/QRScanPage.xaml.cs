@@ -16,6 +16,7 @@ public partial class QRScanPage : ContentPage
     public QRScanPage()
     {
         InitializeComponent();
+        _httpClient.BaseAddress = new Uri(DatabaseService.GlobalApiUrl + "/");
         // KHÔNG set Options ở đây nữa — chuyển sang OnAppearing
     }
 

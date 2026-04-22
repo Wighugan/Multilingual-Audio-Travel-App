@@ -95,8 +95,7 @@ namespace multilingualAudioTravelApp
             try
             {
                 using var client = new HttpClient();
-                string baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                    ? "http://10.0.2.2:5068" : "http://localhost:5068";
+                string baseUrl = DatabaseService.GlobalApiUrl;
 
                 var users = await client.GetFromJsonAsync<List<UserEntity>>($"{baseUrl}/api/users");
                 var user = users?.FirstOrDefault(u => u.Email == email);

@@ -837,6 +837,7 @@
                             <th>Mã thiết bị</th>
                             <th>Trạng thái</th>
                             <th>Gói Premium</th>
+                            <th style="text-align:right">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="customers-table"></tbody>
@@ -972,6 +973,7 @@
                 <select id="u-role">
                     <option value="Owner">Owner (Chủ quán)</option>
                     <option value="Admin">Admin (Quản trị viên)</option>
+                    <option value="Customer">Khách vãng lai (Customer)</option>
                 </select>
             </div>
         </div>
@@ -985,8 +987,9 @@
 <div id="toast">Lưu thành công!</div>
 
 <script>
+    // SỬA LẠI ĐOẠN ĐÓ THÀNH:
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://localhost:5068/apphub")
+        .withUrl("/apphub")
         .build();
 
     connection.on("ReceiveUserStatus", (userId, isOnline) => {
@@ -1497,6 +1500,9 @@
             <td style="color:gray; font-size:14px; font-family: monospace;">${deviceId}</td>
             <td>${statusHtml}</td>
             <td>${premiumBadge}</td>
+            <td style="text-align:right">
+                <button class="btn btn-sm btn-outline" onclick="openUserModal(${u.id || u.Id})">Sửa</button>
+            </td>
         </tr>`;
         }).join('');
 

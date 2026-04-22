@@ -431,24 +431,36 @@ public class DatabaseService
                 FullName = fullName,
                 Email = email,
                 Password = password,
-                Role = role
+                Role = role,
+                IsPremium = false // Nên gửi rõ giá trị mặc định để tránh lỗi Database
             };
+
+            System.Diagnostics.Debug.WriteLine($"[API] Đang gửi yêu cầu tạo tài khoản lên: {GlobalApiUrl}/api/users");
+
             var response = await _httpClient.PostAsJsonAsync($"{GlobalApiUrl}/api/users", newUser);
 
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine("[API] Đăng ký thành công!");
                 return System.Text.Json.JsonSerializer.Deserialize<UserEntity>(
                     json,
                     new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }
                 );
             }
-
-            return null;
+            else
+            {
+                // BÍ QUYẾT NẰM Ở ĐÂY: Đọc xem Server C# báo lỗi gì!
+                string errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"[API LỖI TỪ SERVER] Mã lỗi: {response.StatusCode}");
+                System.Diagnostics.Debug.WriteLine($"[API CHI TIẾT LỖI]: {errorContent}");
+                return null;
+            }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Lỗi Đăng ký ngầm: {ex.Message}");
+            // Lỗi này xảy ra khi mất mạng hoặc không tìm thấy IP
+            System.Diagnostics.Debug.WriteLine($"[LỖI MẠNG / APP]: {ex.Message}");
             return null;
         }
     }

@@ -12,7 +12,8 @@ public partial class QRScanPage : ContentPage
     private string _currentDescription = string.Empty;
     private CancellationTokenSource? _speechCts;
     private bool _isPlaying = false;
-    private readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("http://192.168.171.159:5068/") };
+    // SỬA DÒNG ĐÓ LẠI THÀNH:
+    private readonly HttpClient _httpClient = new HttpClient(); 
     public QRScanPage()
     {
         InitializeComponent();
@@ -28,9 +29,9 @@ public partial class QRScanPage : ContentPage
         BarcodeReader.Options = new BarcodeReaderOptions
         {
             Formats = BarcodeFormat.QrCode,
-            AutoRotate = true,
+            AutoRotate = false,
             Multiple = false,
-            TryHarder = true   // quan trọng cho điện thoại thật
+            TryHarder = false   // quan trọng cho điện thoại thật
         };
 
         // ── FIX 2: Xin quyền runtime đúng cách ──
@@ -113,6 +114,58 @@ public partial class QRScanPage : ContentPage
     {
         System.Diagnostics.Debug.WriteLine($"[QR] Đọc được Token: '{qrToken}'");
         qrToken = qrToken.Trim(); // THÊM DÒNG NÀY VÀO TRƯỚC KHI GỌI API
+
+        if (qrToken.StartsWith("VKPREMIUM_", StringComparison.OrdinalIgnoreCase))
+        {
+            await HandlePremiumQR(qrToken);
+            return;
+        }
+
+        // ==========================================
+        // THÊM TOÀN BỘ ĐOẠN NÀY ĐỂ CHẶN KHÁCH FREE
+        // ==========================================
+        string userEmail = Preferences.Get("userEmail", "");
+        bool isPremium = Preferences.Get($"IsPremium_{userEmail}", false);
+
+        if (!isPremium) // Nếu KHÔNG phải khách Premium
+        {
+            string today = DateTime.Now.ToString("yyyyMMdd");
+            int scanCount = Preferences.Get($"ScanCount_{today}", 0);
+
+            // Giới hạn 3 lần 1 ngày
+            if (scanCount >= 3)
+            {
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    StatusLabel.Text = "❌ Hết lượt miễn phí";
+                    StatusLabel.TextColor = Colors.Red;
+
+                    bool upgrade = await DisplayAlert("Đã hết lượt",
+                        "Bạn đã dùng hết 3 lượt quét miễn phí hôm nay. Hãy nâng cấp Premium để nghe không giới hạn nhé!",
+                        "Mua Premium", "Để sau");
+
+                    // Nếu khách bấm "Mua Premium", mở trang PremiumPage lên
+                    if (upgrade)
+                    {
+                        await Navigation.PushAsync(new PremiumPage());
+                    }
+                });
+                ResetScanner();
+                return; // Dừng lại, không cho quét quán này
+            }
+
+            // Nếu chưa hết lượt, cộng thêm 1 lần quét cho ngày hôm nay
+            Preferences.Set($"ScanCount_{today}", scanCount + 1);
+        }
+        // ==========================================
+
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            StatusLabel.Text = $"🔍 Đang kiểm tra mã trên máy chủ...";
+            StatusLabel.TextColor = Colors.White;
+        });
+
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
             StatusLabel.Text = $"🔍 Đang kiểm tra mã trên máy chủ...";

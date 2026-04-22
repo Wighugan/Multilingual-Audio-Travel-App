@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tải ứng dụng Tour App</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px 20px; background: #E1F5EE; color: #0F6E56;}
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1D9E75; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <h2>Đang kiểm tra ứng dụng...</h2>
+    <div class="loader"></div>
+    <p>Nếu ứng dụng không tự động mở, hệ thống sẽ tự động tải file cài đặt về máy.</p>
+
+    <script>
+        // 1. Link đánh thức App (Nếu khách đã cài sẵn)
+        var appLink = "vktour://home"; 
+        
+        // 2. DÁN LINK GOOGLE DRIVE DIRECT CỦA BẠN VÀO ĐÂY
+        var downloadLink = "https://www.dropbox.com/scl/fi/u2kxr4jxtko153mu2feem/com.companyname.multilingualaudiotravelapp.apk?rlkey=ximfqs0wbuve3bk0krx9z4qrz&st=io59lexd&dl=1";
+
+        // 3. Hẹn giờ: Sau 2.5 giây nếu App không mở lên -> Tự động tải file từ Google Drive
+        var fallbackTimer = setTimeout(function() {
+            window.location.href = downloadLink;
+        }, 2500);
+
+        // 4. Lệnh kích hoạt App
+        window.location.href = appLink;
+
+        // Nếu App mở thành công, hủy đếm giờ tải file
+        window.onblur = function() {
+            clearTimeout(fallbackTimer);
+        };
+    </script>
+</body>
+</html>

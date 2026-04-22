@@ -20,14 +20,37 @@ namespace TravelApp.WebAdmin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPois([FromQuery] int userId = 0, [FromQuery] string role = "")
         {
+            var allPois = await _context.Pois.ToListAsync();
+            bool hasChanges = false;
+
+            // quét kiểm tra hạn sử dụng của toàn bộ poi
+            foreach (var poi in allPois)
+            {
+                if (poi.SubscriptionTier != "Free" && poi.SubscriptionExpiry.HasValue)
+                {
+                    if (DateTime.Now > poi.SubscriptionExpiry.Value)
+                    {
+                        // Nếu hết hạn -> Tự động giáng cấp về Free và trừ Priority
+                        poi.SubscriptionTier = "Free";
+                        poi.Priority = 1;
+                        poi.Radius = 50;
+                        hasChanges = true;
+                    }
+                }
+            }
+
+            // Nếu có quán nào vừa rớt hạng thì lưu lại vào DB
+            if (hasChanges)
+            {
+                await _context.SaveChangesAsync();
+            }
+
             var query = _context.Pois.AsQueryable();
 
             if (role == "Owner" && userId > 0)
             {
                 query = query.Where(p => p.OwnerId == userId);
             }
-
-            var allPois = await _context.Pois.ToListAsync();
             return Ok(allPois);
         }
 
@@ -65,19 +88,32 @@ namespace TravelApp.WebAdmin.Controllers
             if (id != updatedPoi.Id)
                 return BadRequest("ID không khớp.");
 
+            var existingPoi = await _context.Pois.FirstOrDefaultAsync(p => p.Id == id); 
+            if (existingPoi == null) return NotFound();
+            
             if (role == "Owner")
             {
-                var existingPoi = await _context.Pois.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-
                 if (existingPoi == null || existingPoi.OwnerId != userId)
                 {
                     return BadRequest("Lỗi: Bạn không có quyền sửa thông tin quán này!");
                 }
-
                 updatedPoi.OwnerId = existingPoi.OwnerId;
             }
+            existingPoi.Image = updatedPoi.Image;
+            existingPoi.Priority = updatedPoi.Priority;
+            existingPoi.Radius = updatedPoi.Radius;
+            existingPoi.SubscriptionTier = updatedPoi.SubscriptionTier;
+            existingPoi.Latitude = updatedPoi.Latitude;
+            existingPoi.Longitude = updatedPoi.Longitude;
+            existingPoi.CooldownMinutes = updatedPoi.CooldownMinutes;
+            existingPoi.TranslationsJson = updatedPoi.TranslationsJson;
 
-            _context.Entry(updatedPoi).State = EntityState.Modified;
+            if (role != "Owner")
+            {
+                existingPoi.OwnerId = updatedPoi.OwnerId;
+            }
+
+//            _context.Entry(updatedPoi).State = EntityState.Modified;
 
             try
             {
@@ -290,6 +326,55 @@ namespace TravelApp.WebAdmin.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { token = poi.QrCodeToken });
+        }
+
+        [HttpPost("{id}/upgrade")]
+        public async Task<IActionResult> UpgradePoiSubscription(int id, [FromQuery] string tier, [FromQuery] string duration)
+        {
+            var poi = await _context.Pois.FindAsync(id);
+            if (poi == null) return NotFound("Không tìm thấy quán.");
+            bool isChangingTier = poi.SubscriptionTier != tier;
+            // Tính toán ngày hết hạn
+            DateTime newExpiry = poi.SubscriptionExpiry != null && poi.SubscriptionExpiry > DateTime.Now
+                                 ? poi.SubscriptionExpiry.Value
+                                 : DateTime.Now;
+
+            if (duration.ToLower() == "month")
+            {
+                newExpiry = newExpiry.AddMonths(1);
+            }
+            else if (duration.ToLower() == "year")
+            {
+                newExpiry = newExpiry.AddYears(1);
+            }
+            else
+            {
+                return BadRequest("Thời hạn (duration) chỉ chấp nhận 'month' hoặc 'year'.");
+            }
+
+            // Nâng cấp Gói và gán điểm Priority tương ứng
+            poi.SubscriptionTier = tier; // "Pro" hoặc "Max"
+            poi.SubscriptionExpiry = newExpiry;
+
+            if (tier.ToLower() == "pro")
+            {
+                poi.Priority = 10;
+                poi.Radius = 100;
+            }
+            else if (tier.ToLower() == "max")
+            {
+                poi.Priority = 20;
+                poi.Radius = 150;
+            }
+            else return BadRequest("Gói (tier) chỉ chấp nhận 'Pro' hoặc 'Max'.");
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = $"Đã nâng cấp quán lên gói {tier.ToUpper()} thành công!",
+                expiry = poi.SubscriptionExpiry
+            });
         }
     }
 }

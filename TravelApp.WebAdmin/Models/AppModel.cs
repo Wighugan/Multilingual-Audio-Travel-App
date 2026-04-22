@@ -19,6 +19,9 @@ namespace TravelApp.WebAdmin.Models
         public int VisitCount { get; set; } = 0;
         public string WeeklyVisitsJson { get; set; } = "{}";
         public string? QrCodeToken { get; set; }
+        public string SubscriptionTier { get; set; } = "Free";
+
+        public DateTime? SubscriptionExpiry { get; set; }
     }
 
     public class UserEntity

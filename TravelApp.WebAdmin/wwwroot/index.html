@@ -605,6 +605,63 @@
         margin-right: 6px;
         animation: pulse-green 2s infinite;
     }
+
+    /* CSS cho tab Mua Gói VIP */
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .pricing-card {
+        background: var(--color-background-primary);
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: transform 0.2s;
+    }
+
+    .pricing-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .pricing-card.pro {
+        border-color: #F39C12;
+        background: #FEF5E7;
+    }
+
+    .pricing-card.max {
+        border-color: #8E44AD;
+        background: #F5EEF8;
+    }
+
+    .pricing-price {
+        font-size: 28px;
+        font-weight: bold;
+        margin: 1rem 0;
+    }
+
+    .pricing-features {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+
+    .pricing-features li {
+        margin-bottom: 10px;
+        font-size: 13px;
+        color: var(--color-text-secondary);
+    }
+
+    .pricing-features li::before {
+        content: '✓';
+        color: #1D9E75;
+        font-weight: bold;
+        margin-right: 8px;
+    }
 </style>
 
 <div id="app">
@@ -619,8 +676,8 @@
             <div class="sidebar-sub">Admin Dashboard</div>
         </div>
 
-        <div class="nav-section">Overview</div>
-        <div class="nav-item active" onclick="navigate('dashboard')">
+        <div class="nav-section" id="nav-overview">Overview</div>
+        <div class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
             </svg>
@@ -653,6 +710,10 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z" /></svg>
             Feedback
             <span class="nav-badge" id="feedback-nav-count">3</span>
+        </div>
+        <div class="nav-item" id="nav-subscription" onclick="navigate('subscription')" style="display: none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
+            Mua gói VIP
         </div>
     </div>
 
@@ -767,11 +828,12 @@
                             <th>Mã QR</th>
                             <th>Image</th>
                             <th>Coordinates</th>
-                            <th>Radius</th>
-                            <th>Priority</th>
-                            <th>Cooldown</th>
+                            <th id="lblradius">Radius</th>
+                            <th id="lblpriority">Priority</th>
+                            <th>Subscription</th>
+                            <th id="lblcooldown">Cooldown</th>
                             <th>Languages</th>
-                            <th>Owner</th>
+                            <th id="lblowner">Owner</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -880,6 +942,49 @@
                 </table>
             </div>
         </div>
+
+        <!-- VIP PAGE -->
+        <div class="page" id="page-subscription">
+            <div class="page-header">
+                <h1>Mua gói VIP</h1>
+                <p>Nâng cấp độ ưu tiên (Priority) để thu hút thêm du khách đến quán của bạn.</p>
+            </div>
+
+            <div class="card">
+                <div class="form-group">
+                    <label style="font-size: 14px; font-weight:bold; color:black;">1. Chọn quán cần nâng cấp:</label>
+                    <select id="sub-poi-select" style="padding: 10px; font-size: 14px; margin-top: 8px; background: white; border: 1px solid #ccc;">
+                    </select>
+                </div>
+
+                <label style="font-size: 14px; font-weight:bold; color:black; display:block; margin-top: 1.5rem;">2. Chọn gói:</label>
+                <div class="pricing-grid">
+                    <div class="pricing-card pro">
+                        <h2 style="color: #D68910;">⭐ Gói PRO</h2>
+                        <div class="pricing-price" style="color: #D68910;">100.000đ<span style="font-size:14px; color:gray; font-weight:normal;">/tháng</span></div>
+                        <ul class="pricing-features">
+                            <li>Độ ưu tiên nâng lên</li>
+                            <li>Luôn được đọc thông tin trước các quán Free lân cận</li>
+                            <li>Tăng vùng bán kính nhận diện</li>
+                            <li>Hỗ trợ kỹ thuật 24/7</li>
+                        </ul>
+                        <button class="btn" style="background:#F39C12; color:white; width:100%; justify-content:center; padding: 10px; font-weight:bold;" onclick="purchasePackage('Pro')">Đăng ký PRO</button>
+                    </div>
+
+                    <div class="pricing-card max">
+                        <h2 style="color: #8E44AD;">👑 Gói MAX</h2>
+                        <div class="pricing-price" style="color: #8E44AD;">200.000đ<span style="font-size:14px; color:gray; font-weight:normal;">/tháng</span></div>
+                        <ul class="pricing-features">
+                            <li>Độ ưu tiên nâng lên tối đa</li>
+                            <li>Luôn được đọc thông tin trước các quán Free và Pro</li>
+                            <li>Tăng vùng bán kính nhận diện hơn gói Free và Pro</li>
+                            <li>Hỗ trợ kỹ thuật 24/7</li>
+                        </ul>
+                        <button class="btn" style="background:#8E44AD; color:white; width:100%; justify-content:center; padding: 10px; font-weight:bold;" onclick="purchasePackage('Max')">Đăng ký MAX</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -890,17 +995,26 @@
             <h2 id="poi-modal-title">Add point of interest</h2>
             <button class="modal-close" onclick="closeModal('poi-modal')">✕</button>
         </div>
-        <div class="form-grid">
+        <div class="form-grid" style="align-items: flex-end">
             <div class="form-group">
                 <label>Image filename</label>
                 <input type="file" id="poi-file-upload" accept="image/*" multiple>
             </div>
-            <div class="form-group">
-                <label>Priority</label>
-                <input type="number" id="poi-priority" placeholder="e.g. 10" min="1" max="100">
+            <div class="form-group" id="subscription-form-group">
+                <label>Gói dịch vụ</label>
+                <select id="poi-subscription">
+                    <option value="Free">Gói Free (Priority: 1, Radius: 50m)</option>
+                    <option value="Pro">Gói PRO (Priority: 10, Radius: 100m)</option>
+                    <option value="Max">Gói MAX (Priority: 20, Radius: 150m)</option>
+                </select>
             </div>
+            <!--<div class="form-group" id="priority-form-group">
+        <label>Priority</label>
+        <select id="poi-priority" placeholder="e.g. 1">
+        </select>
+    </div>-->
         </div>
-        <div style="margin: 1rem 0 0.5rem;">
+        <div style="margin: 1rem 0 0.5rem;" id="lblcoor">
             <label style="font-size:12px;font-weight:500;color:var(--color-text-secondary);">Coordinates & detection</label>
         </div>
         <div class="coord-row" style="margin-bottom:1rem;">
@@ -912,13 +1026,14 @@
                 <label>Longitude</label>
                 <input type="number" id="poi-lng" placeholder="106.701964" step="0.000001">
             </div>
-            <div class="form-group">
+            <!--<div class="form-group" id="radius-form-group">
                 <label>Radius (m)</label>
-                <input type="number" id="poi-radius" placeholder="100">
-            </div>
+                <select id="poi-radius">
+                </select>
+            </div>-->
         </div>
-        <div class="form-grid" style="margin-bottom:1rem;">
-            <div class="form-group">
+        <div class="form-grid" style="margin-bottom: 1rem; align-items: flex-end;" id="cooldown-form-group">
+            <div class="form-group" id="cooldown-form-group">
                 <label>Cooldown (minutes)</label>
                 <input type="number" id="poi-cooldown" placeholder="5" min="0">
             </div>
@@ -1012,6 +1127,11 @@
         console.log("Đã kết nối SignalR thành công!");
     }).catch(err => console.error("Lỗi kết nối SignalR:", err));
 
+    const originalNavigate = navigate;
+    navigate = function (page) {
+        originalNavigate(page);
+        if (page === 'subscription') renderSubscriptionPage();
+    };
 
     // ==========================================
     // CẤU HÌNH BẢN ĐỒ HEATMAP (LEAFLET)
@@ -1066,14 +1186,20 @@
         window.location.href = "login.html";
     }
     if (currentRole === "Owner") {
+        document.getElementById("nav-dashboard").style.display = "none";
+        document.getElementById("nav-overview").style.display = "none";
         document.getElementById("nav-accounts").style.display = "none";
         document.getElementById("nav-languages").style.display = "none";
-
-        if (document.getElementById("nav-feedback")) document.getElementById("nav-feedback").style.display = "none";
-        if (document.getElementById("dash-feedback-card")) document.getElementById("dash-feedback-card").style.display = "none";
+        document.getElementById("nav-feedback").style.display = "none";
+        document.getElementById("dash-feedback-card").style.display = "none";
+        document.getElementById("lblpriority").style.display = "none";
+        document.getElementById("lblowner").style.display = "none";
+        document.getElementById("lblcooldown").style.display = "none";
+        document.getElementById("lblradius").style.display = "none";
 
         document.getElementById("poi-menu-text").textContent = "Quán của tôi";
         document.getElementById("btn-add-poi").style.display = "none";
+        document.getElementById("nav-subscription").style.display = "flex";
     }
 
     function showToast(message) {
@@ -1123,7 +1249,9 @@
                     ownerId: p.ownerId || p.OwnerId,
                     listenCount: p.listenCount || p.ListenCount || 0,
                     visitCount: p.visitCount || p.VisitCount || 0,
-                    qrCodeToken: p.qrCodeToken || p.QrCodeToken
+                    qrCodeToken: p.qrCodeToken || p.QrCodeToken,
+                    prioBadge: p.subscriptionTier,
+                    subscriptionExpiry: p.subscriptionExpiry || p.SubscriptionExpiry
                 };
             });
 
@@ -1352,23 +1480,33 @@
     function renderPoiTable() {
         const q = (document.getElementById('poi-search').value || '').toLowerCase();
         const tbody = document.getElementById('poi-table');
-
+        const thOwner = document.getElementById('th-owner');
+        if (currentRole === "Owner") {
+            if (thOwner) thOwner.style.display = "none";
+        } else {
+            if (thOwner) thOwner.style.display = "";
+        }
         const filtered = POIS.filter(p => {
             const viName = p.translations?.vi?.name || '';
             const imgName = p.image || '';
             return viName.toLowerCase().includes(q) || imgName.toLowerCase().includes(q);
         });
 
-        if (!filtered.length) {
-            tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><p>No POIs found</p></div></td></tr>';
-            return;
-        }
-
         tbody.innerHTML = filtered.map(p => {
             const langCount = Object.keys(p.translations || {}).length;
             const displayName = p.translations?.vi?.name || '(Chưa có tên)';
             const ownerObj = USERS.find(u => u.id === p.ownerId);
             const ownerName = ownerObj ? ownerObj.fullName : (p.ownerId ? 'Unknown' : 'Admin');
+            if (!filtered.length) {
+                tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><p>No POIs found</p></div></td></tr>';
+                return;
+            }
+            let prioBadge = `<span class="badge badge-gray">Free</span>`;
+            if (p.priority >= 20) {
+                prioBadge = `<span class="badge" style="background:#F5EEF8; color:#8E44AD; font-weight:bold;">MAX</span>`;
+            } else if (p.priority >= 10) {
+                prioBadge = `<span class="badge" style="background:#FEF5E7; color:#D68910; font-weight:bold;">PRO</span>`;
+            }
             return `<tr>
       <td style="font-weight:500">${displayName}</td>
       <td style="text-align: center;">
@@ -1383,13 +1521,14 @@
       </td>
       <td style="font-size:12px;color:var(--color-text-secondary)">${p.image}</td>
       <td style="font-size:12px">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</td>
-      <td>${p.radius}m</td>
-      <td><span class="badge badge-green">${p.priority}</span></td>
-      <td style="font-size:12px">${p.cooldown}min</td>
+        ${currentRole !== "Owner" ? `<td>${p.radius}m</td>` : "" }
+        ${currentRole !== "Owner" ? `<td><span class="badge badge-green">${p.priority}</span></td>` : "" }
+      <td>${prioBadge}</td>
+        ${currentRole !== "Owner" ? `<td style = "font-size:12px"> ${p.cooldown }min</td>` : "" }
       <td>
         ${LANGS.slice(0, langCount).map(l => `<span title="${l.name}" style="font-size:14px">${l.flag}</span>`).join(' ')}
       </td>
-      <td><span class="badge badge-gray">${ownerName}</span></td>
+        ${currentRole !== "Owner" ? `<td><span class="badge badge-gray">${ownerName}</span></td>` : ""}
       <td>
         <button class="btn btn-sm" onclick="openPoiModal(${p.id})">Edit</button>
         <button class="btn btn-sm btn-danger" onclick="deletePoi(${p.id})">Delete</button>
@@ -1397,48 +1536,6 @@
     </tr>`;
         }).join('');
     }
-
-    /*function renderUsersTable() {
-        const q = (document.getElementById('user-search').value || '').toLowerCase();
-        const tbody = document.getElementById('users-table');
-
-        const filtered = USERS.filter(u =>
-            (u.fullName || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q)
-        );
-
-        if (!filtered.length) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;">Chưa có người dùng nào</td></tr>';
-            return;
-        }
-
-        tbody.innerHTML = filtered.map(u => {
-            const name = u.fullName || 'No Name';
-            const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-            const userRole = u.role || u.Role || 'Customer';
-            const premium = u.IsPremium || u.isPremium;
-            const premiumBadge = premium ? `<span class="badge" style="background:#FFF9E6; color:#D35400; margin-left: 4px;">Premium</span>` : '';
-            let roleBadge = `<span class="badge badge-gray">Customer</span>`;
-            if (u.role === 'Admin') roleBadge = `<span class="badge badge-amber">Admin</span>`;
-            if (u.role === 'Owner') roleBadge = `<span class="badge badge-blue">Owner</span>`;
-
-            const isOnline = u.IsOnline === true || u.isOnline === true;
-            const statusHtml = isOnline
-                ? `<span class="status-dot status-online"></span><span style="color:#1D9E75; font-size:12px; font-weight:500;">Online</span>`
-                : `<span class="status-dot status-offline"></span><span style="color:var(--color-text-secondary); font-size:12px;">Offline</span>`;
-            return `<tr>
-      <td>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="avatar">${initials}</div>
-          <span style="font-weight:500">${name}</span>
-        </div>
-      </td>
-      <td style="font-size:13px;color:var(--color-text-secondary)">${u.email || ''}</td>
-      <td>${statusHtml}</td>
-      <td>${roleBadge}  </td>
-      <td>${premiumBadge} </td>
-    </tr>`;
-        }).join('');
-    }*/
 
     function renderUsersTable() {
         if (!USERS || USERS.length === 0) return;
@@ -1626,19 +1723,54 @@
         editPoiId = poiId;
         const modal = document.getElementById('poi-modal');
         const fileInput = document.getElementById('poi-file-upload');
+        const subGroup = document.getElementById('subscription-form-group');
+        const subSelect = document.getElementById('poi-subscription');
         const ownerSelect = document.getElementById('poi-owner');
+        const cooldownGroup = document.getElementById('cooldown-form-group');
+        const coorlbl = document.getElementById('lblcoor');
+
+        if (currentRole === "Owner") {
+            if (subGroup) subGroup.style.display = "none";
+            /*// Ẩn phần chọn Priority
+            if (priorityGroup) priorityGroup.style.display = "none";
+            // Ẫn phần cooldown
+            if (radiusGroup) radiusGroup.style.display = "none";*/
+            // Ẩn phần chọn Chủ quán
+            if (coorlbl) coorlbl.style.display = "none";
+            if (cooldownGroup) cooldownGroup.style.display = "none";
+            if (ownerSelect && ownerSelect.parentElement) {
+                ownerSelect.parentElement.style.display = "none";
+            }
+        } else {
+            if (subGroup) subGroup.style.display = "block";
+            if (ownerSelect && ownerSelect.parentElement) {
+                ownerSelect.parentElement.style.display = "block";
+            }
+        }
+        
         const owners = USERS.filter(u => u.role === 'Owner' || u.Role === 'Owner');
         ownerSelect.innerHTML = '<option value="">-- Thêm chủ quán --</option>' +
             owners.map(o => `<option value="${o.id}">${o.fullName} (${o.email})</option>`).join('');
 
+        /*const prioritySelect = document.getElementById('poi-priority');
+        if (prioritySelect) {
+            prioritySelect.innerHTML = `
+            <option value="1">Free</option>
+            <option value="10">PRO</option>
+            <option value="20">MAX</option>`;
+        }*/
+            
         if (poiId) {
             const poi = POIS.find(p => p.id === poiId);
             if (!poi) return;
+            if (poi.priority >= 20) subSelect.value = "Max";
+            else if (poi.priority >= 10) subSelect.value = "Pro";
+            else subSelect.value = "Free";
 
             if (document.getElementById('poi-lat')) document.getElementById('poi-lat').value = poi.lat || '';
             if (document.getElementById('poi-lng')) document.getElementById('poi-lng').value = poi.lng || '';
-            if (document.getElementById('poi-priority')) document.getElementById('poi-priority').value = poi.priority || 5;
-            if (document.getElementById('poi-radius')) document.getElementById('poi-radius').value = poi.radius || 100;
+            /*if (prioritySelect) prioritySelect.value = poi.priority || '1'
+            if (document.getElementById('poi-radius')) document.getElementById('poi-radius').value = poi.radius || 100;*/
             if (document.getElementById('poi-cooldown')) document.getElementById('poi-cooldown').value = poi.cooldown || 5;
             ownerSelect.value = poi.ownerId || '';
 
@@ -1653,10 +1785,12 @@
                 }
             });
         } else {
+            subSelect.value = "Free";
+
             if (document.getElementById('poi-lat')) document.getElementById('poi-lat').value = '';
             if (document.getElementById('poi-lng')) document.getElementById('poi-lng').value = '';
-            if (document.getElementById('poi-priority')) document.getElementById('poi-priority').value = 5;
-            if (document.getElementById('poi-radius')) document.getElementById('poi-radius').value = 100;
+            /*if (prioritySelect) prioritySelect.value = '1'
+            if (document.getElementById('poi-radius')) document.getElementById('poi-radius').value = 100;*/
             if (document.getElementById('poi-cooldown')) document.getElementById('poi-cooldown').value = 5;
             ownerSelect.value = '';
 
@@ -1701,6 +1835,19 @@
             }
         }
 
+        const subTier = document.getElementById('poi-subscription').value;
+        let priority = 1;
+        let radius = 50;
+
+        // Tự động gán thông số theo gói
+        if (subTier === "Pro") {
+            priority = 10;
+            radius = 100;
+        } else if (subTier === "Max") {
+            priority = 20;
+            radius = 150;
+        }
+
         const translations = {};
         LANGS.forEach(l => {
             const name = document.getElementById('poi-name-' + l.code).value.trim();
@@ -1709,14 +1856,21 @@
         });
 
         const selectedOwnerId = document.getElementById('poi-owner').value;
-
+        let existingQrToken = null;
+        if (editPoiId) {
+            const existingPoi = POIS.find(p => p.id === editPoiId);
+            if (existingPoi) {
+                existingQrToken = existingPoi.qrCodeToken;
+            }
+        }
         // Đóng gói cục dữ liệu
         const poi = {
             image: finalImageName,
-            priority: parseInt(document.getElementById('poi-priority').value) || 5,
+            priority: priority,          
+            radius: radius,               
+            subscriptionTier: subTier,    // Lưu tên gói vào Database
             latitude: parseFloat(document.getElementById('poi-lat').value) || 0,
             longitude: parseFloat(document.getElementById('poi-lng').value) || 0,
-            radius: parseInt(document.getElementById('poi-radius').value) || 100,
             cooldownMinutes: parseInt(document.getElementById('poi-cooldown').value) || 5,
             translationsJson: JSON.stringify(translations),
             ownerId: selectedOwnerId ? parseInt(selectedOwnerId) : null
@@ -1741,6 +1895,13 @@
                 body: JSON.stringify(poi)
             });
             if (response.ok) {
+                const newPoi = await response.json();
+                try {
+                    await fetch(`/api/pois/${newPoi.id || newPoi.Id}/generate-qr`,
+                    {
+                        method: 'POST'
+                    });
+                } catch (e) { }
                 closeModal('poi-modal');
                 loadDataFromServer();
                 showToast("Đã thêm quán mới!");
@@ -2030,7 +2191,97 @@
             alert("Lỗi kết nối mạng: " + e.message);
         }
     }
+    function renderSubscriptionPage() {
+        const select = document.getElementById('sub-poi-select');
+        const ownerPois = POIS.filter(p => (p.ownerId || p.OwnerId) == currentUserId);
 
+        if (ownerPois.length === 0) {
+            select.innerHTML = '<option value="">Bạn chưa có quán nào để nâng cấp</option>';
+            select.disabled = true;
+            return;
+        }
+
+        select.disabled = false;
+        select.innerHTML = ownerPois.map(p => {
+            const name = p.translations?.vi?.name || '(Chưa có tên)';
+            let status = "Free";
+            let daysLeftStr = "";
+
+            if (p.priority >= 20) status = "MAX";
+            else if (p.priority >= 10) status = "PRO";
+
+            // Tính toán số ngày còn lại
+            if (p.subscriptionExpiry && status !== "Free") {
+                const expDate = new Date(p.subscriptionExpiry);
+                const today = new Date();
+                const diffTime = expDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays > 0) {
+                    daysLeftStr = ` (Còn ${diffDays} ngày)`;
+                } else {
+                    daysLeftStr = ` (Đã hết hạn)`;
+                }
+            }
+
+            return `<option value="${p.id}">${name} - Hiện tại: ${status}${daysLeftStr}</option>`;
+        }).join('');
+    }
+
+    // Hàm xử lý Mua gói
+    async function purchasePackage(tier) {
+        const poiId = document.getElementById('sub-poi-select').value;
+        if (!poiId) {
+            alert("Vui lòng chọn một quán để nâng cấp!");
+            return;
+        }
+
+        // Lấy thông tin quán đang chọn để xét logic
+        const selectedPoi = POIS.find(p => p.id == poiId);
+        const currentPriority = selectedPoi.priority;
+
+        let price = tier === 'Pro' ? '100.000đ' : '200.000đ';
+        let confirmMsg = `Xác nhận thanh toán ${price} để nâng cấp quán lên gói ${tier.toUpperCase()} (Thời hạn 1 tháng)?`;
+
+        if (currentPriority >= 20) {
+            if (tier === 'Pro') {
+                alert("❌ KHÔNG THÀNH CÔNG: Xin sử dụng hết thời gian gói hiện tại trước khi gia hạn gói khác!");
+                return;
+            } else {
+                confirmMsg = "Bạn đang sử dụng gói MAX. Xác nhận gia hạn thêm 1 tháng với giá 200.000đ?";
+            }
+        } else if (currentPriority >= 10) {
+            // Đang ở gói PRO
+            if (tier === 'Max') {
+                alert("❌ KHÔNG THÀNH CÔNG: Xin sử dụng hết thời gian gói hiện tại trước khi gia hạn gói khác!");
+                return;
+            } else {
+                confirmMsg = "Bạn đang sử dụng gói PRO. Xác nhận gia hạn thêm 1 tháng với giá 100.000đ?";
+            }
+        }
+
+        if (!confirm(confirmMsg)) return;
+
+        await upgradePoi(poiId, tier);
+    }
+
+    // HÀM GỌI API NÂNG CẤP
+    async function upgradePoi(id, tier) {
+        try {
+            const res = await fetch(`/api/pois/${id}/upgrade?tier=${tier}&duration=month`, { method: 'POST' });
+            if (res.ok) {
+                const data = await res.json();
+                showToast(data.message || `Đã đăng ký gói ${tier.toUpperCase()} thành công!`);
+                await loadDataFromServer();
+                renderSubscriptionPage(); // Load lại dropdown để hiện số ngày
+            } else {
+                const err = await res.text();
+                alert("Lỗi nâng cấp từ Server: " + err);
+            }
+        } catch (e) {
+            alert("Lỗi kết nối mạng: " + e.message);
+        }
+    }
     // Ẩn nút Create ngay khi vừa load trang (vì mặc định ở Tab Khách)
     document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('btn-create-admin').style.display = 'none';
@@ -2040,5 +2291,9 @@
     });
 
     buildLangTabs();
-    renderDashboard();
+    if (currentRole === "Owner") {
+        navigate('poi'); // Chủ quán F5 sẽ nhảy thẳng vào tab Quán của tôi
+    } else {
+        navigate('dashboard'); // Admin F5 sẽ vào Dashboard
+    }
 </script>

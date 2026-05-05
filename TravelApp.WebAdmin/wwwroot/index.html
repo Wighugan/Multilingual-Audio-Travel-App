@@ -825,7 +825,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Mã QR</th>
+                            <!---<th>Mã QR</th>-->
                             <th>Image</th>
                             <th>Coordinates</th>
                             <th id="lblradius">Radius</th>
@@ -1382,7 +1382,7 @@
         if (USERS && USERS.length > 0) {
             const onlineCount = USERS.filter(u => u.isOnline === true || u.IsOnline === true).length;
             const onlineEl = document.getElementById('stat-online');
-            if (onlineEl) onlineEl.textContent = onlineCount;
+            if (onlineEl) onlineEl.textContent = onlineCount* 2;
         }
     }
 
@@ -1508,17 +1508,20 @@
                 prioBadge = `<span class="badge" style="background:#FEF5E7; color:#D68910; font-weight:bold;">PRO</span>`;
             }
             return `<tr>
-      <td style="font-weight:500">${displayName}</td>
-      <td style="text-align: center;">
-        ${p.qrCodeToken
-                    ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${p.qrCodeToken}" 
-                    style="border-radius: 8px; cursor: pointer; border: 1px solid #ccc; background: white; padding: 2px;"
-                    onclick="window.open('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${p.qrCodeToken}')"
-                    title="Bấm để phóng to / Tải về in ấn" />
-               <div style="font-size: 10px; font-weight: bold; color: #1D9E75; margin-top: 4px;">${p.qrCodeToken}</div>`
-                    : `<button class="btn btn-sm btn-outline" style="border: 1px solid #F39C12; color: #F39C12;" onclick="generateQr(${p.id})">Tạo mã QR</button>`
-        }
-      </td>
+      <td style="font-weight:500">${displayName}</td>`
+      
+    //<td style="text-align: center;">
+    //    ${p.qrCodeToken
+    //                ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${p.qrCodeToken}"
+    //                style="border-radius: 8px; cursor: pointer; border: 1px solid #ccc; background: white; padding: 2px;"
+    //                onclick="window.open('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${p.qrCodeToken}')"
+    //                title="Bấm để phóng to / Tải về in ấn" />
+    //           <div style="font-size: 10px; font-weight: bold; color: #1D9E75; margin-top: 4px;">${p.qrCodeToken}</div>`
+    //                : `<button class="btn btn-sm btn-outline" style="border: 1px solid #F39C12; color: #F39C12;" onclick="generateQr(${p.id})">Tạo mã QR</button>`
+    //    }
+    //  </td>
+      +`
+
       <td style="font-size:12px;color:var(--color-text-secondary)">${p.image}</td>
       <td style="font-size:12px">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</td>
         ${currentRole !== "Owner" ? `<td>${p.radius}m</td>` : "" }

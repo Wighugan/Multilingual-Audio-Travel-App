@@ -146,6 +146,10 @@ public partial class HomePage : ContentPage
         else // chưa đọc → bắt đầu
         {
             PlayStopButton.Source = "stop_icon.png";
+            if (_selectedPoi.SourcePoi != null)
+            {
+                _ = _dbService.TrackAnalyticsAsync(_selectedPoi.SourcePoi.Id, "listen");
+            }
             await SpeakAsync(_selectedPoi.Description);
             PlayStopButton.Source = "play_icon.png"; // reset sau khi đọc xong
         }

@@ -75,6 +75,7 @@ public partial class ExplorePage : ContentPage
         else
         {
             PlayStopButton.Source = "stop_icon.png";
+            _ = _dbService.TrackAnalyticsAsync(_selectedPoi.Id, "listen");
             await SpeakDescription(_selectedPoi.CurrentDescription);
         }
     }

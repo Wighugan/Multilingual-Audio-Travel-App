@@ -572,7 +572,7 @@ public partial class MainPage : ContentPage
             })
             // Lọc ra các quán ở gần VÀ đã qua thời gian Cooldown
             .Where(x => x.Distance <= x.Poi.Radius && (DateTime.Now - x.LastPlayed) > x.Poi.CooldownDuration)
-            .OrderByDescending(x => x.Poi.Priority)
+            .OrderByDescending(x => x.Poi.Priority)  // do uu tien 
             .ThenBy(x => x.Distance)
             .ToList();
 

@@ -23,15 +23,7 @@
                     TextChanged="OnSearchTextChanged"
                     SearchButtonPressed="OnSearchButtonPressed"
                     Margin="8,0,0,0"/>
-                <ImageButton
-                    Grid.Column="2"
-                    Source="qrcode.png"
-                    BackgroundColor="Transparent"
-                    WidthRequest="44"
-                    HeightRequest="44"
-                    Padding="8"
-                    Aspect="AspectFit"
-                    Clicked="OnScanQRClicked"/>
+                
             </Grid>
 
             <!-- TABS -->

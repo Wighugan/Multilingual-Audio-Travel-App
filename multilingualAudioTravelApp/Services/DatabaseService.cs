@@ -162,7 +162,7 @@ public class DatabaseService
     {
         get
         {
-            const string devIp = "192.168.171.159"; // TỪ NAY ĐỔI IP WIFI THÌ CHỈ CẦN VÀO ĐÚNG DÒNG NÀY ĐỂ SỬA
+            const string devIp = "192.168.107.159"; // TỪ NAY ĐỔI IP WIFI THÌ CHỈ CẦN VÀO ĐÚNG DÒNG NÀY ĐỂ SỬA
 
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {

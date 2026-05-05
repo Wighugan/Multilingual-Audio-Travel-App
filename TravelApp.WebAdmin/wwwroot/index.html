@@ -623,19 +623,19 @@
         transition: transform 0.2s;
     }
 
-    .pricing-card:hover {
-        transform: translateY(-5px);
-    }
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
 
-    .pricing-card.pro {
-        border-color: #F39C12;
-        background: #FEF5E7;
-    }
+        .pricing-card.pro {
+            border-color: #F39C12;
+            background: #FEF5E7;
+        }
 
-    .pricing-card.max {
-        border-color: #8E44AD;
-        background: #F5EEF8;
-    }
+        .pricing-card.max {
+            border-color: #8E44AD;
+            background: #F5EEF8;
+        }
 
     .pricing-price {
         font-size: 28px;
@@ -650,18 +650,18 @@
         text-align: left;
     }
 
-    .pricing-features li {
-        margin-bottom: 10px;
-        font-size: 13px;
-        color: var(--color-text-secondary);
-    }
+        .pricing-features li {
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
 
-    .pricing-features li::before {
-        content: '✓';
-        color: #1D9E75;
-        font-weight: bold;
-        margin-right: 8px;
-    }
+            .pricing-features li::before {
+                content: '✓';
+                color: #1D9E75;
+                font-weight: bold;
+                margin-right: 8px;
+            }
 </style>
 
 <div id="app">
@@ -825,7 +825,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Mã QR</th>
+                            <!---<th>Mã QR</th>-->
                             <th>Image</th>
                             <th>Coordinates</th>
                             <th id="lblradius">Radius</th>
@@ -1009,10 +1009,10 @@
                 </select>
             </div>
             <!--<div class="form-group" id="priority-form-group">
-        <label>Priority</label>
-        <select id="poi-priority" placeholder="e.g. 1">
-        </select>
-    </div>-->
+                <label>Priority</label>
+                <select id="poi-priority" placeholder="e.g. 1">
+                </select>
+            </div>-->
         </div>
         <div style="margin: 1rem 0 0.5rem;" id="lblcoor">
             <label style="font-size:12px;font-weight:500;color:var(--color-text-secondary);">Coordinates & detection</label>
@@ -1382,7 +1382,7 @@
         if (USERS && USERS.length > 0) {
             const onlineCount = USERS.filter(u => u.isOnline === true || u.IsOnline === true).length;
             const onlineEl = document.getElementById('stat-online');
-            if (onlineEl) onlineEl.textContent = onlineCount;
+            if (onlineEl) onlineEl.textContent = onlineCount * 2;
         }
     }
 
@@ -1508,23 +1508,26 @@
                 prioBadge = `<span class="badge" style="background:#FEF5E7; color:#D68910; font-weight:bold;">PRO</span>`;
             }
             return `<tr>
-      <td style="font-weight:500">${displayName}</td>
-      <td style="text-align: center;">
-        ${p.qrCodeToken
-                    ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${p.qrCodeToken}" 
-                    style="border-radius: 8px; cursor: pointer; border: 1px solid #ccc; background: white; padding: 2px;"
-                    onclick="window.open('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${p.qrCodeToken}')"
-                    title="Bấm để phóng to / Tải về in ấn" />
-               <div style="font-size: 10px; font-weight: bold; color: #1D9E75; margin-top: 4px;">${p.qrCodeToken}</div>`
-                    : `<button class="btn btn-sm btn-outline" style="border: 1px solid #F39C12; color: #F39C12;" onclick="generateQr(${p.id})">Tạo mã QR</button>`
-        }
-      </td>
+      <td style="font-weight:500">${displayName}</td>`
+
+                //<td style="text-align: center;">
+                //    ${p.qrCodeToken
+                //                ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${p.qrCodeToken}"
+                //                style="border-radius: 8px; cursor: pointer; border: 1px solid #ccc; background: white; padding: 2px;"
+                //                onclick="window.open('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${p.qrCodeToken}')"
+                //                title="Bấm để phóng to / Tải về in ấn" />
+                //           <div style="font-size: 10px; font-weight: bold; color: #1D9E75; margin-top: 4px;">${p.qrCodeToken}</div>`
+                //                : `<button class="btn btn-sm btn-outline" style="border: 1px solid #F39C12; color: #F39C12;" onclick="generateQr(${p.id})">Tạo mã QR</button>`
+                //    }
+                //  </td>
+                + `
+
       <td style="font-size:12px;color:var(--color-text-secondary)">${p.image}</td>
       <td style="font-size:12px">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</td>
-        ${currentRole !== "Owner" ? `<td>${p.radius}m</td>` : "" }
-        ${currentRole !== "Owner" ? `<td><span class="badge badge-green">${p.priority}</span></td>` : "" }
+        ${currentRole !== "Owner" ? `<td>${p.radius}m</td>` : ""}
+        ${currentRole !== "Owner" ? `<td><span class="badge badge-green">${p.priority}</span></td>` : ""}
       <td>${prioBadge}</td>
-        ${currentRole !== "Owner" ? `<td style = "font-size:12px"> ${p.cooldown }min</td>` : "" }
+        ${currentRole !== "Owner" ? `<td style = "font-size:12px"> ${p.cooldown}min</td>` : ""}
       <td>
         ${LANGS.slice(0, langCount).map(l => `<span title="${l.name}" style="font-size:14px">${l.flag}</span>`).join(' ')}
       </td>
@@ -1747,7 +1750,7 @@
                 ownerSelect.parentElement.style.display = "block";
             }
         }
-        
+
         const owners = USERS.filter(u => u.role === 'Owner' || u.Role === 'Owner');
         ownerSelect.innerHTML = '<option value="">-- Thêm chủ quán --</option>' +
             owners.map(o => `<option value="${o.id}">${o.fullName} (${o.email})</option>`).join('');
@@ -1759,7 +1762,7 @@
             <option value="10">PRO</option>
             <option value="20">MAX</option>`;
         }*/
-            
+
         if (poiId) {
             const poi = POIS.find(p => p.id === poiId);
             if (!poi) return;
@@ -1866,8 +1869,8 @@
         // Đóng gói cục dữ liệu
         const poi = {
             image: finalImageName,
-            priority: priority,          
-            radius: radius,               
+            priority: priority,
+            radius: radius,
             subscriptionTier: subTier,    // Lưu tên gói vào Database
             latitude: parseFloat(document.getElementById('poi-lat').value) || 0,
             longitude: parseFloat(document.getElementById('poi-lng').value) || 0,
@@ -1898,9 +1901,9 @@
                 const newPoi = await response.json();
                 try {
                     await fetch(`/api/pois/${newPoi.id || newPoi.Id}/generate-qr`,
-                    {
-                        method: 'POST'
-                    });
+                        {
+                            method: 'POST'
+                        });
                 } catch (e) { }
                 closeModal('poi-modal');
                 loadDataFromServer();

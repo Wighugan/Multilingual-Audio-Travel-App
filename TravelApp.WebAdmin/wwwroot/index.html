@@ -623,19 +623,19 @@
         transition: transform 0.2s;
     }
 
-    .pricing-card:hover {
-        transform: translateY(-5px);
-    }
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
 
-    .pricing-card.pro {
-        border-color: #F39C12;
-        background: #FEF5E7;
-    }
+        .pricing-card.pro {
+            border-color: #F39C12;
+            background: #FEF5E7;
+        }
 
-    .pricing-card.max {
-        border-color: #8E44AD;
-        background: #F5EEF8;
-    }
+        .pricing-card.max {
+            border-color: #8E44AD;
+            background: #F5EEF8;
+        }
 
     .pricing-price {
         font-size: 28px;
@@ -650,18 +650,18 @@
         text-align: left;
     }
 
-    .pricing-features li {
-        margin-bottom: 10px;
-        font-size: 13px;
-        color: var(--color-text-secondary);
-    }
+        .pricing-features li {
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
 
-    .pricing-features li::before {
-        content: '✓';
-        color: #1D9E75;
-        font-weight: bold;
-        margin-right: 8px;
-    }
+            .pricing-features li::before {
+                content: '✓';
+                color: #1D9E75;
+                font-weight: bold;
+                margin-right: 8px;
+            }
 </style>
 
 <div id="app">
@@ -898,8 +898,6 @@
                             <th>Du khách</th>
                             <th>Mã thiết bị</th>
                             <th>Trạng thái</th>
-                            <th>Gói Premium</th>
-                            <th style="text-align:right">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="customers-table"></tbody>
@@ -1009,10 +1007,10 @@
                 </select>
             </div>
             <!--<div class="form-group" id="priority-form-group">
-        <label>Priority</label>
-        <select id="poi-priority" placeholder="e.g. 1">
-        </select>
-    </div>-->
+                <label>Priority</label>
+                <select id="poi-priority" placeholder="e.g. 1">
+                </select>
+            </div>-->
         </div>
         <div style="margin: 1rem 0 0.5rem;" id="lblcoor">
             <label style="font-size:12px;font-weight:500;color:var(--color-text-secondary);">Coordinates & detection</label>
@@ -1079,10 +1077,7 @@
                 <label>Confirm password</label>
                 <input id="u-password2" placeholder="••••••••" type="password">
             </div>
-            <div class="form-group full" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 8px; padding: 10px; background: #FFF9E6; border-radius: 8px; border: 1px dashed #F5B041;">
-                <input type="checkbox" id="u-isPremium" style="width: 18px; height: 18px; accent-color: #F39C12; cursor: pointer;">
-                <label for="u-isPremium" style="font-size: 14px; color: #D35400; font-weight: bold; cursor: pointer; margin: 0;">Cấp quyền Premium</label>
-            </div>
+            
             <div class="form-group full">
                 <label>Account Role</label>
                 <select id="u-role">
@@ -1382,7 +1377,7 @@
         if (USERS && USERS.length > 0) {
             const onlineCount = USERS.filter(u => u.isOnline === true || u.IsOnline === true).length;
             const onlineEl = document.getElementById('stat-online');
-            if (onlineEl) onlineEl.textContent = onlineCount* 2;
+            if (onlineEl) onlineEl.textContent = onlineCount;
         }
     }
 
@@ -1508,26 +1503,23 @@
                 prioBadge = `<span class="badge" style="background:#FEF5E7; color:#D68910; font-weight:bold;">PRO</span>`;
             }
             return `<tr>
-      <td style="font-weight:500">${displayName}</td>`
-      
-    //<td style="text-align: center;">
-    //    ${p.qrCodeToken
-    //                ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${p.qrCodeToken}"
-    //                style="border-radius: 8px; cursor: pointer; border: 1px solid #ccc; background: white; padding: 2px;"
-    //                onclick="window.open('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${p.qrCodeToken}')"
-    //                title="Bấm để phóng to / Tải về in ấn" />
-    //           <div style="font-size: 10px; font-weight: bold; color: #1D9E75; margin-top: 4px;">${p.qrCodeToken}</div>`
-    //                : `<button class="btn btn-sm btn-outline" style="border: 1px solid #F39C12; color: #F39C12;" onclick="generateQr(${p.id})">Tạo mã QR</button>`
-    //    }
-    //  </td>
-      +`
-
+      <td style="font-weight:500">${displayName}</td>
+      <td style="text-align: center;">
+        ${p.qrCodeToken
+                    ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${p.qrCodeToken}" 
+                    style="border-radius: 8px; cursor: pointer; border: 1px solid #ccc; background: white; padding: 2px;"
+                    onclick="window.open('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${p.qrCodeToken}')"
+                    title="Bấm để phóng to / Tải về in ấn" />
+               <div style="font-size: 10px; font-weight: bold; color: #1D9E75; margin-top: 4px;">${p.qrCodeToken}</div>`
+                    : `<button class="btn btn-sm btn-outline" style="border: 1px solid #F39C12; color: #F39C12;" onclick="generateQr(${p.id})">Tạo mã QR</button>`
+        }
+      </td>
       <td style="font-size:12px;color:var(--color-text-secondary)">${p.image}</td>
       <td style="font-size:12px">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</td>
-        ${currentRole !== "Owner" ? `<td>${p.radius}m</td>` : "" }
-        ${currentRole !== "Owner" ? `<td><span class="badge badge-green">${p.priority}</span></td>` : "" }
+        ${currentRole !== "Owner" ? `<td>${p.radius}m</td>` : ""}
+        ${currentRole !== "Owner" ? `<td><span class="badge badge-green">${p.priority}</span></td>` : ""}
       <td>${prioBadge}</td>
-        ${currentRole !== "Owner" ? `<td style = "font-size:12px"> ${p.cooldown }min</td>` : "" }
+        ${currentRole !== "Owner" ? `<td style = "font-size:12px"> ${p.cooldown}min</td>` : ""}
       <td>
         ${LANGS.slice(0, langCount).map(l => `<span title="${l.name}" style="font-size:14px">${l.flag}</span>`).join(' ')}
       </td>
@@ -1581,10 +1573,7 @@
                 ? `<span class="status-dot status-online"></span><span style="color:#1D9E75; font-size:12px; font-weight:500;">Online</span>`
                 : `<span class="status-dot status-offline"></span><span style="color:var(--color-text-secondary); font-size:12px;">Offline</span>`;
 
-            const premiumBadge = (u.isPremium || u.IsPremium)
-                ? '<span class="badge" style="background:#FFF9E6; color:#D35400;">💎 Premium</span>'
-                : '<span class="badge badge-gray">Free</span>';
-
+            
             let deviceId = u.email || "Không rõ";
             if (deviceId.startsWith("device_")) {
                 deviceId = deviceId.replace("device_", "").split("@")[0];
@@ -1599,10 +1588,7 @@
             </td>
             <td style="color:gray; font-size:14px; font-family: monospace;">${deviceId}</td>
             <td>${statusHtml}</td>
-            <td>${premiumBadge}</td>
-            <td style="text-align:right">
-                <button class="btn btn-sm btn-outline" onclick="openUserModal(${u.id || u.Id})">Sửa</button>
-            </td>
+            
         </tr>`;
         }).join('');
 
@@ -1750,7 +1736,7 @@
                 ownerSelect.parentElement.style.display = "block";
             }
         }
-        
+
         const owners = USERS.filter(u => u.role === 'Owner' || u.Role === 'Owner');
         ownerSelect.innerHTML = '<option value="">-- Thêm chủ quán --</option>' +
             owners.map(o => `<option value="${o.id}">${o.fullName} (${o.email})</option>`).join('');
@@ -1762,7 +1748,7 @@
             <option value="10">PRO</option>
             <option value="20">MAX</option>`;
         }*/
-            
+
         if (poiId) {
             const poi = POIS.find(p => p.id === poiId);
             if (!poi) return;
@@ -1869,8 +1855,8 @@
         // Đóng gói cục dữ liệu
         const poi = {
             image: finalImageName,
-            priority: priority,          
-            radius: radius,               
+            priority: priority,
+            radius: radius,
             subscriptionTier: subTier,    // Lưu tên gói vào Database
             latitude: parseFloat(document.getElementById('poi-lat').value) || 0,
             longitude: parseFloat(document.getElementById('poi-lng').value) || 0,
@@ -1901,9 +1887,9 @@
                 const newPoi = await response.json();
                 try {
                     await fetch(`/api/pois/${newPoi.id || newPoi.Id}/generate-qr`,
-                    {
-                        method: 'POST'
-                    });
+                        {
+                            method: 'POST'
+                        });
                 } catch (e) { }
                 closeModal('poi-modal');
                 loadDataFromServer();
@@ -1967,12 +1953,9 @@
             document.getElementById('u-role').value = u.role || 'Customer';
             document.getElementById('u-password').value = '';
             document.getElementById('u-password2').value = '';
-            const premiumStatus = (u.isPremium === true || u.IsPremium === true);
-            document.getElementById('u-isPremium').checked = premiumStatus;
         } else {
             ['u-name', 'u-email', 'u-password', 'u-password2'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('u-role').value = 'Customer';
-            document.getElementById('u-isPremium').checked = false;
         }
         document.getElementById('user-modal').classList.add('open');
     }
@@ -1983,10 +1966,8 @@
         const pw = document.getElementById('u-password').value;
         const pw2 = document.getElementById('u-password2').value;
         const role = document.getElementById('u-role').value;
-        const isPremiumChecked = document.getElementById('u-isPremium').checked;
         if (!name || !email) { alert('Vui lòng nhập tên và email'); return; }
         if (!editUserId && pw !== pw2) { alert('Mật khẩu không khớp'); return; }
-        const userObj = { fullName: name, email: email, password: pw, role: role, IsPremium: isPremiumChecked };
         if (pw) {
             userObj.password = pw;
         }

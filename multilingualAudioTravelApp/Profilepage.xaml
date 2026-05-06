@@ -55,7 +55,7 @@
 
                 </VerticalStackLayout>
                 <!-- ── BANNER NÂNG CẤP PREMIUM ── -->
-                <Frame BackgroundColor="#FFF3E0" CornerRadius="16"
+    <!--            <Frame BackgroundColor="#FFF3E0" CornerRadius="16"
                        Padding="16" HasShadow="False"
                        BorderColor="#FFCC80">
                     <Frame.GestureRecognizers>
@@ -72,6 +72,7 @@
                                VerticalOptions="Center"/>
                     </Grid>
                 </Frame>
+                -->
 
                 <!-- Dark mode --><!--
                 <Grid ColumnDefinitions="*,Auto">

@@ -28,8 +28,8 @@ public partial class ProfilePage : ContentPage
         }
 
             // Update banner labels (localization may change while running)
-            PremiumBannerTitleLabel.Text = Languages.AppStrings.PremiumBannerTitle;
-            PremiumBannerSubtitleLabel.Text = Languages.AppStrings.PremiumBannerSubtitle;
+/*            PremiumBannerTitleLabel.Text = Languages.AppStrings.PremiumBannerTitle;
+            PremiumBannerSubtitleLabel.Text = Languages.AppStrings.PremiumBannerSubtitle;*/
 
     }
     private async void OnPremiumBannerTapped(object sender, TappedEventArgs e)

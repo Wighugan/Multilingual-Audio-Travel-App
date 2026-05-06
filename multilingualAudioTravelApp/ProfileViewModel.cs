@@ -44,10 +44,10 @@ public class ProfileViewModel
             //    Description = multilingualAudioTravelApp.Languages.AppStrings.DesFvCafe
             //},
 
-            new ProfileMenu { 
-                Key = "myqr", 
-                Title = multilingualAudioTravelApp.Languages.AppStrings.MyQR, 
-                Description = multilingualAudioTravelApp.Languages.AppStrings.MyQRDesc },
+            //new ProfileMenu { 
+            //    Key = "myqr", 
+            //    Title = multilingualAudioTravelApp.Languages.AppStrings.MyQR, 
+            //    Description = multilingualAudioTravelApp.Languages.AppStrings.MyQRDesc },
             new ProfileMenu
             {
                 Key = "feedback",

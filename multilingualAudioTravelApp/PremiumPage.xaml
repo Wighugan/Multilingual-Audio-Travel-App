@@ -55,70 +55,32 @@
                 </Grid>
             </Frame>
 
-            <!-- Chọn gói giá -->
-            <VerticalStackLayout Spacing="10">
+            <!-- Vé vào cổng -->
+            <Frame BackgroundColor="#F0FAF6" 
+                   BorderColor="#1D9E75" 
+                   CornerRadius="16" 
+                   Padding="20" 
+                   HasShadow="False"
+                   Margin="0, 10, 0, 0">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="Vé Trọn Gói (Audio Guide &amp; GPS)" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#1D9E75" 
+                           HorizontalOptions="Center"/>
 
-                <!-- Theo năm -->
-                <Border x:Name="BorderNam" 
-            Stroke="#E0E0E0" StrokeThickness="1">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12"/>
-                    </Border.StrokeShape>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnPlanSelected" CommandParameter="nam"/>
-                    </Border.GestureRecognizers>
-                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
-                        <Ellipse x:Name="RadioNam" WidthRequest="22" HeightRequest="22"
-                     Stroke="#CCCCCC" StrokeThickness="1.5"
-                     Fill="White" VerticalOptions="Center"/>
-                        <Label Grid.Column="1" x:Name="PlanYearLabel" Text=""
-                   FontSize="15" VerticalOptions="Center" Margin="12,0,0,0"/>
-                        <Label Grid.Column="2" Text="330.000 VND"
-                   FontSize="15" TextColor="Black" VerticalOptions="Center"/>
-                    </Grid>
-                </Border>
+                    <Label Text="50.000 VND" 
+                           FontSize="24" 
+                           FontAttributes="Bold"
+                           TextColor="Black" 
+                           HorizontalOptions="Center"/>
 
-                <!-- Theo tháng -->
-                <Border x:Name="BorderThang" 
-            Stroke="#E0E0E0" StrokeThickness="1">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12"/>
-                    </Border.StrokeShape>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnPlanSelected" CommandParameter="thang"/>
-                    </Border.GestureRecognizers>
-                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
-                        <Ellipse x:Name="RadioThang" WidthRequest="22" HeightRequest="22"
-                     Stroke="#CCCCCC" StrokeThickness="1.5"
-                     Fill="White" VerticalOptions="Center"/>
-                        <Label Grid.Column="1" x:Name="PlanMonthLabel" Text=""
-                   FontSize="15" VerticalOptions="Center" Margin="12,0,0,0"/>
-                        <Label Grid.Column="2" Text="101.000 VND"
-                   FontSize="15" TextColor="Black" VerticalOptions="Center"/>
-                    </Grid>
-                </Border>
-
-                <!-- Theo tuần -->
-                <Border x:Name="BorderTuan" 
-            Stroke="#E0E0E0" StrokeThickness="1">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12"/>
-                    </Border.StrokeShape>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnPlanSelected" CommandParameter="tuan"/>
-                    </Border.GestureRecognizers>
-                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
-                        <Ellipse x:Name="RadioTuan" WidthRequest="22" HeightRequest="22"
-                     Stroke="#CCCCCC" StrokeThickness="1.5"
-                     Fill="White" VerticalOptions="Center"/>
-                        <Label Grid.Column="1" x:Name="PlanWeekLabel" Text=""
-                   FontSize="15" VerticalOptions="Center" Margin="12,0,0,0"/>
-                        <Label Grid.Column="2" Text="51.000 VND"
-                   FontSize="15" TextColor="Black" VerticalOptions="Center"/>
-                    </Grid>
-                </Border>
-
-            </VerticalStackLayout>
+                    <Label Text="Thanh toán 1 lần - Mở khóa vĩnh viễn" 
+                           FontSize="13" 
+                           TextColor="Gray" 
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
 
             <Button x:Name="BuyButton"
                     Text=""

@@ -7,93 +7,59 @@ namespace multilingualAudioTravelApp
 {
     public partial class PremiumPage : ContentPage
     {
-        private string _selectedPlan = string.Empty;
-
         public PremiumPage()
         {
             InitializeComponent();
             var email = Preferences.Get("userEmail", string.Empty);
 
-            // Set localized UI texts
-            PremiumMainTitle.Text = Languages.AppStrings.PremiumTitle;
-            FeaturesLabel.Text = Languages.AppStrings.Features;
-            FreeLabel.Text = Languages.AppStrings.Free;
-            PaidLabel.Text = Languages.AppStrings.Paid;
-            Feature1Label.Text = Languages.AppStrings.Feature1;
-            Feature2Label.Text = Languages.AppStrings.Feature2;
-            Feature3Label.Text = Languages.AppStrings.Feature3;
-            Feature4Label.Text = Languages.AppStrings.Feature4;
-            PlanYearLabel.Text = Languages.AppStrings.PlanYear;
-            PlanMonthLabel.Text = Languages.AppStrings.PlanMonth;
-            PlanWeekLabel.Text = Languages.AppStrings.PlanWeek;
-            BuyButton.Text = Languages.AppStrings.SubscribeButton;
+            // ĐỒNG BỘ TOÀN BỘ SANG TIẾNG VIỆT
+            PremiumMainTitle.Text = "Kích hoạt Tour";
 
+            // Header của bảng
+            FeaturesLabel.Text = "Quyền lợi";
+            FreeLabel.Text = "Xem thử";
+            PaidLabel.Text = "Trọn gói";
+
+            // Nội dung 4 dòng quyền lợi (Viết đúng theo chức năng App của bạn)
+            Feature1Label.Text = "Xem bản đồ và hình ảnh các quán ăn";
+            Feature2Label.Text = "Mở khóa toàn bộ Audio thuyết minh";
+            Feature3Label.Text = "Tự động phát Audio qua GPS khi đi dạo";
+            Feature4Label.Text = "Không giới hạn số lần bấm nghe thủ công";
+
+            BuyButton.Text = "Thanh toán ngay";
+
+            // Nếu đã có vé rồi thì mờ nút đi
             if (Preferences.Get($"IsPremium_{email}", false))
             {
-                BuyButton.Text = Languages.AppStrings.BtnPremiumActivated;
+                BuyButton.Text = "Đã kích hoạt vé";
                 BuyButton.BackgroundColor = Colors.Gray;
                 BuyButton.IsEnabled = false;
-                StatusLabel.Text = Languages.AppStrings.StatusPremiumActive;
+                StatusLabel.Text = "Hệ thống Audio Guide đang hoạt động";
             }
         }
 
-        private void OnPlanSelected(object sender, TappedEventArgs e)
-        {
-            if (e.Parameter is not string plan) return;
-            _selectedPlan = plan;
-
-            var borders = new[] { (BorderNam, RadioNam), (BorderThang, RadioThang), (BorderTuan, RadioTuan) };
-            foreach (var (b, r) in borders)
-            {
-                b.Stroke = new SolidColorBrush(Color.FromArgb("#E0E0E0"));
-                b.BackgroundColor = Colors.Transparent;
-                r.Stroke = new SolidColorBrush(Color.FromArgb("#CCCCCC"));
-                r.Fill = new SolidColorBrush(Colors.White);
-            }
-
-            var isDark = Application.Current.UserAppTheme == AppTheme.Dark;
-            var (selBorder, selRadio) = _selectedPlan switch
-            {
-                "nam" => (BorderNam, RadioNam),
-                "thang" => (BorderThang, RadioThang),
-                _ => (BorderTuan, RadioTuan)
-            };
-
-            selBorder.Stroke = new SolidColorBrush(Color.FromArgb("#1D9E75"));
-            selBorder.BackgroundColor = Color.FromArgb(isDark ? "#0D2B20" : "#F0FAF6");
-            selRadio.Stroke = new SolidColorBrush(Color.FromArgb("#1D9E75"));
-            selRadio.Fill = new SolidColorBrush(Color.FromArgb("#1D9E75"));
-        }
+        // Đã xóa hàm OnPlanSelected vì không cần chọn gói nữa
 
         private async void OnBuyClicked(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_selectedPlan))
-            {
-                await DisplayAlert(Languages.AppStrings.MsgSelectPlanTitle, Languages.AppStrings.MsgSelectPlanBody, "OK");
-                return;
-            }
-
             BuyButton.IsEnabled = false;
             BuyButton.Text = Languages.AppStrings.BtnProcessing;
-            await Task.Delay(1200);
+            await Task.Delay(1200); // Giả lập thời gian kết nối ví điện tử/ngân hàng
 
             var email = Preferences.Get("userEmail", "user");
 
-            var months = _selectedPlan == "nam" ? 12 : _selectedPlan == "thang" ? 1 : 0;
-            var days = _selectedPlan == "tuan" ? 7 : 0;
-
-            var expiry = (days > 0
-                ? DateTime.Now.AddDays(days)
-                : DateTime.Now.AddMonths(months)).ToString("yyyy-MM-dd");
-
+            // Kịch bản: Thanh toán 1 lần dùng mãi mãi -> Set hạn sử dụng là 10 năm sau
+            var expiry = DateTime.Now.AddYears(10).ToString("yyyy-MM-dd");
             var token = $"VKPREMIUM_{email}_{expiry}";
 
+            // Lưu vé vào bộ nhớ tạm của điện thoại
             Preferences.Set($"IsPremium_{email}", true);
             Preferences.Set($"PremiumToken_{email}", token);
             Preferences.Set($"PremiumExpiry_{email}", expiry);
 
             try
             {
+                // Lưu lên Database Server
                 using var client = new HttpClient();
                 string baseUrl = DatabaseService.GlobalApiUrl;
 
@@ -112,14 +78,12 @@ namespace multilingualAudioTravelApp
                 System.Diagnostics.Debug.WriteLine($"Lưu Premium lên server thất bại: {ex.Message}");
             }
 
-            BuyButton.Text = Languages.AppStrings.BtnPremiumActivated;
-            BuyButton.BackgroundColor = Colors.Gray;
             StatusLabel.Text = Languages.AppStrings.StatusActivated;
 
-            await DisplayAlert(Languages.AppStrings.MsgActivatedTitle,
-                Languages.AppStrings.MsgActivatedBody, "OK");
+            await DisplayAlert("Thành công", "Bạn đã mua vé thành công. Chào mừng đến với Khu phố ẩm thực Vĩnh Khánh!", "Vào App");
 
-            await Navigation.PopAsync();
+            // Mở cổng cho khách vào App chính
+            Application.Current.MainPage = new AppShell();
         }
     }
 }

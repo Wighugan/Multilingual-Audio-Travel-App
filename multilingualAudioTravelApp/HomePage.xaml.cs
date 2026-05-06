@@ -135,39 +135,39 @@ public partial class HomePage : ContentPage
     }
 
 
-    private async Task<bool> CheckFreeListenLimitAsync()
-    {
-        // 1. Kiểm tra xem khách có phải là Premium không
-        string email = Preferences.Get("userEmail", "");
-        bool isPremium = Preferences.Get($"IsPremium_{email}", false);
+    //private async Task<bool> CheckFreeListenLimitAsync()
+    //{
+    //    // 1. Kiểm tra xem khách có phải là Premium không
+    //    string email = Preferences.Get("userEmail", "");
+    //    bool isPremium = Preferences.Get($"IsPremium_{email}", false);
 
-        if (isPremium) return true; // VIP thì bấm nghe thoải mái
+    //    if (isPremium) return true; // VIP thì bấm nghe thoải mái
 
-        // 2. Nếu là khách Free, đếm số lượt BẤM TAY
-        int listenCount = Preferences.Get("ManualListenCount", 0);
-        int maxFree = 5; // Cho phép bấm tay thử 2 lần
+    //    // 2. Nếu là khách Free, đếm số lượt BẤM TAY
+    //    int listenCount = Preferences.Get("ManualListenCount", 0);
+    //    int maxFree = 5; // Cho phép bấm tay thử 2 lần
 
-        if (listenCount < maxFree)
-        {
-            Preferences.Set("ManualListenCount", listenCount + 1);
-            return true;
-        }
-        else
-        {
-            // 3. Đã hết lượt bấm thử -> Chặn lại và mời nâng cấp
-            bool confirm = await DisplayAlert("Giới hạn lượt nghe",
-                "Bạn đã dùng hết lượt bấm nghe thử thủ công. Vui lòng nâng cấp gói Premium để tiếp tục nghe, hoặc cứ đi dạo để hệ thống tự động phát qua GPS (Miễn phí) nhé!",
-                "Nâng cấp", "Đóng");
+    //    if (listenCount < maxFree)
+    //    {
+    //        Preferences.Set("ManualListenCount", listenCount + 1);
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        // 3. Đã hết lượt bấm thử -> Chặn lại và mời nâng cấp
+    //        bool confirm = await DisplayAlert("Giới hạn lượt nghe",
+    //            "Bạn đã dùng hết lượt bấm nghe thử thủ công. Vui lòng nâng cấp gói Premium để tiếp tục nghe, hoặc cứ đi dạo để hệ thống tự động phát qua GPS (Miễn phí) nhé!",
+    //            "Nâng cấp", "Đóng");
 
-            if (confirm)
-            {
-                // Chuyển sang trang Premium
-                await Navigation.PushAsync(new PremiumPage());
-            }
+    //        if (confirm)
+    //        {
+    //            // Chuyển sang trang Premium
+    //            await Navigation.PushAsync(new PremiumPage());
+    //        }
 
-            return false; // Chặn không cho đọc Audio
-        }
-    }
+    //        return false; // Chặn không cho đọc Audio
+    //    }
+    //}
 
     private async void OnPopupPlayClicked(object sender, EventArgs e)
     {
@@ -180,8 +180,8 @@ public partial class HomePage : ContentPage
         }
         else // chưa đọc → bắt đầu
         {
-            bool canPlay = await CheckFreeListenLimitAsync();
-            if (!canPlay) return; // Nếu hàm trả về false -> Dừng lại, không đọc
+            //bool canPlay = await CheckFreeListenLimitAsync();
+            //if (!canPlay) return; // Nếu hàm trả về false -> Dừng lại, không đọc
             PlayStopButton.Source = "stop_icon.png";
             if (_selectedPoi.SourcePoi != null)
             {

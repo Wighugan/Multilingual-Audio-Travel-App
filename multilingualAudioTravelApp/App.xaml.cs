@@ -9,7 +9,7 @@ namespace multilingualAudioTravelApp
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            MainPage = new ContentPage { BackgroundColor = Colors.White };
         }
         protected override void OnStart()
         {
@@ -17,6 +17,24 @@ namespace multilingualAudioTravelApp
             Task.Run(async () =>
             {
                 await SilentLoginOrRegisterAsync();
+                // SAU KHI TẠO TÀI KHOẢN XONG -> KIỂM TRA VÉ
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    string email = Preferences.Get("userEmail", "");
+                    bool isPremium = Preferences.Get($"IsPremium_{email}", false);
+
+                    if (isPremium)
+                    {
+                        // Đã có vé -> Cho vào App chính
+                        MainPage = new AppShell();
+                    }
+                    else
+                    {
+                        // Chưa có vé -> Bắt ra quầy thu phí
+                        MainPage = new PremiumPage();
+                    }
+                });
+
             });
         }
         private async Task SilentLoginOrRegisterAsync()

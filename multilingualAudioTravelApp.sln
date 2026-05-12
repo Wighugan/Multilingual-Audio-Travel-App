@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "multilingualAudioTravelApp"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelApp.WebAdmin", "TravelApp.WebAdmin\TravelApp.WebAdmin.csproj", "{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "matp.LoadTest", "matp.LoadTest\matp.LoadTest.csproj", "{D3519357-EB9A-41BA-B290-77DC24B1C355}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{568E7A52-DD5D-478A-9DFC-4D5F6CA6D714}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3519357-EB9A-41BA-B290-77DC24B1C355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3519357-EB9A-41BA-B290-77DC24B1C355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3519357-EB9A-41BA-B290-77DC24B1C355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3519357-EB9A-41BA-B290-77DC24B1C355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -341,6 +341,24 @@ namespace TravelApp.WebAdmin.Controllers
             return Ok(poi);
         }
 
+        // Bạn có thể tạo class này ở cuối file PoisController.cs
+        public class AppLogRequest
+        {
+            public string Message { get; set; }
+        }
+
+        // Chèn API này vào bên trong class PoisController
+        [HttpPost("app-log")]
+        public IActionResult ReceiveAppLog([FromBody] AppLogRequest req)
+        {
+            // In ra màn hình Terminal với màu XANH DƯƠNG (Cyan) để phân biệt với log Queue
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(req.Message);
+            Console.ResetColor();
+
+            return Ok();
+        }
+
 
         [HttpPost("{id}/generate-qr")]
         public async Task<IActionResult> GenerateQrForExistingPoi(int id)

@@ -94,7 +94,7 @@ namespace TravelApp.WebAdmin.Services
             {
                 await context.SaveChangesAsync();
 
-                // Hét lên cho Web Admin biết để vẽ lại biểu đồ
+                //  cho Web Admin biết để vẽ lại biểu đồ
                 await hubContext.Clients.All.SendAsync("ReceiveAnalyticsUpdate");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"[DATABASE] Đã lưu thanh cong tong cong {batch.Count} luot tuong tac vao Database CÙNG 1 LÚC!\n");

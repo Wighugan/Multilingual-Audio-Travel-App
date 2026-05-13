@@ -611,6 +611,28 @@ public partial class MainPage : ContentPage
             .ThenBy(x => x.Distance)
             .ToList();
 
+
+        if (candidates.Any())
+        {
+            // Thay vì dùng Debug.WriteLine, ta gom tất cả thành 1 cục Text
+            string logText = "\n========== [TELEMETRY TỪ MOBILE APP] ==========\n";
+            logText += $"[QUET GEOFENCE] Phat hien khach dung gan {candidates.Count} quan.\n";
+            logText += "[XEP HANG UU TIEN PHAT AUDIO]:\n";
+
+            foreach (var item in candidates)
+            {
+                string tenGoi = item.Poi.Priority >= 20 ? "MAX" : (item.Poi.Priority >= 10 ? "PRO" : "Free");
+                logText += $"   -> {item.Poi.Name} | Goi: {tenGoi} | Đo uu tiên: {item.Poi.Priority}\n";
+            }
+            logText += "===============================================\n";
+
+            // Bắn cục Text này bay lên Server cho nó in ra Terminal!
+            _ = LogLenServer(logText);
+        }
+
+
+
+
         var bestMatch = candidates.FirstOrDefault();
 
         if (bestMatch != null)
@@ -667,6 +689,21 @@ public partial class MainPage : ContentPage
         catch { /* Bỏ qua nếu mất GPS tạm thời */ }
     }
 
+    private async Task LogLenServer(string thongBao)
+    {
+        try
+        {
+            using var client = new HttpClient();
+            var json = System.Text.Json.JsonSerializer.Serialize(new { Message = thongBao });
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
+            // LƯU Ý: Thay đổi URL này cho đúng với IP hoặc Domain Backend của bạn
+            // (Nếu xài máy ảo Android thì thay localhost thành 10.0.2.2)
+            string GlobalApiUrl = "https://scouts-smog-acclaim.ngrok-free.dev";
+
+            await client.PostAsync($"{GlobalApiUrl}/api/pois/app-log", content);
+        }
+        catch { /* Lỗi mạng thì bỏ qua, không làm sập app */ }
+    }
 
 }

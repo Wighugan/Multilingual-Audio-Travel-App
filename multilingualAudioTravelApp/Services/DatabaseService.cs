@@ -158,22 +158,22 @@ public class DatabaseService
     private SQLiteAsyncConnection _db;
     private readonly string _dbPath;
     private readonly HttpClient _httpClient = new HttpClient();
-    public static string GlobalApiUrl
-    {
-        get
-        {
-            const string devIp = "192.168.107.159"; // TỪ NAY ĐỔI IP WIFI THÌ CHỈ CẦN VÀO ĐÚNG DÒNG NÀY ĐỂ SỬA
+    //public static string GlobalApiUrl
+    //{
+    //    get
+    //    {
+    //        const string devIp = "192.168.107.159"; // TỪ NAY ĐỔI IP WIFI THÌ CHỈ CẦN VÀO ĐÚNG DÒNG NÀY ĐỂ SỬA
 
-            if (DeviceInfo.Platform == DevicePlatform.Android)
-            {
-                return DeviceInfo.DeviceType == DeviceType.Virtual
-                    ? "http://10.0.2.2:5068"
-                    : $"http://{devIp}:5068";
-            }
-            return "http://localhost:5068";
-        }
-    }
-
+    //        if (DeviceInfo.Platform == DevicePlatform.Android)
+    //        {
+    //            return DeviceInfo.DeviceType == DeviceType.Virtual
+    //                ? "http://10.0.2.2:5068"
+    //                : $"http://{devIp}:5068";
+    //        }
+    //        return "http://localhost:5068";
+    //    }
+    //}
+    public static string GlobalApiUrl = "https://scouts-smog-acclaim.ngrok-free.dev";
     public DatabaseService()
     {
         _dbPath = Path.Combine(FileSystem.AppDataDirectory, "tourapp.db");

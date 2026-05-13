@@ -18,11 +18,12 @@ namespace VinhKhanhLoadTest
 
             string baseUrl = "http://localhost:5068";
 
-            var scenario = Scenario.Create("test_delay_lay_thong_tin", async context =>
+            var scenario = Scenario.Create("test_hang_doi_queue", async context =>
             {
                 try
                 {
-                    var response = await httpClient.GetAsync($"{baseUrl}/api/pois");
+                    // 1. ĐÃ SỬA THÀNH POST VÀ GỌI ĐÚNG VÀO API ĐẾM LƯỢT (QUÁN SỐ 1)
+                    var response = await httpClient.PostAsync($"{baseUrl}/api/pois/1/analytics?type=visit", null);
 
                     string statusCodeStr = ((int)response.StatusCode).ToString();
 
@@ -32,7 +33,7 @@ namespace VinhKhanhLoadTest
                     }
                     else
                     {
-                        Console.WriteLine($"[SERVER BÁO LỖI]: Mã {statusCodeStr} - Dữ liệu trả về: {await response.Content.ReadAsStringAsync()}");
+                        Console.WriteLine($"[SERVER BÁO LỖI]: Mã {statusCodeStr}");
                         return Response.Fail(statusCode: statusCodeStr);
                     }
                 }
@@ -43,12 +44,12 @@ namespace VinhKhanhLoadTest
                 }
             })
             .WithLoadSimulations(
-                Simulation.Inject(rate: 100, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30))
-            //thay rate thanh so nguoi muon mo phong, interval la khoang thoi gian giua cac lan mo phong, during la tong thoi gian chay load test
+                // 2. TĂNG TẢI LÊN 500 REQUEST/GIÂY TRONG 10 GIÂY (Tổng 5000 lượt)
+                Simulation.Inject(rate: 500, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10))
             );
 
             NBomberRunner.RegisterScenarios(scenario)
-                         .WithReportFileName("Delay_Fetch_Data_Report")
+                         .WithReportFileName("Queue_Load_Test_Report")
                          .Run();
         }
     }

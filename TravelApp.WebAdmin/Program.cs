@@ -11,6 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSignalR();
+builder.Services.AddHostedService<TravelApp.WebAdmin.Services.AnalyticsBackgroundWorker>();
 
 // 1. CẤU HÌNH CORS (Bắt buộc để HTML có thể lấy được dữ liệu từ API)
 builder.Services.AddCors(options =>

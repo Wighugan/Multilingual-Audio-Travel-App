@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using TravelApp.WebAdmin.Data;
+using TravelApp.WebAdmin.Hubs;
 using TravelApp.WebAdmin.Models;
 
 namespace TravelApp.WebAdmin.Controllers
@@ -11,10 +13,13 @@ namespace TravelApp.WebAdmin.Controllers
     public class PoisController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<AppHub> _hubContext; // <-- 1. THÊM DÒNG NÀY
 
-        public PoisController(AppDbContext context)
+        // <-- 2. SỬA LẠI CONSTRUCTOR ĐỂ BƠM SIGNALR VÀO
+        public PoisController(AppDbContext context, IHubContext<AppHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext; // <-- 3. THÊM DÒNG NÀY
         }
 
         [HttpGet]
@@ -211,41 +216,63 @@ namespace TravelApp.WebAdmin.Controllers
             }
             catch { return "—"; }
         }
+        //[HttpPost("{id}/analytics")]
+        //public async Task<IActionResult> UpdateAnalytics(int id, [FromQuery] string type)
+        //{
+        //    var poi = await _context.Pois.FindAsync(id);
+        //    if (poi == null) return NotFound();
+
+        //    if (type == "listen")
+        //    {
+        //        poi.ListenCount++;
+        //    }
+        //    else if (type == "visit")
+        //    {
+        //        poi.VisitCount++;
+
+        //        // DÙNG NGÀY THÁNG NĂM CHÍNH XÁC (VD: "2026-04-20") THAY VÌ TÊN THỨ
+        //        var today = DateTime.Now.ToString("yyyy-MM-dd");
+
+        //        // Đọc dữ liệu cũ
+        //        var dict = string.IsNullOrEmpty(poi.WeeklyVisitsJson)
+        //            ? new Dictionary<string, int>()
+        //            : System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(poi.WeeklyVisitsJson);
+
+        //        // Cộng thêm 1 cho ngày hôm nay
+        //        if (dict.ContainsKey(today)) dict[today]++;
+        //        else dict[today] = 1;
+
+        //        // Lưu ngược lại thành chuỗi JSON
+        //        poi.WeeklyVisitsJson = System.Text.Json.JsonSerializer.Serialize(dict);
+        //    }
+        //    else return BadRequest("type phải là 'listen' hoặc 'visit'");
+
+        //    await _context.SaveChangesAsync();
+        //    if (_hubContext != null)
+        //    {
+        //        await _hubContext.Clients.All.SendAsync("ReceiveAnalyticsUpdate");
+        //    }
+        //    return Ok(new { poi.Id, poi.ListenCount, poi.VisitCount });
+        //}
         [HttpPost("{id}/analytics")]
-        public async Task<IActionResult> UpdateAnalytics(int id, [FromQuery] string type)
+        // Lưu ý: Đã bỏ chữ 'async Task<>' vì hàm này giờ chạy chớp nhoáng, không cần chờ đợi (await) DB nữa
+        public IActionResult UpdateAnalytics(int id, [FromQuery] string type)
         {
-            var poi = await _context.Pois.FindAsync(id);
-            if (poi == null) return NotFound();
+            // 1. Kiểm tra đầu vào
+            if (type != "listen" && type != "visit")
+                return BadRequest("type phải là 'listen' hoặc 'visit'");
 
-            if (type == "listen")
-            {
-                poi.ListenCount++;
-            }
-            else if (type == "visit")
-            {
-                poi.VisitCount++;
+            // 2. QUĂNG YÊU CẦU VÀO RỔ (QUEUE) TRÊN RAM
+            TravelApp.WebAdmin.Services.AnalyticsQueue.Requests.Enqueue((id, type));
 
-                // DÙNG NGÀY THÁNG NĂM CHÍNH XÁC (VD: "2026-04-20") THAY VÌ TÊN THỨ
-                var today = DateTime.Now.ToString("yyyy-MM-dd");
-
-                // Đọc dữ liệu cũ
-                var dict = string.IsNullOrEmpty(poi.WeeklyVisitsJson)
-                    ? new Dictionary<string, int>()
-                    : System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(poi.WeeklyVisitsJson);
-
-                // Cộng thêm 1 cho ngày hôm nay
-                if (dict.ContainsKey(today)) dict[today]++;
-                else dict[today] = 1;
-
-                // Lưu ngược lại thành chuỗi JSON
-                poi.WeeklyVisitsJson = System.Text.Json.JsonSerializer.Serialize(dict);
-            }
-            else return BadRequest("type phải là 'listen' hoặc 'visit'");
-
-            await _context.SaveChangesAsync();
-            return Ok(new { poi.Id, poi.ListenCount, poi.VisitCount });
+            // 3. GHI LOG MÀU XANH LÁ CHO GIẢNG VIÊN XEM
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"[API] Khách vua báo {type} cho quán {id}. So luong đang cho trong Queue: {TravelApp.WebAdmin.Services.AnalyticsQueue.Requests.Count}");
+            Console.ResetColor();
+            
+            // 4. Trả lời điện thoại của khách ngay lập tức (Không bắt khách đợi lưu DB)
+            return Ok(new { message = "Đã đưa vào hàng đợi xử lý" });
         }
-
 
         [HttpGet("weekly-chart")]
         public async Task<IActionResult> GetWeeklyChart()
